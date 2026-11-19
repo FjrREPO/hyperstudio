@@ -1,103 +1,92 @@
-# Example workflow: luxury watch commercial
+# Example workflow: a 15-second product showcase
 
-`examples/luxury-watch-commercial/` taken from a sentence to a verified MP4. The figures below are from the
-run on 2026-11-19 (HyperFrames 0.9.69, Apple M4 Pro).
+`examples/saas-product-showcase/` from a brief to a reviewed, rendered film. This is the quality benchmark:
+the earlier slide-based examples were removed after their output was rejected as generic
+([CREATIVE-QUALITY-PROPOSAL.md](CREATIVE-QUALITY-PROPOSAL.md)). Figures below are from 2026-11-19
+(HyperFrames 0.9.69, Apple M4 Pro).
 
-## 1. Brief
+**Lumen is an example product.** No real product was supplied, so its interface was built as real HTML for this
+film and everything about it is marked as a placeholder. The method is the one a real product goes through.
 
-> A short commercial for the Noctis One watch. Dark luxury, cinematic, premium.
+## 1. The product
 
-Decisions made from it: 16:9, about 16 s, three scenes with one job each — reveal the watch, prove the
-movement, close on the name. One recipe (`luxury-product-reveal`) used three times with different layout,
-camera and lighting so the scenes do not repeat.
-
-The watch and the brand are fictional. `assets/noctis-one.svg` is a drawn stand-in and `assets/night-bed.m4a`
-is a synthesised drone made with FFmpeg; a real project supplies the product photo and licensed music.
-
-## 2. Creative IR
-
-[`video.json`](../examples/luxury-watch-commercial/video.json):
-
-| Scene     | Duration | Layout | Camera     | Lighting        | Entered by             |
-| --------- | -------- | ------ | ---------- | --------------- | ---------------------- |
-| `reveal`  | 6 s      | center | push-in    | dramatic        | fade from black, 0.8 s |
-| `calibre` | 5 s      | left   | orbit ×0.8 | rim             | crossfade, 0.8 s       |
-| `closing` | 6 s      | right  | pull-out   | soft, exit fade | fade, 0.8 s            |
-
-`project.duration` is 16.2 s: 6 + 5 + 6, minus the 0.8 s the crossfade overlaps.
-
-## 3. Validate and compile
+`product/index.html` is the product's interface as a working page, with four states chosen by the URL hash:
+`#home`, `#asked`, `#answer`, `#share`. Components the film needs carry a `data-region` name.
 
 ```bash
-pnpm hyperstudio compile examples/luxury-watch-commercial/video.json --validate-only --pretty
-pnpm hyperstudio compile examples/luxury-watch-commercial/video.json --pretty
+node examples/saas-product-showcase/product/capture.mjs
 ```
 
-Result: 16.2 s, 486 frames, scenes starting at 0, 5.2 and 10.2 s, written to `build/` (`index.html`, three
-scene files, two assets).
+That screenshots each state at 2× with headless Chrome and reads every region's rectangle from the DOM. The
+screenshots are in `screens/`; the rectangles are in `video.json` under `screens.*.regions`. For a real
+product, `npx hyperframes capture <url>` and a screenshot per state replace this step.
 
-## 4. HyperFrames check
+## 2. Direction
+
+Written before any shot (see `direction` in `video.json`):
+
+- **Concept:** one question being asked and answered inside the product, start to finish.
+- **Palette:** warm paper stage, near-black ink, one cobalt accent where the eye should land.
+- **Typography:** Inter, the product's own face; copy small, sentence case, one line at a time.
+- **Motion:** one camera move per shot on the real interface; cursor and typing are the only other motion.
+- **Pacing:** nine shots in fifteen seconds, cut on action.
+
+## 3. Shots
+
+| #   | Shot      | Length | Recipe       | What happens                                           |
+| --- | --------- | ------ | ------------ | ------------------------------------------------------ |
+| 1   | `hook`    | 2.4 s  | product-shot | The ask bar alone on the stage; the question is typed  |
+| 2   | `meet`    | 1.2 s  | statement    | "Meet Lumen."                                          |
+| 3   | `reveal`  | 1.7 s  | product-shot | The whole app rises in; the cursor sends the question  |
+| 4   | `answer`  | 1.7 s  | product-shot | The answer card alone, with a label                    |
+| 5   | `proof`   | 1.3 s  | product-shot | Push in to the row the answer rests on; it is outlined |
+| 6   | `share`   | 1.1 s  | product-shot | Close on the card's footer; the cursor clicks Share    |
+| 7   | `shared`  | 1.3 s  | product-shot | The "Link copied" popover alone                        |
+| 8   | `benefit` | 1.7 s  | statement    | "The answer, before the meeting starts."               |
+| 9   | `close`   | 2.6 s  | brand-close  | Mark, name, tagline, address                           |
+
+Shots 1 to 7 are one interaction seen at different scales, each cut on an action; the two statements name what
+was just shown.
+
+## 4. Compile and review
 
 ```bash
-cd examples/luxury-watch-commercial/build
-npx hyperframes check --json
+pnpm hyperstudio compile examples/saas-product-showcase/video.json
+pnpm hyperstudio review  examples/saas-product-showcase/video.json
 ```
 
-Result: `ok: true`; lint, runtime, layout, motion, contrast, craft and audio all 0 errors and 0 warnings
-(21 of 21 contrast samples passed).
+`compile` prints the shot table and lists seven placeholders (the brand, four screens, the mark, the sound).
+`review` runs `hyperframes check` (0 errors, 0 warnings), takes 18 frames and starts `REVIEW.md`.
 
-The first run did not pass, and what it caught is now in the recipe guide: an image variable without a
-`default`, an eyebrow below the 28 px reading floor, and intentional overflow that needed
-`data-layout-allow-overflow`.
+The answered rubric is [REVIEW.md](../examples/saas-product-showcase/REVIEW.md). Three rounds of looking at
+frames changed the film:
 
-## 5. Snapshot inspection
+| Seen in the frames                                   | Change                                                           |
+| ---------------------------------------------------- | ---------------------------------------------------------------- |
+| Labels sat on top of interface text                  | Components are isolated on the stage, so labels sit on the stage |
+| Close-ups cut the window at odd edges, leaving voids | Shots frame a component or a whole row, not an arbitrary point   |
+| The cursor covered the word on the button it clicked | The cursor aims below and right of a component's centre          |
+| Three shots of the same card at nearly the same size | The `proof` shot cuts closer and pushes in                       |
+| The closing line was on screen under two seconds     | The close runs longer and its lines arrive sooner                |
+
+## 5. Render and verify
 
 ```bash
-npx hyperframes snapshot --at 0.5,1.6,3.5,5.6,7.5,9.8,10.2,12.5,15.8
+cd examples/saas-product-showcase/build
+npx hyperframes render --quality looks -o ../renders/saas-product-showcase.mp4
 ```
 
-Reviewed on the contact sheet and full frames: the watch resolves out of blur, the glint crosses its
-silhouette, the headline rises word by word; the crossfade at 5.6 s shows both scenes; 10.2 s is the black
-midpoint of the fade; the closing copy fades at the end. The review led to two changes: a wider orbit (it was
-too subtle to read) and more room between the watch and the copy in the centered layout.
+Result: 15.000 s, 1920×1080, 30 fps, H.264 with AAC, about 3.5 MB; `ffprobe` duration equals the IR's. Frames
+pulled from the rendered file at two per second match the snapshots.
 
-## 6. Render and verify
+## What is still not real
 
-```bash
-df -h .                                                      # 6.4 GB free at the time
-npx hyperframes render --quality looks -o ../renders/noctis-one.mp4
-ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,r_frame_rate ../renders/noctis-one.mp4
-```
+- The product, its data and its mark are an example.
+- The sound is synthesised clicks and tones (`assets/make-sfx.mjs`). There is no music.
+- Only Inter is used, because the example product's interface uses it.
 
-Result: 5.9 MB, rendered in 18 s. `ffprobe`: H.264 1920×1080 at 30 fps with AAC audio, duration 16.200 s —
-equal to the IR. Audio mean −21.4 dB, peak −12.8 dB. Decoded frames at nine points match the snapshots.
+## The other example
 
-`build/` and `renders/` are git-ignored; run the commands above to reproduce them.
-
-## The other examples
-
-The same steps were run for six more films on 2026-11-19. Each passes `hyperframes check` with 0 errors and
-0 warnings, and each rendered file's duration equals its IR's.
-
-| Example                   | Canvas | Length | What it shows                                         |
-| ------------------------- | ------ | ------ | ----------------------------------------------------- |
-| `saas-product-launch`     | 16:9   | 23 s   | Four recipes in one film under one `style`            |
-| `kinetic-typography`      | 16:9   | 13.6 s | Both text modes, all three entrances, three typefaces |
-| `data-visualization`      | 16:9   | 18.4 s | Split, stacked and number-only data scenes            |
-| `web3-protocol-promo`     | 16:9   | 18.2 s | Product screen plus a counted figure                  |
-| `luxury-brand-commercial` | 16:9   | 19.6 s | Serif kinetic type around two product reveals         |
-| `social-short`            | 9:16   | 16.3 s | Portrait layouts inside the social safe areas         |
-
-What the checks caught on the first pass, and how the IR fixed it:
-
-- **Text crossfading over text** in the same area (`content_overlap`): changed those transitions to `fade`.
-- **A line on screen too briefly** (`line_unread`): lengthened the scene. A line needs about 0.5 s plus
-  0.3 s per word, and a film's last line at least 2 s.
-- **Only background on frame 0** (`first_frame_empty`): fixed in the recipe, and the luxury film now opens
-  on a cut instead of a fade from black.
-
-## With Claude Code
-
-`pnpm skill:link` makes the `hyperstudio-director` skill available in this repo. Then a request such as
-"make a 15-second commercial for this product, dark and premium" follows the same steps: plan, IR, compile,
-check, snapshot review, render.
+`examples/luxury-watch-commercial/` is a slow, three-scene film for a physical product, made with
+`luxury-product-reveal`. Its average shot is 5.4 s, so `compile` warns that it is slow; that is its direction,
+stated in its IR. The watch image and the music are placeholders.
