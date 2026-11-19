@@ -5,3 +5,4 @@ renders/
 *.mp4
 .tmp-*/
 .claude/
+.DS_Store

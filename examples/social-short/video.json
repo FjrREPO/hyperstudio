@@ -1,0 +1,100 @@
+{
+  "project": {
+    "title": "Lumen - Social Short",
+    "fps": 30,
+    "aspectRatio": "9:16",
+    "duration": 16.3
+  },
+  "style": {
+    "accent": "#6d5efc",
+    "accent2": "#22d3ee",
+    "background": "#0a0b14",
+    "ink": "#f5f6fb"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "recipe": "kinetic-typography",
+      "duration": 3,
+      "text": {
+        "line1": "Stop",
+        "line2": "guessing.",
+        "emphasis": "guessing."
+      },
+      "params": {
+        "mode": "stack",
+        "motion": "slam",
+        "backdrop": "glow",
+        "accent": "#22d3ee"
+      }
+    },
+    {
+      "id": "stat",
+      "recipe": "data-storytelling",
+      "duration": 4.5,
+      "text": {
+        "statSuffix": "%",
+        "statLabel": "more answers, no analyst",
+        "bars": "Week 1:38, Week 6:120, Week 12:214",
+        "barSuffix": "%"
+      },
+      "params": {
+        "stat": 214,
+        "accent": "#22d3ee"
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.4
+      }
+    },
+    {
+      "id": "screen",
+      "recipe": "tech-product-launch",
+      "duration": 4.6,
+      "assets": {
+        "screen": "assets/lumen-dashboard.svg"
+      },
+      "text": {
+        "eyebrow": "Lumen",
+        "headline": "Revenue you can read.",
+        "chip1": "Live MRR",
+        "chip2": "No SQL"
+      },
+      "params": {
+        "camera": "tilt-rise"
+      },
+      "transition": {
+        "type": "fade",
+        "duration": 0.4
+      }
+    },
+    {
+      "id": "cta",
+      "recipe": "kinetic-typography",
+      "duration": 4.6,
+      "text": {
+        "line1": "Try Lumen.",
+        "line2": "Free today.",
+        "emphasis": "Free"
+      },
+      "params": {
+        "mode": "sequence",
+        "motion": "rise",
+        "backdrop": "grid"
+      },
+      "transition": {
+        "type": "fade",
+        "duration": 0.6
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "bed",
+      "src": "assets/bed.m4a",
+      "volume": 0.8,
+      "fadeIn": 1,
+      "fadeOut": 2
+    }
+  ]
+}

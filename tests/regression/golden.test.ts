@@ -9,7 +9,7 @@ import { compile } from "../../packages/compiler/src/index.ts";
 // recipe shows up here as a diff to review. Accept an intended change with:  pnpm test:update
 
 const ROOT = join(import.meta.dirname, "../..");
-const EXAMPLE = join(ROOT, "examples/luxury-watch-commercial/commercial.json");
+const EXAMPLE = join(ROOT, "examples/luxury-watch-commercial/video.json");
 const GOLDEN = join(import.meta.dirname, "__golden__/luxury-watch-commercial");
 const TEXT = [
   "index.html",

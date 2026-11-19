@@ -57,6 +57,13 @@ Put it in its own folder with its assets: `<project>/video.json`, `<project>/ass
   the previous scene, so the film gets shorter by its duration).
 - Durations must land on whole frames. Set `project.duration` to the length you intend: the compiler then
   fails if the scenes do not add up, which catches a miscounted crossfade.
+- Choose by the scene's job: `kinetic-typography` for a hook, a claim or a sign-off (no assets);
+  `luxury-product-reveal` for a physical product (needs a cut-out image); `tech-product-launch` for software
+  (needs a screenshot); `data-storytelling` for a number or a comparison (no assets).
+- Open on a recipe that shows something at time 0 (kinetic type does) and do not `fade` into the first scene:
+  frame 0 is the thumbnail.
+- Do not `crossfade` between two scenes whose text sits in the same place; use `fade` or `cut`.
+- Give each line time to be read: about 0.5 s plus 0.3 s per word, and at least 2 s for the film's last line.
 - Vary what repeats. Reusing one recipe is fine when layout, camera and lighting change between scenes.
 - Music and voice: get them with `media-use`, then reference the file in `audio`.
 

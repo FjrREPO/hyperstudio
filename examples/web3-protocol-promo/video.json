@@ -1,0 +1,114 @@
+{
+  "project": {
+    "title": "Tessera - Web3 Protocol Promo",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 18.2
+  },
+  "style": {
+    "accent": "#7c5cff",
+    "accent2": "#2ee6a6",
+    "background": "#080a16",
+    "ink": "#f3f5fa",
+    "headingFont": "Outfit",
+    "bodyFont": "Inter"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "recipe": "kinetic-typography",
+      "duration": 4.2,
+      "text": {
+        "line1": "Liquidity",
+        "line2": "should not",
+        "line3": "wait.",
+        "emphasis": "wait."
+      },
+      "params": {
+        "mode": "sequence",
+        "motion": "blur",
+        "backdrop": "grid",
+        "accent": "#2ee6a6"
+      }
+    },
+    {
+      "id": "product",
+      "recipe": "tech-product-launch",
+      "duration": 5.5,
+      "assets": {
+        "screen": "assets/tessera-swap.svg"
+      },
+      "text": {
+        "eyebrow": "Tessera Protocol",
+        "headline": "Swap in under two seconds.",
+        "subline": "One route across three pools, settled on-chain.",
+        "chip1": "1.8s settlement",
+        "chip2": "$0.02 fee",
+        "chip3": "Non-custodial",
+        "url": "app.tessera.example"
+      },
+      "params": {
+        "layout": "center",
+        "camera": "dolly-in"
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.5
+      }
+    },
+    {
+      "id": "volume",
+      "recipe": "data-storytelling",
+      "duration": 5,
+      "text": {
+        "eyebrow": "Since launch",
+        "statPrefix": "$",
+        "statSuffix": "B",
+        "statLabel": "volume routed",
+        "headline": "Four quarters on mainnet.",
+        "bars": "Q1:0.1, Q2:0.3, Q3:0.7, Q4:1.2",
+        "barSuffix": "B"
+      },
+      "params": {
+        "stat": 1.2,
+        "decimals": 1,
+        "layout": "split",
+        "accent": "#2ee6a6"
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.5
+      }
+    },
+    {
+      "id": "close",
+      "recipe": "kinetic-typography",
+      "duration": 4.5,
+      "text": {
+        "line1": "Tessera.",
+        "line2": "Trade at the speed",
+        "line3": "of a block.",
+        "emphasis": "Tessera."
+      },
+      "params": {
+        "mode": "stack",
+        "motion": "rise",
+        "backdrop": "glow",
+        "exit": "fade"
+      },
+      "transition": {
+        "type": "fade",
+        "duration": 0.6
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "bed",
+      "src": "assets/bed.m4a",
+      "volume": 0.8,
+      "fadeIn": 1,
+      "fadeOut": 2
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "project": {
+    "title": "Maison Oree - Luxury Brand Commercial",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 19.6
+  },
+  "style": {
+    "accent": "#d4a857",
+    "background": "#07060a",
+    "ink": "#f4efe6",
+    "headingFont": "Playfair Display"
+  },
+  "scenes": [
+    {
+      "id": "mood",
+      "recipe": "kinetic-typography",
+      "duration": 4.2,
+      "text": {
+        "line1": "Some nights",
+        "line2": "stay with you.",
+        "emphasis": "stay"
+      },
+      "params": {
+        "mode": "stack",
+        "motion": "blur",
+        "textCase": "none",
+        "backdrop": "glow"
+      }
+    },
+    {
+      "id": "reveal",
+      "recipe": "luxury-product-reveal",
+      "duration": 6,
+      "assets": {
+        "product": "assets/nuit-dor.svg"
+      },
+      "text": {
+        "eyebrow": "Maison Oree",
+        "headline": "Nuit d’Or."
+      },
+      "params": {
+        "layout": "center",
+        "camera": "push-in",
+        "lighting": "dramatic"
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "notes",
+      "recipe": "luxury-product-reveal",
+      "duration": 5.6,
+      "assets": {
+        "product": "assets/nuit-dor.svg"
+      },
+      "text": {
+        "eyebrow": "Eau de parfum",
+        "headline": "Amber, smoke and warm skin.",
+        "subline": "Composed in Grasse. Poured by hand."
+      },
+      "params": {
+        "layout": "right",
+        "camera": "orbit",
+        "lighting": "rim",
+        "intensity": 0.8
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "sign",
+      "recipe": "kinetic-typography",
+      "duration": 5.4,
+      "text": {
+        "line1": "Nuit d’Or.",
+        "line2": "Wear the night.",
+        "emphasis": "night."
+      },
+      "params": {
+        "mode": "sequence",
+        "motion": "blur",
+        "textCase": "none",
+        "headingFont": "EB Garamond",
+        "backdrop": "plain",
+        "exit": "fade"
+      },
+      "transition": {
+        "type": "fade",
+        "duration": 0.8
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "bed",
+      "src": "assets/bed.m4a",
+      "volume": 0.8,
+      "fadeIn": 1,
+      "fadeOut": 2
+    }
+  ]
+}

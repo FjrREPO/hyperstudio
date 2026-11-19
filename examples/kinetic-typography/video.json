@@ -1,0 +1,80 @@
+{
+  "project": {
+    "title": "Type in Motion - Kinetic Typography",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 13.6
+  },
+  "style": {
+    "background": "#0b0b0f",
+    "ink": "#f6f4ee",
+    "accent": "#ff5a36"
+  },
+  "scenes": [
+    {
+      "id": "claim",
+      "recipe": "kinetic-typography",
+      "duration": 4,
+      "text": {
+        "line1": "Nobody reads",
+        "line2": "a slow sentence.",
+        "emphasis": "slow"
+      },
+      "params": {
+        "mode": "stack",
+        "motion": "slam",
+        "backdrop": "glow"
+      }
+    },
+    {
+      "id": "rules",
+      "recipe": "kinetic-typography",
+      "duration": 5.1,
+      "text": {
+        "line1": "Cut it.",
+        "line2": "Time it.",
+        "line3": "Land it.",
+        "emphasis": "Land it."
+      },
+      "params": {
+        "mode": "sequence",
+        "motion": "rise",
+        "backdrop": "grid",
+        "headingFont": "Archivo Black"
+      }
+    },
+    {
+      "id": "credo",
+      "recipe": "kinetic-typography",
+      "duration": 5,
+      "text": {
+        "line1": "Type is the",
+        "line2": "first frame",
+        "line3": "of every idea.",
+        "emphasis": "first frame"
+      },
+      "params": {
+        "mode": "stack",
+        "motion": "blur",
+        "align": "left",
+        "textCase": "none",
+        "headingFont": "Playfair Display",
+        "backdrop": "plain",
+        "exit": "fade"
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.5
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "bed",
+      "src": "assets/bed.m4a",
+      "volume": 0.8,
+      "fadeIn": 1,
+      "fadeOut": 2
+    }
+  ]
+}

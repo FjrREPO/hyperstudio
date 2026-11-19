@@ -16,7 +16,7 @@ is a synthesised drone made with FFmpeg; a real project supplies the product pho
 
 ## 2. Creative IR
 
-[`commercial.json`](../examples/luxury-watch-commercial/commercial.json):
+[`video.json`](../examples/luxury-watch-commercial/video.json):
 
 | Scene     | Duration | Layout | Camera     | Lighting        | Entered by             |
 | --------- | -------- | ------ | ---------- | --------------- | ---------------------- |
@@ -29,8 +29,8 @@ is a synthesised drone made with FFmpeg; a real project supplies the product pho
 ## 3. Validate and compile
 
 ```bash
-pnpm hyperstudio compile examples/luxury-watch-commercial/commercial.json --validate-only --pretty
-pnpm hyperstudio compile examples/luxury-watch-commercial/commercial.json --pretty
+pnpm hyperstudio compile examples/luxury-watch-commercial/video.json --validate-only --pretty
+pnpm hyperstudio compile examples/luxury-watch-commercial/video.json --pretty
 ```
 
 Result: 16.2 s, 486 frames, scenes starting at 0, 5.2 and 10.2 s, written to `build/` (`index.html`, three
@@ -73,6 +73,28 @@ Result: 5.9 MB, rendered in 18 s. `ffprobe`: H.264 1920×1080 at 30 fps with AAC
 equal to the IR. Audio mean −21.4 dB, peak −12.8 dB. Decoded frames at nine points match the snapshots.
 
 `build/` and `renders/` are git-ignored; run the commands above to reproduce them.
+
+## The other examples
+
+The same steps were run for six more films on 2026-11-19. Each passes `hyperframes check` with 0 errors and
+0 warnings, and each rendered file's duration equals its IR's.
+
+| Example                   | Canvas | Length | What it shows                                         |
+| ------------------------- | ------ | ------ | ----------------------------------------------------- |
+| `saas-product-launch`     | 16:9   | 23 s   | Four recipes in one film under one `style`            |
+| `kinetic-typography`      | 16:9   | 13.6 s | Both text modes, all three entrances, three typefaces |
+| `data-visualization`      | 16:9   | 18.4 s | Split, stacked and number-only data scenes            |
+| `web3-protocol-promo`     | 16:9   | 18.2 s | Product screen plus a counted figure                  |
+| `luxury-brand-commercial` | 16:9   | 19.6 s | Serif kinetic type around two product reveals         |
+| `social-short`            | 9:16   | 16.3 s | Portrait layouts inside the social safe areas         |
+
+What the checks caught on the first pass, and how the IR fixed it:
+
+- **Text crossfading over text** in the same area (`content_overlap`): changed those transitions to `fade`.
+- **A line on screen too briefly** (`line_unread`): lengthened the scene. A line needs about 0.5 s plus
+  0.3 s per word, and a film's last line at least 2 s.
+- **Only background on frame 0** (`first_frame_empty`): fixed in the recipe, and the luxury film now opens
+  on a cut instead of a fade from black.
 
 ## With Claude Code
 

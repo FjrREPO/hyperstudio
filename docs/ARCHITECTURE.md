@@ -62,4 +62,5 @@ pnpm workspace · TypeScript strict, run directly by Node 24 · Zod 4 · Biome (
 
 ## Next
 
-More recipes (tech product launch, kinetic typography, data storytelling), then the remaining example videos.
+Four recipes and seven examples exist. Likely next steps, when a real film needs them: wiring HyperFrames'
+registry transitions into the IR, and layering more than one recipe in a scene.

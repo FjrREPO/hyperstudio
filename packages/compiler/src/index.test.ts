@@ -6,7 +6,7 @@ import { test } from "node:test";
 import { CompileError, compile, listRecipes } from "./index.ts";
 
 const EXAMPLE_DIR = join(import.meta.dirname, "../../../examples/luxury-watch-commercial");
-const EXAMPLE = join(EXAMPLE_DIR, "commercial.json");
+const EXAMPLE = join(EXAMPLE_DIR, "video.json");
 const base = JSON.parse(readFileSync(EXAMPLE, "utf8"));
 
 /** Compile a variation of the example and return the issue paths it is rejected with. */
