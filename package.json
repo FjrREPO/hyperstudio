@@ -1,0 +1,33 @@
+{
+  "name": "hyperstudio-workspace",
+  "version": "0.1.0",
+  "description": "Creative IR, deterministic compiler and cinematic recipes on top of HyperFrames",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "hyperstudio": "node packages/cli/src/cli.ts",
+    "lint": "biome check --error-on-warnings .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"packages/*/src/**/*.test.ts\" \"tests/**/*.test.ts\"",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test",
+    "skill:link": "mkdir -p .claude/skills && ln -sfn ../../skills/hyperstudio-director .claude/skills/hyperstudio-director",
+    "prepare": "husky",
+    "test:unit": "node --test \"packages/*/src/**/*.test.ts\"",
+    "test:integration": "node --test \"tests/integration/*.test.ts\"",
+    "test:regression": "node --test \"tests/regression/*.test.ts\"",
+    "test:update": "UPDATE_GOLDEN=1 node --test \"tests/regression/*.test.ts\"",
+    "test:e2e": "HYPERSTUDIO_E2E=1 node --test \"tests/integration/*.e2e.test.ts\""
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.0",
+    "@types/node": "^24.0.0",
+    "husky": "^9.1.7",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,7 @@
+node_modules/
+build/
+renders/
+.hyperframes/
+*.mp4
+.tmp-*/
+.claude/
