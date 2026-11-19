@@ -29,6 +29,7 @@
     #product-take-says { position: absolute; inset: 0; pointer-events: none; }
     /* A column of clear stage for the film's lines: the interface is seen beside it, never under it. */
     .pt-gutter { position: absolute; top: 0; bottom: 0; width: 46%; opacity: 0; }
+    #product-take-gutter-band { top: auto; left: 0; right: 0; width: auto; height: 31%; }
     .pt-say { position: absolute; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; white-space: nowrap; }
     /* Font names are written out: HyperFrames loads a bundled font only when it finds its name in the styles. */
     .pt-d-inter { font-family: "Inter", sans-serif; } .pt-d-outfit { font-family: "Outfit", sans-serif; } .pt-d-montserrat { font-family: "Montserrat", sans-serif; } .pt-d-poppins { font-family: "Poppins", sans-serif; }
@@ -56,6 +57,7 @@
       <div id="product-take-dof" data-layout-allow-occlusion data-layout-ignore></div>
       <div id="product-take-gutter-left" class="pt-gutter" style="left: 0" data-layout-allow-occlusion data-layout-ignore></div>
       <div id="product-take-gutter-right" class="pt-gutter" style="right: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="product-take-gutter-band" class="pt-gutter" data-layout-allow-occlusion data-layout-ignore></div>
       <div id="product-take-says" data-layout-allow-occlusion></div>
     </div>
     <script type="application/json" id="product-take-ui">{}</script>
@@ -128,7 +130,7 @@
       // Where in the frame the subject sits: centred, or to one side when type shares the frame.
       var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
       var side = SIDES[v.side] || 0.5;
-      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66, bleed: 0.78 };
+      var LEVELS = { top: 0.08, high: 0.36, middle: 0.5, low: 0.66, bleed: 0.78 };
       var level = LEVELS[v.level] || 0.5;
       var frame = function (r, f, cap) {
         var room = side === 0.5 ? 1 : 0.56;
@@ -315,13 +317,16 @@
         under: mid("66%", 0), over: mid("22%", -100), foot: mid("80%", 0),
         "top-left": edge("left", "top", "left"), "top-right": edge("right", "top", "right"),
         "bottom-left": edge("left", "bottom", "left"), "bottom-right": edge("right", "bottom", "right"),
+        band: { left: M, bottom: 7.5 * U + "px", yPercent: 0, textAlign: "left" },
       };
       // The column behind side-set lines appears with the first of them and leaves with the last.
-      ["left", "right"].forEach(function (name) {
+      // Lines set to the sides or in the band at the bottom get a clear strip of stage behind them.
+      var TOWARDS = { left: "right", right: "left", band: "top" };
+      ["left", "right", "band"].forEach(function (name) {
         var mine = says.filter(function (b) { return (b.place || "left") === name; });
         if (!mine.length) return;
         var gutter = $("gutter-" + name);
-        gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 78%, transparent)";
+        gutter.style.background = "linear-gradient(to " + TOWARDS[name] + ", " + v.background + " 78%, transparent)";
         var last = mine[mine.length - 1];
         var to = last.over ? last.at + Number(last.over) : D + 1;
         tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
@@ -356,7 +361,7 @@
         if (b.at <= 0.05) tl.fromTo(lines, { yPercent: 6, opacity: 1 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, 0);
         else tl.fromTo(lines, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.75, ease: "expo.out", stagger: 0.1 }, b.at);
         if (until < D) tl.fromTo(block, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, Math.max(b.at + 0.4, until - 0.3));
-        placed.push({ block: block, lines: lines, text: String(b.text || "").replace(/\n/g, " "), from: b.at + 0.8, to: Math.min(until - 0.3, D), beside: b.place === "left" || b.place === "right" || !b.place });
+        placed.push({ block: block, lines: lines, text: String(b.text || "").replace(/\n/g, " "), from: b.at + 0.8, to: Math.min(until - 0.3, D), beside: b.place === "left" || b.place === "right" || b.place === "band" || !b.place });
       });
 
       tl.set({}, {}, D);

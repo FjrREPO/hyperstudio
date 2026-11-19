@@ -118,6 +118,10 @@
       "default": "middle",
       "options": [
         {
+          "value": "top",
+          "label": "Near the top of the frame"
+        },
+        {
           "value": "high",
           "label": "High"
         },
