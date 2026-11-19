@@ -76,7 +76,8 @@ packages/
   ir/          @hyperstudio/ir        The Creative IR schema (Zod)
   compiler/    @hyperstudio/compiler  IR → HyperFrames project; the only code that knows HyperFrames
   recipes/     @hyperstudio/recipes   blocks/<name>/{registry-item.json, <name>.html}
-  cli/         hyperstudio            compile, review, recipes
+  assets/      @hyperstudio/assets    Free asset search, the licence gate, the download ledger
+  cli/         hyperstudio            compile, review, recipes, assets
 skills/hyperstudio-director/          Claude Code skill: direction → shots → IR → review → render
 examples/                             A film per folder: video.json, screens/, assets/, REVIEW.md
 tests/                                integration/ and regression/ (unit tests sit beside the code)
@@ -89,6 +90,7 @@ docs/
 - [Compiler](docs/COMPILER.md)
 - [Recipe development](docs/RECIPE-DEVELOPMENT.md)
 - [Example workflow](docs/EXAMPLE-WORKFLOW.md)
+- [Asset engine](docs/ASSET-ENGINE.md) · [Asset licensing](docs/ASSET-LICENSING.md)
 - [Creative quality review and proposal](docs/CREATIVE-QUALITY-PROPOSAL.md): why the first approach was replaced
 - [Architecture](docs/ARCHITECTURE.md) · [Technical decisions](docs/TECHNICAL-DECISIONS.md) ·
   [HyperFrames research](docs/HYPERFRAMES-RESEARCH.md)
