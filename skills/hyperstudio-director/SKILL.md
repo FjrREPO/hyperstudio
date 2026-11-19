@@ -156,6 +156,22 @@ file** and look at them once more.
 
 Report plainly: what the film is, what is a placeholder, and what you would still improve.
 
+## Finding free media
+
+When a film needs a texture, a photograph or a sound the person has not supplied:
+
+```bash
+pnpm -s hyperstudio assets search "soft piano" --kind audio     # image, audio or video
+pnpm -s hyperstudio assets download 1 --to <film>/assets --name bed
+pnpm -s hyperstudio assets list <film>/assets                   # licences and credits owed
+```
+
+Only assets whose own licence allows commercial use and editing are returned. Never use `--accept-review`
+yourself: it records that a **person** read a licence. `compile` lists the credits a film owes; put them in
+the film or its description. Licence data comes from the source and can be wrong, so say which assets came
+from where when you report. This never replaces the real product: do not search for a stand-in screenshot.
+See `docs/ASSET-ENGINE.md`.
+
 ## Sound
 
 Music and sound design need a real source: a track the person supplies, or `media-use` (the free catalogue
