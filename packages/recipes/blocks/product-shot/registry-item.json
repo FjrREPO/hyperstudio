@@ -1,0 +1,354 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "product-shot",
+  "type": "hyperframes:block",
+  "title": "Product Shot",
+  "description": "One shot of a real product screen. The camera frames one named region of the screenshot and moves to another: wide to close, a pan, or a hold. On top of the screenshot it can move a cursor to a component and click it, type text into an input, and outline a component. A short label can sit in the frame. Cut several of these together to show a product working; one shot shows one thing.",
+  "tags": ["product", "ui", "screen", "camera", "cursor", "typing", "saas"],
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 2,
+  "hyperstudio": {
+    "minDuration": 0.8,
+    "maxDuration": 4,
+    "required": [],
+    "screen": true
+  },
+  "files": [
+    {
+      "path": "product-shot.html",
+      "target": "compositions/product-shot.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "screen",
+      "type": "image",
+      "role": "content",
+      "label": "Screen",
+      "description": "Supplied by the compiler from the scene's screen.",
+      "default": ""
+    },
+    {
+      "id": "screenMeta",
+      "type": "string",
+      "role": "content",
+      "label": "Screen geometry",
+      "description": "Supplied by the compiler: the screen's size and regions as JSON.",
+      "default": ""
+    },
+    {
+      "id": "isolate",
+      "type": "string",
+      "role": "region",
+      "label": "Isolated component",
+      "description": "Show only this component of the screen, floating on the stage, instead of the whole window. The camera, cursor and outline still use region names.",
+      "default": ""
+    },
+    {
+      "id": "radius",
+      "type": "number",
+      "role": "look",
+      "label": "Corner radius",
+      "description": "Corner radius of what is shown, in the screenshot's pixels. Match the isolated component's own corners.",
+      "default": 14,
+      "min": 0,
+      "max": 48,
+      "step": 1
+    },
+    {
+      "id": "from",
+      "type": "string",
+      "role": "region",
+      "label": "Start framing",
+      "description": "The region the camera frames at the start. window is the whole screen.",
+      "default": "window"
+    },
+    {
+      "id": "to",
+      "type": "string",
+      "role": "region",
+      "label": "End framing",
+      "description": "The region the camera frames at the end. Empty holds on the start framing with a slow drift.",
+      "default": ""
+    },
+    {
+      "id": "fill",
+      "type": "number",
+      "role": "layout",
+      "label": "Frame fill",
+      "description": "How much of the frame the framed region may take, by width or height. Lower leaves more space around it.",
+      "default": 0.78,
+      "min": 0.3,
+      "max": 1,
+      "step": 0.02
+    },
+    {
+      "id": "move",
+      "type": "enum",
+      "role": "motion",
+      "label": "Camera move",
+      "default": "settle",
+      "options": [
+        {
+          "value": "settle",
+          "label": "Fast out, long settle"
+        },
+        {
+          "value": "ease",
+          "label": "Ease in and out"
+        },
+        {
+          "value": "drift",
+          "label": "Constant slow drift"
+        }
+      ]
+    },
+    {
+      "id": "tilt",
+      "type": "enum",
+      "role": "layout",
+      "label": "Perspective",
+      "description": "Turn the screen in perspective. A 2.5D transform of the flat screenshot.",
+      "default": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "Flat"
+        },
+        {
+          "value": "left",
+          "label": "Turned to the left"
+        },
+        {
+          "value": "right",
+          "label": "Turned to the right"
+        }
+      ]
+    },
+    {
+      "id": "enter",
+      "type": "enum",
+      "role": "motion",
+      "label": "Entrance",
+      "description": "none for a cut. rise brings the screen up into the frame, for the first time the product is seen.",
+      "default": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "None (cut)"
+        },
+        {
+          "value": "rise",
+          "label": "Rise in"
+        }
+      ]
+    },
+    {
+      "id": "cursor",
+      "type": "string",
+      "role": "region",
+      "label": "Cursor target",
+      "description": "The component the cursor travels to. Empty for no cursor.",
+      "default": ""
+    },
+    {
+      "id": "click",
+      "type": "boolean",
+      "role": "motion",
+      "label": "Click",
+      "description": "Click when the cursor arrives.",
+      "default": true
+    },
+    {
+      "id": "clickAt",
+      "type": "number",
+      "role": "motion",
+      "label": "Click moment",
+      "description": "When the cursor arrives, as a fraction of the shot.",
+      "default": 0.62,
+      "min": 0.2,
+      "max": 0.95,
+      "step": 0.01
+    },
+    {
+      "id": "highlight",
+      "type": "string",
+      "role": "region",
+      "label": "Outlined component",
+      "description": "A component to outline in the accent colour. Empty for none.",
+      "default": ""
+    },
+    {
+      "id": "typeIn",
+      "type": "string",
+      "role": "region",
+      "label": "Typed-into component",
+      "description": "The input the text is typed into. Use the text area itself, not the whole control.",
+      "default": ""
+    },
+    {
+      "id": "typeText",
+      "type": "string",
+      "role": "content",
+      "label": "Typed text",
+      "description": "What gets typed. It should be what the next screen shows as entered.",
+      "default": "",
+      "maxLength": 64
+    },
+    {
+      "id": "typeColor",
+      "type": "color",
+      "role": "look",
+      "label": "Typed text colour",
+      "description": "Match the input's text colour in the screenshot.",
+      "default": "#17150f"
+    },
+    {
+      "id": "typeBackground",
+      "type": "color",
+      "role": "look",
+      "label": "Input background",
+      "description": "Match the input's background in the screenshot; it covers the placeholder.",
+      "default": "#ffffff"
+    },
+    {
+      "id": "label",
+      "type": "string",
+      "role": "content",
+      "label": "Label",
+      "description": "A few words naming what the shot shows. Empty for none.",
+      "default": "",
+      "maxLength": 40
+    },
+    {
+      "id": "emphasis",
+      "type": "string",
+      "role": "content",
+      "label": "Emphasised word",
+      "description": "A word of the label to set in the accent colour.",
+      "default": "",
+      "maxLength": 20
+    },
+    {
+      "id": "labelAt",
+      "type": "enum",
+      "role": "layout",
+      "label": "Label position",
+      "default": "bottom-left",
+      "options": [
+        {
+          "value": "bottom-left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom-center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left"
+        },
+        {
+          "value": "top-center",
+          "label": "Top center"
+        }
+      ]
+    },
+    {
+      "id": "background",
+      "type": "color",
+      "role": "brand",
+      "label": "Stage background",
+      "default": "#f3efe6"
+    },
+    {
+      "id": "ink",
+      "type": "color",
+      "role": "brand",
+      "label": "Text colour",
+      "default": "#17150f"
+    },
+    {
+      "id": "accent",
+      "type": "color",
+      "role": "brand",
+      "label": "Accent colour",
+      "description": "The film's one accent. Used for emphasis only.",
+      "default": "#2747f0"
+    },
+    {
+      "id": "displayFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Display typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "Playfair Display",
+          "label": "Playfair Display"
+        },
+        {
+          "value": "EB Garamond",
+          "label": "EB Garamond"
+        },
+        {
+          "value": "Oswald",
+          "label": "Oswald"
+        },
+        {
+          "value": "Archivo Black",
+          "label": "Archivo Black"
+        }
+      ]
+    },
+    {
+      "id": "textFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Text typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "IBM Plex Mono",
+          "label": "IBM Plex Mono"
+        }
+      ]
+    }
+  ]
+}
