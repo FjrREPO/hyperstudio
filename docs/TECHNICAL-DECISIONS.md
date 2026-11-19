@@ -203,6 +203,16 @@ changes state, so the camera's behaviour follows the story. `veil` covers everyt
 stage's colour, so the film ends on the product's own mark, where it sits in the interface, instead of
 cutting to a logo card. `statement` and `brand-close` remain for films that want them.
 
+## D31. A second product, to test that the direction is not a template
+
+One good film of one product proves little. `examples/marlow-launch-film` was made with the same recipe and
+no new one, and differs from the Lumen film in structure (a journey with no cut and no "old way"), in where
+the problem is told (the product's own transcript), in composition (product full-width, words in a band), in
+type, in camera and in ending. The recipe gained only a caption band and a higher vertical placement.
+
+What it does not test: both example interfaces were written by the same hand as the films. Whether the
+quality holds for a product that was not is still open.
+
 ## D30. A take audits its own composition
 
 HyperFrames' layout checks cannot see into a shadow root, and the film's lines are exempt from them, so a
