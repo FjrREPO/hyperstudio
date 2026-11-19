@@ -17,6 +17,11 @@ pnpm -s hyperstudio review <film>/video.json
 It compiles, runs HyperFrames' check, takes two frames from every shot (early and late), and writes
 `<film>/REVIEW.md` if there is none. Over MCP, `review_video` does the same and returns the sheets as images.
 
+Run it with `--motion`. That renders a draft, reports the share of still frames and the longest freeze, and
+writes one strip per shot at eight frames a second; open them. Warnings in the check that start with
+`hyperstudio:` come from the film's own audit: a line outside the safe area, a line on top of the interface,
+or a camera move that crops its subject. Each is a fault to fix in the IR, not to wave through.
+
 Open every contact sheet. Then open at least one full-size frame per shot: small frames hide clipped text,
 labels sitting on interface text, and soft images.
 

@@ -203,6 +203,15 @@ changes state, so the camera's behaviour follows the story. `veil` covers everyt
 stage's colour, so the film ends on the product's own mark, where it sits in the interface, instead of
 cutting to a logo card. `statement` and `brand-close` remain for films that want them.
 
+## D30. A take audits its own composition
+
+HyperFrames' layout checks cannot see into a shadow root, and the film's lines are exempt from them, so a
+headline touching the interface passed `check` and was found by a person. Each take now steps through its
+timeline once at build time and reports with `console.warn`, which `hyperframes check` lists as warnings: a
+line outside the safe area (3% of the frame), a line overlapping the interface unless it has its own column,
+and a camera move whose subject ends partly outside the frame. It measures boxes; it cannot judge whether a
+composition is good.
+
 ## D29. An art direction is a composition system, not a palette
 
 The editorial and cinematic cuts were reviewed as "the same composition in two colours": headline left,
