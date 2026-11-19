@@ -42,9 +42,15 @@ export interface Review {
   motion?: Motion;
 }
 
+/**
+ * The HyperFrames release every command runs. Pinned: an unpinned `npx hyperframes` takes whatever was
+ * published last, so the same IR could render differently, or not at all, from one day to the next.
+ */
+export const HYPERFRAMES = "hyperframes@0.9.69";
+
 /** Run a HyperFrames CLI command in a project. */
 export const hyperframes = (cwd: string, args: string[]) =>
-  spawnSync("npx", ["-y", "hyperframes", ...args], { cwd, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+  spawnSync("npx", ["-y", HYPERFRAMES, ...args], { cwd, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 
 /**
  * Compile a film and gather what a reviewer needs.

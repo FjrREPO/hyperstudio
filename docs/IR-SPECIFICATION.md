@@ -159,18 +159,26 @@ start.
 ]
 ```
 
-| `do`        | What happens                                                                | Uses                             |
-| ----------- | --------------------------------------------------------------------------- | -------------------------------- |
-| `camera`    | The camera moves to frame a region, starting at `at`                        | `target`, `fill`, `over`, `ease` |
-| `cursor`    | The pointer arrives at a region at `at`                                     | `target`, `over` (travel time)   |
-| `click`     | As `cursor`, then a click; with `state`, the interface switches as it lands | `target`, `state`, `over`        |
-| `type`      | Text is typed into an input                                                 | `target`, `text`, `over`         |
-| `state`     | The interface switches state                                                | `state`                          |
-| `reveal`    | The region's `data-reveal` parts arrive one by one                          | `target`, `over`                 |
-| `draw`      | The region's `data-draw` lines are drawn                                    | `target`, `over`                 |
-| `highlight` | The region is outlined; with `over`, the outline leaves after that long     | `target`, `over`                 |
+| `do`        | What happens                                                                                                                                                                           | Uses                                                                                                 |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `camera`    | The camera moves to frame a region, starting at `at`. It can turn to another angle (`tilt`), pull focus (`focus`), and move the interface to one side of the frame (`side`) as it goes | `target`, `fill`, `over`, `ease`, `tilt`, `focus`, `side`                                            |
+| `cursor`    | The pointer arrives at a region at `at`                                                                                                                                                | `target`, `over` (travel time)                                                                       |
+| `click`     | As `cursor`, then a click; with `state`, the interface switches as it lands                                                                                                            | `target`, `state`, `over`                                                                            |
+| `type`      | Text is typed into an input                                                                                                                                                            | `target`, `text`, `over`                                                                             |
+| `state`     | The interface switches state                                                                                                                                                           | `state`                                                                                              |
+| `reveal`    | The region's `data-reveal` parts arrive one by one                                                                                                                                     | `target`, `over`                                                                                     |
+| `draw`      | The region's `data-draw` lines are drawn                                                                                                                                               | `target`, `over`                                                                                     |
+| `count`     | A figure the page shows counts up to its own value                                                                                                                                     | `target`, `over`                                                                                     |
+| `highlight` | The region is outlined; with `over`, the outline leaves after that long                                                                                                                | `target`, `over`                                                                                     |
+| `say`       | One of the film's own lines is set in the frame. It stays until the next line in the same place, or for `over`                                                                         | `text`, `place` (`left`, `right`, `under`, `over`, `foot`), `size` (`hero`, `title`, `text`), `over` |
+| `veil`      | Everything but the region is covered in the stage's colour: the interface resolves into that part, usually its own mark, to end the film                                               | `target`, `over`                                                                                     |
 
-The compiler rejects a target or state the page does not have, and warns when nothing starts for more than
+A line set to `left` or `right` gets a clear column of stage behind it, so type and interface never overlap;
+put the interface on the other side with `side`. In the page, an element marked `data-leave` (a loading
+skeleton, a status) fades out as its region is revealed, and one marked `data-shimmer` breathes while shown.
+
+The compiler rejects a target or state the page does not have, rejects a line given too little time to be
+read, and warns when nothing starts for more than
 1.5 s: an interface that sits untouched reads as a frozen picture.
 
 ## `audio[]`

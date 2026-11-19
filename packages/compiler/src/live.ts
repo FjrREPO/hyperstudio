@@ -48,7 +48,17 @@ export function readLivePage(file: string): LivePage | string {
 
 /** The longest stretch of a take in which no beat starts, before it reads as a frozen screen. */
 const LONGEST_QUIET = 1.5;
-const NEEDS_TARGET = new Set(["camera", "cursor", "click", "type", "reveal", "draw", "highlight"]);
+const NEEDS_TARGET = new Set([
+  "camera",
+  "cursor",
+  "click",
+  "type",
+  "reveal",
+  "draw",
+  "count",
+  "highlight",
+  "veil",
+]);
 
 type Report = (path: string, message: string) => void;
 
@@ -83,7 +93,15 @@ export function checkBeats(
       fail(`${path}.target`, `"${beat.do}" needs a target region`);
     if (beat.target !== undefined && beat.target !== "window" && !page.regions.includes(beat.target))
       fail(`${path}.target`, `"${beat.target}" is not a region of this page. ${regions}`);
-    if (beat.do === "type" && !beat.text) fail(`${path}.text`, '"type" needs the text to type');
+    if ((beat.do === "type" || beat.do === "say") && !beat.text)
+      fail(`${path}.text`, `"${beat.do}" needs its text`);
+    // A line has to be read: roughly half a second, and a third of a second a word.
+    const words = beat.do === "say" ? (beat.text ?? "").trim().split(/\s+/).length : 0;
+    if (words > 0 && beat.over !== undefined && beat.over < 0.5 + words * 0.3 - 1e-6)
+      fail(
+        `${path}.over`,
+        `${beat.over}s is too short to read ${words} words; give it ${(0.5 + words * 0.3).toFixed(1)}s`,
+      );
     if (beat.do === "state" && beat.state === undefined)
       fail(`${path}.state`, '"state" needs the state to switch to');
     if (beat.state !== undefined && !page.states.includes(beat.state))
@@ -94,7 +112,12 @@ export function checkBeats(
   let quiet = 0;
   for (const beat of [...scene.beats].sort((a, b) => a.at - b.at)) {
     quiet = Math.max(quiet, beat.at - covered);
-    const length = beat.over ?? (beat.do === "type" ? (beat.text?.length ?? 0) * 0.042 : 0.3);
+    // Typing takes its length; a line of the film's own takes the time it needs to be read.
+    const text = beat.text ?? "";
+    const natural =
+      { type: text.length * 0.042, say: 0.5 + text.trim().split(/\s+/).length * 0.3 }[beat.do as string] ??
+      0.3;
+    const length = beat.over ?? natural;
     covered = Math.max(covered, beat.at + length);
   }
   quiet = Math.max(quiet, scene.duration - covered);

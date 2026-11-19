@@ -31,6 +31,10 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - Live screens: a screen can be the product's own HTML (`screens.*.html`), driven by a scene's `beats`
   (camera, cursor, click, type, state, reveal, draw, highlight). New recipe `product-take` plays one
   continuous take of it.
+- Takes can carry the whole film: `say` sets the film's lines in the frame beside the product, camera beats
+  can turn, pull focus and move the product to one side, `count` counts a figure up, `veil` resolves the
+  interface into its own mark. Loading and result are one element in the page (`data-leave`, `data-shimmer`).
+- The HyperFrames release is pinned (0.9.69) wherever HyperStudio launches it.
 - `hyperstudio review --motion`: a draft render, the share of still frames, the longest freeze, and one strip
   per shot at eight frames a second.
 - The compiler warns when nothing starts in a take for more than 1.5 s.
