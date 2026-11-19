@@ -78,6 +78,8 @@ test("beats are checked against the page they drive", () => {
   assert.deepEqual(problems([{ at: 0.5, do: "type", target: "toggle" }]), ["scenes.0.beats.0.text"]);
   assert.deepEqual(problems([{ at: 9, do: "cursor", target: "menu" }]), ["scenes.0.beats.0.at"]);
   assert.deepEqual(problems([]), ["scenes.0.beats"]);
+  assert.deepEqual(problems([{ at: 0.2, do: "scroll", by: 300, over: 2 }]), ["scenes.0.beats.0.target"]);
+  assert.deepEqual(problems([{ at: 0.2, do: "scroll", target: "menu", by: 300, over: 2.5 }]), []);
   // The film's own lines: they need text, and long enough on screen to be read.
   assert.deepEqual(problems([{ at: 0, do: "say", place: "left", size: "hero" }]), ["scenes.0.beats.0.text"]);
   assert.deepEqual(problems([{ at: 0, do: "say", text: "Four words to read", over: 0.8 }]), [

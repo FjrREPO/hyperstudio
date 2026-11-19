@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>The old way (example)</title>
+    <!--
+      "The old way", for the opening of the Lumen film: a billing export in a spreadsheet, and the thread
+      where someone was asked to make sense of it. Not a real product; every row and message is invented
+      sample data. A live page like index.html: one .app element, shown from its data-state.
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; }
+      .app { --line: #dcdfe4; --ink: #1c1d21; --muted: #6d7078; width: 1440px; height: 900px; overflow: hidden; display: flex; flex-direction: column; background: #fff; color: var(--ink); font: 14px/1.3 Inter, sans-serif; text-align: left; -webkit-font-smoothing: antialiased; }
+      .top { display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 18px; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 15px; }
+      .top i { width: 22px; height: 22px; border-radius: 5px; background: #1f9d55; }
+      .top span { color: var(--muted); font-weight: 400; font-size: 13px; }
+      .tools { display: flex; gap: 22px; height: 38px; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+      .main { flex: 1; display: flex; min-height: 0; }
+      .grid { flex: 1; overflow: hidden; font-variant-numeric: tabular-nums; }
+      .r { display: grid; grid-template-columns: 130px 1fr 130px 120px 130px 110px; height: 34px; align-items: center; border-bottom: 1px solid #eceef1; }
+      .r span { padding: 0 14px; white-space: nowrap; overflow: hidden; border-right: 1px solid #eceef1; height: 100%; display: flex; align-items: center; }
+      .r span:nth-child(5) { justify-content: flex-end; }
+      .head { background: #f4f5f7; font-weight: 600; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); }
+      .thread { width: 400px; border-left: 1px solid var(--line); background: #fafafb; display: flex; flex-direction: column; padding: 18px; gap: 12px; }
+      .app[data-state="sheet"] .thread { display: none; }
+      .thread h2 { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+      .msg { padding: 12px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--line); font-size: 15px; line-height: 1.4; }
+      .msg b { display: block; font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+      .msg.me { background: #1c1d21; color: #fff; border-color: #1c1d21; align-self: flex-end; }
+      .msg.me b { color: #a9acb5; }
+      .app:not([data-state="waiting"]) .late { display: none; }
+      .seen { align-self: flex-end; font-size: 12px; color: var(--muted); }
+      .box { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 12px; border: 1px solid #c9ccd3; background: #fff; }
+      .box .in { flex: 1; height: 24px; line-height: 24px; font-size: 15px; color: #9a9da6; white-space: nowrap; overflow: hidden; }
+      .box .in[data-typed] { color: var(--ink); }
+      .box .go { padding: 7px 14px; border-radius: 9px; background: #1c1d21; color: #fff; font-weight: 600; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <div class="app" data-state="sheet" data-states="sheet thread waiting" data-region="window">
+      <div class="top" data-region="file"><i></i>q3_export_final_v7.csv <span>2,318 rows · exported Monday</span></div>
+      <div class="tools"><span>File</span><span>Edit</span><span>Data</span><span>Filter: none</span><span>Pivot table…</span></div>
+      <div class="main">
+        <div class="grid" data-region="grid"><div>
+          <div class="r head" data-region="columns"><span>Invoice</span><span>Account</span><span data-region="plan-column">Plan</span><span>Date</span><span>Amount</span><span>Status</span></div>
+<div class="r"><span>INV-20418</span><span>Northwind</span><span>Team</span><span>Jul 27</span><span>291.00</span><span>open</span></div>
+<div class="r"><span>INV-20421</span><span>Harrow</span><span>Starter</span><span>Jul 02</span><span>40.00</span><span>paid</span></div>
+<div class="r"><span>INV-20424</span><span>Brightline</span><span>Team</span><span>Sep 14</span><span>207.00</span><span>paid</span></div>
+<div class="r"><span>INV-20427</span><span>Stannard</span><span>Scale</span><span>Jul 19</span><span>2,191.00</span><span>open</span></div>
+<div class="r"><span>INV-20430</span><span>Quillon</span><span>Team</span><span>Jul 10</span><span>246.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20433</span><span>Tidewater</span><span>Starter</span><span>Sep 27</span><span>46.00</span><span>paid</span></div>
+<div class="r"><span>INV-20436</span><span>Oakfield</span><span>Starter</span><span>Aug 04</span><span>47.00</span><span>open</span></div>
+<div class="r"><span>INV-20439</span><span>Wexcombe</span><span>Scale</span><span>Jul 16</span><span>1,022.00</span><span>open</span></div>
+<div class="r"><span>INV-20442</span><span>Corbel</span><span>Team</span><span>Aug 10</span><span>309.00</span><span>paid</span></div>
+<div class="r"><span>INV-20445</span><span>Tidewater</span><span>Starter</span><span>Sep 16</span><span>36.00</span><span>paid</span></div>
+<div class="r"><span>INV-20448</span><span>Brightline</span><span>Scale</span><span>Jul 17</span><span>2,147.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20451</span><span>Sable</span><span>Starter</span><span>Jul 22</span><span>39.00</span><span>paid</span></div>
+<div class="r"><span>INV-20454</span><span>Junction 9</span><span>Scale</span><span>Sep 12</span><span>1,542.00</span><span>open</span></div>
+<div class="r"><span>INV-20457</span><span>Brightline</span><span>Team</span><span>Jul 09</span><span>394.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20460</span><span>Tidewater</span><span>Scale</span><span>Sep 19</span><span>2,397.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20463</span><span>Fennel</span><span>Team</span><span>Jul 15</span><span>417.00</span><span>paid</span></div>
+<div class="r"><span>INV-20466</span><span>Northwind</span><span>Starter</span><span>Jul 25</span><span>48.00</span><span>paid</span></div>
+<div class="r"><span>INV-20469</span><span>Linden Works</span><span>Starter</span><span>Jul 06</span><span>36.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20472</span><span>Sable</span><span>Team</span><span>Sep 09</span><span>261.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20475</span><span>Brightline</span><span>Team</span><span>Jul 05</span><span>249.00</span><span>paid</span></div>
+<div class="r"><span>INV-20478</span><span>Stannard</span><span>Scale</span><span>Jul 09</span><span>1,893.00</span><span>paid</span></div>
+<div class="r"><span>INV-20481</span><span>Fennel</span><span>Starter</span><span>Sep 19</span><span>33.00</span><span>paid</span></div>
+<div class="r"><span>INV-20484</span><span>Northwind</span><span>Starter</span><span>Aug 28</span><span>45.00</span><span>open</span></div>
+<div class="r"><span>INV-20487</span><span>Kestrel Labs</span><span>Team</span><span>Aug 21</span><span>292.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20490</span><span>Corbel</span><span>Starter</span><span>Jul 04</span><span>35.00</span><span>paid</span></div>
+<div class="r"><span>INV-20493</span><span>Stannard</span><span>Scale</span><span>Jul 18</span><span>900.00</span><span>paid</span></div>
+<div class="r"><span>INV-20496</span><span>Oakfield</span><span>Team</span><span>Sep 13</span><span>196.00</span><span>paid</span></div>
+<div class="r"><span>INV-20499</span><span>Fennel</span><span>Scale</span><span>Aug 04</span><span>2,133.00</span><span>paid</span></div>
+<div class="r"><span>INV-20502</span><span>Tidewater</span><span>Team</span><span>Jul 05</span><span>312.00</span><span>paid</span></div>
+<div class="r"><span>INV-20505</span><span>Linden Works</span><span>Scale</span><span>Sep 06</span><span>1,442.00</span><span>open</span></div>
+<div class="r"><span>INV-20508</span><span>Pemberton</span><span>Starter</span><span>Sep 18</span><span>35.00</span><span>paid</span></div>
+<div class="r"><span>INV-20511</span><span>Marlow Press</span><span>Scale</span><span>Sep 12</span><span>1,086.00</span><span>paid</span></div>
+<div class="r"><span>INV-20514</span><span>Harrow</span><span>Team</span><span>Aug 21</span><span>326.00</span><span>paid</span></div>
+<div class="r"><span>INV-20517</span><span>Greywell</span><span>Scale</span><span>Sep 26</span><span>1,390.00</span><span>paid</span></div>
+<div class="r"><span>INV-20520</span><span>Alder & Co</span><span>Starter</span><span>Jul 26</span><span>45.00</span><span>paid</span></div>
+<div class="r"><span>INV-20523</span><span>Wexcombe</span><span>Team</span><span>Aug 15</span><span>239.00</span><span>paid</span></div>
+<div class="r"><span>INV-20526</span><span>Halcyon</span><span>Team</span><span>Aug 07</span><span>246.00</span><span>paid</span></div>
+<div class="r"><span>INV-20529</span><span>Alder & Co</span><span>Starter</span><span>Aug 21</span><span>44.00</span><span>paid</span></div>
+<div class="r"><span>INV-20532</span><span>Kestrel Labs</span><span>Scale</span><span>Aug 26</span><span>2,252.00</span><span>paid</span></div>
+<div class="r"><span>INV-20535</span><span>Junction 9</span><span>Team</span><span>Jul 26</span><span>301.00</span><span>refunded</span></div>
+<div class="r"><span>INV-20538</span><span>Vantage Rail</span><span>Team</span><span>Jul 05</span><span>380.00</span><span>paid</span></div>
+<div class="r"><span>INV-20541</span><span>Pemberton</span><span>Starter</span><span>Sep 27</span><span>47.00</span><span>open</span></div>
+<div class="r"><span>INV-20544</span><span>Quillon</span><span>Team</span><span>Jul 01</span><span>229.00</span><span>paid</span></div>
+<div class="r"><span>INV-20547</span><span>Pemberton</span><span>Scale</span><span>Aug 28</span><span>1,978.00</span><span>paid</span></div>
+<div class="r"><span>INV-20550</span><span>Tidewater</span><span>Starter</span><span>Sep 08</span><span>29.00</span><span>open</span></div>
+<div class="r"><span>INV-20553</span><span>Pemberton</span><span>Team</span><span>Jul 24</span><span>329.00</span><span>paid</span></div>
+        </div></div>
+        <aside class="thread" data-region="thread">
+          <h2>#finance</h2>
+          <div class="msg me" data-reveal><b>Dana · Monday</b>Can someone pull Q3 growth by plan?</div>
+          <div class="msg" data-reveal><b>Sam · Monday</b>On it. I need to clean the export first.</div>
+          <div class="msg" data-reveal><b>Sam · Tuesday</b>Refunds are double counted. Looking into it.</div>
+          <div class="msg me late"><b>Dana · today</b>Any update? The meeting is at ten.</div>
+          <div class="seen late" data-region="seen">Delivered · no reply yet</div>
+          <div class="box" data-region="reply"><div class="in" data-region="reply-input">Reply…</div><span class="go" data-region="reply-send">Send</span></div>
+        </aside>
+      </div>
+    </div>
+    <script>
+      document.querySelector(".app").dataset.state = (location.hash || "#sheet").slice(1);
+    </script>
+  </body>
+</html>

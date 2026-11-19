@@ -34,6 +34,9 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - Takes can carry the whole film: `say` sets the film's lines in the frame beside the product, camera beats
   can turn, pull focus and move the product to one side, `count` counts a figure up, `veil` resolves the
   interface into its own mark. Loading and result are one element in the page (`data-leave`, `data-shimmer`).
+- The benchmark is a 30-second film: the old way as a live page of its own, a reveal through the question
+  bar, the answer filed to a board, and a follow-up question. New beat `scroll`; a film can use several live
+  pages.
 - Two directions that differ in composition, not colour: `say` takes corner placements and a `display` size
   with masked line reveals; camera beats take `level` and `zoom`; `veil` can open as well as close, so a
   product can be introduced through one element; `lens: wide` for an interface seen as an object in space.
