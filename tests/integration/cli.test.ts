@@ -151,6 +151,7 @@ test("audio: providers, dry runs and a missing key never generate or spend", () 
     providers.map((p: { id: string; cost: string }) => [p.id, p.cost]),
     [
       ["local", "none"],
+      ["kokoro", "none"],
       ["system", "none"],
       ["elevenlabs", "plan-credits"],
     ],

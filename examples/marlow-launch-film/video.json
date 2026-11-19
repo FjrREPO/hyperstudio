@@ -311,6 +311,78 @@
       "origin": "placeholder",
       "role": "sfx",
       "volume": 0.6
+    },
+    {
+      "id": "vo-minutes",
+      "src": "assets/vo-minutes.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 0.3,
+      "duration": 1.3333333333
+    },
+    {
+      "id": "vo-notes",
+      "src": "assets/vo-notes.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 3.9,
+      "duration": 1.5
+    },
+    {
+      "id": "vo-click",
+      "src": "assets/vo-click.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 7.1,
+      "duration": 1.0333333333
+    },
+    {
+      "id": "vo-reads",
+      "src": "assets/vo-reads.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 9.4,
+      "duration": 1.5666666667
+    },
+    {
+      "id": "vo-decisions",
+      "src": "assets/vo-decisions.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 11.9,
+      "duration": 1.3
+    },
+    {
+      "id": "vo-owners",
+      "src": "assets/vo-owners.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 15.9,
+      "duration": 1.1666666667
+    },
+    {
+      "id": "vo-sent",
+      "src": "assets/vo-sent.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 21.0,
+      "duration": 1.7666666667
+    },
+    {
+      "id": "vo-close",
+      "src": "assets/vo-close.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 25.9,
+      "duration": 2.2333333333
     }
   ]
 }

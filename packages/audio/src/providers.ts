@@ -1,9 +1,10 @@
 import { spawnSync } from "node:child_process";
+import { kokoroProblem } from "./kokoro.ts";
 
 // Where a voice can come from. Free and local first; anything paid is optional and never chosen silently.
 
 export interface AudioProviderInfo {
-  id: "local" | "system" | "elevenlabs";
+  id: "local" | "kokoro" | "system" | "elevenlabs";
   name: string;
   does: ("voiceover" | "dubbing")[];
   /** What using it costs: nothing, or credits from a plan (which may be a free plan or a paid one). */
@@ -25,6 +26,18 @@ export const AUDIO_PROVIDERS: AudioProviderInfo[] = [
     notes: [
       "Reference the file in the IR's audio list",
       "Free media can be found with: hyperstudio assets search --kind audio",
+    ],
+  },
+  {
+    id: "kokoro",
+    name: "Kokoro (runs on this machine)",
+    does: ["voiceover"],
+    cost: "none",
+    rights:
+      "The model is open-weight under Apache 2.0, and the runtime is MIT; neither restricts what you do with the audio. It is a synthetic voice: say so where disclosure is expected",
+    notes: [
+      "No key, no account, no network once set up: hyperstudio audio setup kokoro (about 190 MB, once)",
+      "The default voice when it is set up. English voices; needs uv and FFmpeg",
     ],
   },
   {
@@ -65,6 +78,12 @@ export function audioProviderStatus(env: NodeJS.ProcessEnv = process.env): Audio
   return AUDIO_PROVIDERS.map((p) => {
     if (p.keyEnv && !env[p.keyEnv]) return { ...p, available: false, reason: `set ${p.keyEnv} to enable it` };
     if (p.id === "system" && !hasSay()) return { ...p, available: false, reason: "needs macOS" };
+    const kokoro = p.id === "kokoro" ? kokoroProblem(env) : null;
+    if (kokoro) return { ...p, available: false, reason: kokoro };
     return { ...p, available: true };
   });
 }
+
+/** The voice used when none is named: Kokoro when it is set up, otherwise the system's draft voice. */
+export const defaultVoiceProvider = (env: NodeJS.ProcessEnv = process.env): "kokoro" | "system" =>
+  kokoroProblem(env) === null ? "kokoro" : "system";

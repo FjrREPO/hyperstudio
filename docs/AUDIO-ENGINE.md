@@ -15,12 +15,13 @@ Everything works without ElevenLabs and without the network. See
 [ELEVENLABS-INTEGRATION.md](ELEVENLABS-INTEGRATION.md), [AUDIO-COST-CONTROLS.md](AUDIO-COST-CONTROLS.md) and
 [AUDIO-LICENSING.md](AUDIO-LICENSING.md).
 
-| Module          | Responsibility                                                               |
-| --------------- | ---------------------------------------------------------------------------- |
-| `providers.ts`  | The providers, what each costs, and what its output may be used for          |
-| `local.ts`      | Read a file's real length and format (`ffprobe`); the system draft voice     |
-| `elevenlabs.ts` | The optional client: plan-aware, estimates first, never repeats a generation |
-| `cost.ts`       | Estimates from the published price list                                      |
+| Module          | Responsibility                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------- |
+| `providers.ts`  | The providers, what each costs, and what its output may be used for                               |
+| `local.ts`      | Read a file's real length and format (`ffprobe`); the system draft voice                          |
+| `kokoro.ts`     | Kokoro, an open-weight voice run on this machine: setup, and one line of narration at a set level |
+| `elevenlabs.ts` | The optional client: plan-aware, estimates first, never repeats a generation                      |
+| `cost.ts`       | Estimates from the published price list                                                           |
 
 ## Commands
 
@@ -39,8 +40,25 @@ pnpm hyperstudio audio dub <film.mp4> --lang id [--confirm-cost]
 pnpm hyperstudio audio status <job-id> --lang id --out <film>-id.mp3
 ```
 
-`tts` defaults to the system voice. `--voice` is a system voice name (`say -v '?'` lists them) or an ElevenLabs
-voice id.
+`tts` uses Kokoro when it is set up, and the system's draft voice otherwise. `--voice` is a Kokoro voice
+(`af_heart` by default; `am_adam`, `bf_emma` and about fifty more), a system voice name (`say -v '?'` lists
+them), or an ElevenLabs voice id.
+
+### Kokoro: a local voice with no key
+
+```bash
+pnpm hyperstudio audio setup kokoro          # once: downloads about 190 MB to ~/.cache/hyperstudio/kokoro
+pnpm hyperstudio audio tts "Ask your revenue." --out <film>/assets/vo-1.m4a
+pnpm hyperstudio audio tts "Ask your revenue." --provider kokoro --voice am_adam --out <film>/assets/vo-1.m4a
+```
+
+[Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) is an open-weight model under Apache 2.0, run here
+through [kokoro-onnx](https://github.com/thewh1teagle/kokoro-onnx) (MIT). It needs `uv` and FFmpeg, no key and
+no network once the model is in place. On an M4 Pro a 3.5 s line takes about 1.2 s. Every line is levelled
+to -16 LUFS so lines made at different times sit together. Neither licence restricts what is done with the
+audio; it is a synthetic voice, so say so where disclosure is expected. The voices are English.
+
+Nothing is downloaded until `audio setup kokoro` is run.
 
 ## Audio in the IR
 

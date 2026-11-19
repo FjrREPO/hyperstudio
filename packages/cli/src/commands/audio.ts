@@ -3,11 +3,18 @@ import {
   audioProviderStatus,
   ConfirmationRequired,
   createElevenLabs,
+  defaultVoiceProvider,
   estimateDub,
   estimateTts,
   inspectAudio,
+  KOKORO_DEFAULT_VOICE,
+  KOKORO_FILES,
+  kokoroDir,
+  kokoroProblem,
+  kokoroVoiceover,
   MissingKeyError,
   QuotaError,
+  setupKokoro,
   spendSummary,
   systemVoiceover,
 } from "@hyperstudio/audio";
@@ -35,6 +42,8 @@ export async function runAudio(sub: string | undefined, args: string[], flags: A
     switch (sub) {
       case "providers":
         return providers(flags);
+      case "setup":
+        return await setup(args[0], flags);
       case "tts":
         return await tts(args.join(" "), flags);
       case "voices":
@@ -46,7 +55,7 @@ export async function runAudio(sub: string | undefined, args: string[], flags: A
       case "status":
         return await status(args[0], flags);
       default:
-        return fail("audio needs one of: providers, tts, voices, dub, inspect, status", 2);
+        return fail("audio needs one of: providers, setup, tts, voices, dub, inspect, status", 2);
     }
   } catch (error) {
     // Each of these means nothing was generated. Say so, and say what would change that.
@@ -79,10 +88,36 @@ function providers(flags: AudioFlags): number {
   return 0;
 }
 
+/** `audio setup kokoro`: download the local voice model. Explicit, because it is a large download. */
+async function setup(what: string | undefined, flags: AudioFlags): Promise<number> {
+  if (what !== "kokoro") return fail("audio setup needs: kokoro", 2);
+  const megabytes = KOKORO_FILES.reduce((sum, f) => sum + f.megabytes, 0);
+  if (flags.dryRun) return say(flags, { wouldDownload: `${megabytes} MB`, to: kokoroDir() });
+  const done = await setupKokoro();
+  return say(flags, {
+    dir: done.dir,
+    downloaded: done.downloaded.length > 0 ? done.downloaded.join(", ") : "nothing: already installed",
+    ready: kokoroProblem() === null,
+    note: kokoroProblem() ?? "Kokoro is ready and is now the default voice.",
+  });
+}
+
 async function tts(text: string, flags: AudioFlags): Promise<number> {
   if (!text) return fail("audio tts needs the text to speak", 2);
   if (!flags.out) return fail("audio tts needs --out <file>", 2);
-  const provider = flags.provider ?? "system";
+  const provider = flags.provider ?? defaultVoiceProvider();
+  if (provider === "kokoro") {
+    if (flags.dryRun) return say(flags, { provider, wouldUse: "no credits, no network" });
+    const file = kokoroVoiceover({ text, out: resolve(flags.out), voice: flags.voice });
+    return say(flags, {
+      file: shown(file),
+      seconds: inspectAudio(file).seconds,
+      provider,
+      voice: flags.voice ?? KOKORO_DEFAULT_VOICE,
+      commercial: true,
+      note: "Generated on this machine by an Apache 2.0 model. A synthetic voice: say so where disclosure is expected.",
+    });
+  }
   if (provider === "system") {
     if (flags.dryRun) return say(flags, { provider, wouldUse: "no credits, no network" });
     const file = systemVoiceover({ text, out: resolve(flags.out), voice: flags.voice });
@@ -95,7 +130,7 @@ async function tts(text: string, flags: AudioFlags): Promise<number> {
       note: "Draft voice. Mark it as a placeholder; replace it before publishing.",
     });
   }
-  if (provider !== "elevenlabs") return fail('--provider must be "system" or "elevenlabs"', 2);
+  if (provider !== "elevenlabs") return fail('--provider must be "kokoro", "system" or "elevenlabs"', 2);
   const model = flags.model ?? "eleven_multilingual_v2";
   const estimate = estimateTts(text, model);
   if (flags.dryRun)
