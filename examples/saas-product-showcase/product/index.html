@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=block" rel="stylesheet" />
     <style>
       .app {
-        --side: #f6f6f7;
+        --side: #efede8;
         --canvas: #ffffff;
         --ink: #0d0e12;
         --muted: #6b6f7b;
@@ -39,7 +39,21 @@
       .app:not([data-state="share"]) #popover,
       .app:not([data-state="thinking"], [data-state="arriving"]) .skeleton,
       .app:not([data-state="thinking"], [data-state="arriving"]) .status { display: none; }
-      .app[data-state="thinking"] [data-reveal] { opacity: 0; }
+      .app[data-state="thinking"] #card [data-reveal] { opacity: 0; }
+      /* Added to a board: the button says so, and the board appears in the sidebar. */
+      .app:not([data-state="boarded"], [data-state="share"], [data-state="followup"]) :is(#board-new, .added) { display: none; }
+      .app:is([data-state="boarded"], [data-state="share"], [data-state="followup"]) .add { display: none; }
+      .board.new { color: var(--ink); font-weight: 600; background: var(--accent-soft); border-radius: 9px; }
+      .btn.added { border-color: #b9e3cf; background: #ecf8f1; color: #0f7a4a; }
+      /* A follow-up: the first answer folds to its headline and the second arrives under it. */
+      .app:not([data-state="followup"]) :is(#question2, #card2) { display: none; }
+      .app[data-state="followup"] #card :is(.chart, .foot, .detail) { display: none; }
+      .app[data-state="followup"] #card { padding-bottom: 26px; }
+      .app[data-state="followup"] .answer-line { font-size: 24px; }
+      .reasons { margin-top: 16px; display: grid; gap: 10px; }
+      .reason { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 500; }
+      .reason i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+      .reason small { margin-left: auto; font-size: 13px; color: var(--faint); font-weight: 400; }
       .app[data-state="asked"] #ask .input, #ask .input[data-typed] { color: var(--ink); }
       .app[data-state="asked"] #ask .send, #ask:has(.input[data-typed]) .send { background: var(--accent); box-shadow: 0 8px 18px rgba(59, 91, 255, 0.35); }
       .card { position: relative; }
@@ -127,11 +141,13 @@
       .popover .to { margin-top: 10px; font-size: 13px; color: #9a9eab; }
       .follow { margin: auto 0 30px; height: 60px; box-shadow: 0 8px 22px rgba(13, 14, 18, 0.06); }
       .follow .send { width: 40px; height: 40px; border-radius: 13px; }
+      .follow:has(.input[data-typed]) .send { background: var(--accent); }
+      .follow .input[data-typed] { color: var(--ink); }
       [hidden] { display: none !important; }
     </style>
   </head>
   <body>
-    <div class="app" data-state="home" data-states="home asked thinking arriving answer share" data-region="window">
+    <div class="app" data-state="home" data-states="home asked thinking arriving answer boarded share followup" data-region="window">
     <aside>
       <div class="brand" data-region="brand"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
       <div class="space"><i></i>Northwind<span>Workspace</span></div>
@@ -145,6 +161,7 @@
       <div class="board"><i style="background: #3b5bff"></i>Revenue weekly</div>
       <div class="board"><i style="background: #ff8a4c"></i>Churn watch</div>
       <div class="board"><i style="background: #18a566"></i>Board pack</div>
+      <div class="board new" id="board-new" data-region="board-new"><i style="background: #3b5bff"></i>Q3 plan growth</div>
       <div class="who"><div class="avatar">DK</div><div><b>Dana Kim</b>Northwind</div></div>
     </aside>
 
@@ -205,7 +222,7 @@
           <div class="foot" data-region="foot" data-reveal>
             <span class="src" data-region="sources"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.5"/><path d="M4 5v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/></svg>From billing · 2,318 invoices · July to September</span>
             <div class="actions" data-region="actions">
-              <span class="btn">Add to board</span>
+              <span class="btn add" data-region="add-board">Add to board</span><span class="btn added" data-region="added-board">Added to boards</span>
               <span class="btn primary" data-region="share-button">Share</span>
               <div class="popover" id="popover" data-region="share-popover">
                 <b>Link copied</b>
@@ -215,7 +232,17 @@
             </div>
           </div>
         </div>
-        <div class="ask follow"><div class="input">Ask a follow-up…</div><div class="send"><svg viewBox="0 0 18 18"><path d="M9 14V4m-4.5 4.5L9 4l4.5 4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+        <div class="question" id="question2" data-region="question2" style="margin-top: 22px">Why did Team grow?</div>
+        <div class="card" id="card2" data-region="answer2">
+          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
+          <div class="answer-line" style="font-size: 26px" data-reveal>Mostly upgrades from <em>Starter</em>.</div>
+          <div class="reasons">
+            <div class="reason" data-reveal><i></i>41 Starter accounts moved up to Team<small>from billing</small></div>
+            <div class="reason" data-reveal><i></i>Two annual Team contracts started in August<small>from CRM</small></div>
+            <div class="reason" data-reveal><i></i>Churn on Team held flat<small>from billing</small></div>
+          </div>
+        </div>
+        <div class="ask follow" data-region="follow"><div class="input" data-region="follow-input">Ask a follow-up…</div><div class="send" data-region="follow-send"><svg viewBox="0 0 18 18"><path d="M9 14V4m-4.5 4.5L9 4l4.5 4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
       </section>
     </main>
 
