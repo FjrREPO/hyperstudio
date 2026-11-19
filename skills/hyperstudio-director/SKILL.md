@@ -1,106 +1,175 @@
 ---
 name: hyperstudio-director
-description: Direct a cinematic video from a brief with HyperStudio - plan the storyboard, write a Creative IR (JSON), pick and configure cinematic recipes, compile it to a HyperFrames project, then check, snapshot and render with the HyperFrames CLI. Use for "make a commercial / product video / launch film" requests in a repo that has HyperStudio, or when asked to write, fix or compile a Creative IR.
+description: Direct a product or brand film with HyperStudio - set the creative direction, capture the real product, storyboard in shots, write a Creative IR (JSON), compile it to a HyperFrames project, review real frames against a rubric, then render. Use for "make a launch video / product video / commercial" requests in a repo that has HyperStudio, or when asked to write, fix, compile or review a Creative IR.
 ---
 
 # HyperStudio director
 
-HyperStudio turns a plan into a HyperFrames project. You write a **Creative IR** (one JSON file: scenes, recipes,
-values); `hyperstudio compile` validates it and writes the project; HyperFrames does everything after that.
-Run commands from the HyperStudio repo root. For anything HyperFrames-native (check, snapshot, preview, render,
-media, registry) follow the `hyperframes`, `hyperframes-cli` and `media-use` skills - this skill does not repeat them.
+You are directing a film, not filling a template. A render that passes validation is not a finished film;
+a film is finished when its frames look designed and say something.
 
-## 1. Read the brief, then decide the film
+HyperStudio gives you three things: a **Creative IR** (one JSON file that records the direction and the shots),
+a compiler that turns it into a HyperFrames project, and a few **shot recipes**. HyperFrames does the rest.
+Run commands from the HyperStudio repo root. For check, snapshot, preview, render and media follow the
+`hyperframes`, `hyperframes-cli` and `media-use` skills; this skill does not repeat them.
 
-Before any JSON, settle in words: who it is for, the one thing they should feel or know, the length, the
-aspect ratio, and 2-5 scenes each with one job (reveal, prove, close). One idea per scene. If the brief gives
-no length, a product spot is 12-20 s. Ask only for what you cannot default: the product image and the copy.
+Work in this order. Do not skip ahead to JSON.
 
-## 2. See what recipes exist
+## 1. Real product first
+
+A product film shows the product. Before anything else, get the real thing:
+
+- A live product or site: `npx hyperframes capture <url> --json` for screenshots, colours, fonts and the logo.
+  Take the brand's colours and typefaces from there, not from taste.
+- An app you can open: screenshot the states the story needs (empty, filled, result). One screenshot per state.
+- Nothing available: **ask for it.** If the person wants to proceed anyway, build the screens as real HTML and
+  mark every one `"origin": "placeholder"`. Never draw a dashboard to fill space.
+
+Never invent a metric, a customer, a feature or a quote. A number on screen needs a source in the IR
+(`sources`), and the compiler rejects a statistic without one.
+
+## 2. Direction, in words
+
+Write the eight `direction` sentences before any scene exists. Each is a decision the whole film obeys:
+
+| Field | Decide |
+| --- | --- |
+| `concept` | The idea of the film in one sentence. If you cannot say it, there is no film yet |
+| `audience` | Who it is for and what they already know |
+| `message` | The one thing they should leave with |
+| `tone` | How it feels |
+| `palette` | Background, ink, and **one** accent, and what the accent is for |
+| `typography` | Which faces, at what scale, for what |
+| `motion` | What moves, how, and what stays still |
+| `pacing` | Shot length, and where the film breathes |
+
+Restraint is the default: one stage, one accent, one camera move per shot, small type with space around it.
+No gradient blobs, glows, particles or grids standing in for design. A still frame is allowed.
+
+## 3. Storyboard, in shots
+
+List the shots in plain words before writing JSON. For each: what the viewer sees, what happens in it, why it
+is there (`purpose`), and how long. Then check the list:
+
+- Every shot moves the story on. A shot you could delete without loss, delete.
+- A line of copy is followed by the product doing what the line said.
+- Neighbouring shots differ in subject or scale: wide, then close.
+- Cut on action (a click, a line finishing), not on a timer.
+- Product films cut fast: 1 to 2.5 s a shot. The compiler warns above a 3.5 s average.
+- Open on something visible at frame 0 (it is the thumbnail) and end on the brand.
+
+A shape that often fits a launch film, to adapt and not to follow: hook, product reveal, one feature shown
+working, what it means for the viewer, close.
+
+## 4. See what recipes exist
 
 ```bash
-pnpm -s hyperstudio recipes --pretty
+pnpm -s hyperstudio recipes                # the list
+pnpm -s hyperstudio recipes product-shot   # one recipe: every variable, where it is set, what it accepts
 ```
 
-Each recipe lists its `variables` (id, type, default, options or min/max), `minDuration`/`maxDuration` and
-`required` ids. A recipe is a whole shot - composition, timing, motion, camera, light and type are already
-decided - so choose by the scene's job, then set variables. Never invent a variable or an option; the compiler
-rejects them. If no recipe fits a scene, say so and either build that scene by hand with the `hyperframes`
-skill or write a new recipe (`docs/RECIPE-DEVELOPMENT.md`).
+| Recipe | Use it for |
+| --- | --- |
+| `product-shot` | One shot of a real screen: camera from one named region to another, optional cursor and click, typed text, outlined component, short label. `isolate` floats one component on the stage |
+| `statement` | One short line of copy, small, with at most one emphasised word |
+| `brand-close` | The ending: mark, name, tagline, optional button |
+| `luxury-product-reveal` | A physical product emerging from darkness (slow, 4 to 12 s) |
 
-## 3. Write the IR
+If no recipe fits a shot, say so, and either build that shot by hand with the `hyperframes` skill or write a
+recipe (`docs/RECIPE-DEVELOPMENT.md`). Do not bend a recipe into something it is not.
 
-Put it in its own folder with its assets: `<project>/video.json`, `<project>/assets/...`.
+## 5. Write the IR
+
+One folder per film: `video.json`, `screens/`, `assets/`. Full reference: `docs/IR-SPECIFICATION.md`; a complete
+example: `examples/saas-product-showcase/video.json`.
 
 ```json
 {
-  "project": { "title": "…", "fps": 30, "aspectRatio": "16:9", "duration": 16.2 },
-  "style": { "accent": "#c9a35c", "headingFont": "Playfair Display" },
+  "project": { "title": "…", "aspectRatio": "16:9", "duration": 15 },
+  "direction": { "concept": "…", "audience": "…", "message": "…", "tone": "…", "palette": "…", "typography": "…", "motion": "…", "pacing": "…" },
+  "brand": { "name": "Lumen", "kind": "real" },
+  "style": { "background": "#f3efe6", "ink": "#17150f", "accent": "#2747f0", "displayFont": "Inter", "textFont": "Inter", "light": "soft" },
+  "screens": {
+    "answer": { "src": "screens/answer.png", "width": 1440, "height": 900, "origin": "captured",
+      "regions": { "answer": [456, 178, 760, 364], "share-button": [1110, 480, 73, 37] } }
+  },
   "scenes": [
-    {
-      "id": "reveal",
-      "recipe": "luxury-product-reveal",
-      "duration": 6,
-      "assets": { "product": "assets/product.png" },
-      "text": { "eyebrow": "Introducing", "headline": "Time, distilled." },
-      "params": { "layout": "center", "camera": "push-in", "lighting": "dramatic" },
-      "transition": { "type": "fade", "duration": 0.8 }
-    }
-  ],
-  "audio": [{ "id": "bed", "src": "assets/music.m4a", "volume": 0.8, "fadeIn": 1.5, "fadeOut": 2.5 }]
+    { "id": "share", "recipe": "product-shot", "duration": 1.1, "screen": "answer",
+      "purpose": "The next step a team takes: pass the answer on.",
+      "params": { "isolate": "answer", "from": "answer", "to": "share-button", "cursor": "share-button" } }
+  ]
 }
 ```
 
-- `assets` takes image variables (paths relative to the IR file), `text` takes string variables, `params` the rest.
-- `style` reaches every scene whose recipe declares that id; a scene's own value wins.
-- `transition` is how a scene is **entered**: `cut` (default), `fade` (dip through black), `crossfade` (overlaps
-  the previous scene, so the film gets shorter by its duration).
-- Durations must land on whole frames. Set `project.duration` to the length you intend: the compiler then
-  fails if the scenes do not add up, which catches a miscounted crossfade.
-- Choose by the scene's job: `kinetic-typography` for a hook, a claim or a sign-off (no assets);
-  `luxury-product-reveal` for a physical product (needs a cut-out image); `tech-product-launch` for software
-  (needs a screenshot); `data-storytelling` for a number or a comparison (no assets).
-- Open on a recipe that shows something at time 0 (kinetic type does) and do not `fade` into the first scene:
-  frame 0 is the thumbnail.
-- Do not `crossfade` between two scenes whose text sits in the same place; use `fade` or `cut`.
-- Give each line time to be read: about 0.5 s plus 0.3 s per word, and at least 2 s for the film's last line.
-- Vary what repeats. Reusing one recipe is fine when layout, camera and lighting change between scenes.
-- Music and voice: get them with `media-use`, then reference the file in `audio`.
+- **Regions** are rectangles `[x, y, width, height]` in the screenshot's CSS pixels, one per component a shot
+  frames, points at, outlines or types into. Read them from the page's DOM when you can; otherwise measure
+  them on the screenshot. A wrong rectangle is a visible mistake, so every product shot gets looked at.
+- **`style` is the film's visual system** and is set once. A scene cannot override colours or typefaces.
+- **`purpose`** is required for every scene and must be a sentence.
+- Typed text should be what the next screen shows as entered, so the cut is continuous.
+- Durations land on whole frames. State `project.duration` so a miscount fails the compile.
 
-Full field reference: `docs/IR-SPECIFICATION.md`.
-
-## 4. Compile
+## 6. Compile
 
 ```bash
-pnpm -s hyperstudio compile <project>/video.json --validate-only --pretty   # timing + errors, writes nothing
-pnpm -s hyperstudio compile <project>/video.json --pretty                   # writes <project>/build/
+pnpm -s hyperstudio compile <film>/video.json --validate-only   # plan and problems, writes nothing
+pnpm -s hyperstudio compile <film>/video.json                   # writes <film>/build/
 ```
 
-Output is JSON. `ok: false` lists `errors` as `{ path, message }`; `path` points into the IR
-(`scenes.1.params.camera`) and the message names the allowed values. Fix the IR and compile again - never edit
-`build/`, it is regenerated on every compile.
+Read the summary: the shot table, **Placeholders** and **Warnings**. Add `--json` when you need to parse it.
+Exit code 1 means the IR was rejected; each problem names its place in the IR (`scenes.4.params.to`) and what
+is allowed. Fix the IR and compile again. Never edit `build/`.
 
-## 5. Check, look, render
-
-In `<project>/build/`:
+## 7. Review real frames
 
 ```bash
-npx hyperframes check --json                       # must be ok: true with 0 errors
-npx hyperframes snapshot --at <mid-scene times and each transition>
+pnpm -s hyperstudio review <film>/video.json
 ```
 
-Read the contact sheet and at least one full frame per scene. Judge it as a viewer: is the product the hero,
-is every line readable, does each scene differ from the last, is anything clipped or colliding? Fix by changing
-the IR (copy length, layout, camera, lighting, durations), recompile, and look again.
+This compiles, runs `hyperframes check`, takes two frames from every shot, and writes `<film>/REVIEW.md` with
+a rubric. Then **open the contact sheets and at least one full frame per shot, and answer the rubric from
+what you see**:
 
-Then follow `hyperframes-cli`: preview for the person unless they asked for the file, and render with
-`npx hyperframes render --quality looks -o ../renders/<name>.mp4` once checks and your review pass. Check free
-disk first (`df -h .`); a 1080p render needs well under 1 GB. Confirm the file with `ffprobe` (duration equals
-the IR's) and look at decoded frames before saying it is done.
+1. Storytelling: does each shot move the story on?
+2. Art direction: is it one film, the same stage and light throughout?
+3. Typography: a clear order of reading; nothing too large, too small or crowded?
+4. Composition: balanced, with intended space, nothing clipped by accident, no label on top of UI text?
+5. Shot variety: do neighbours differ in subject or scale?
+6. Motion: does one thing lead? Does anything move without a reason?
+7. Transitions: does each cut land on an action or a change of idea?
+8. Assets: is everything real? List every placeholder.
+9. Brand: would the brand recognise itself?
+10. Coherence: does it feel made by one hand?
 
-## What this does not do
+Write a verdict and the evidence for each row. If any row is "revise", change the IR and run the review
+again. Typical fixes: `isolate` a component so the stage shows around it, change `fill` to give a frame room,
+move a label off the UI, retime a shot, cut a shot.
 
-- Camera moves are 2.5D simulations on flat images, not a physical camera. Do not promise real 3D.
-- One recipe per scene. Layering several recipes inside one scene means hand-editing with the `hyperframes` skill.
-- Edits made in Studio or by hand under `build/` are lost on the next compile. For a one-off manual finish,
-  compile to a fresh `--output` folder and stop compiling into it.
+Do not report a film as verified because `check` passed or the render succeeded. Say what you looked at.
+
+## 8. Render, then look again
+
+Follow `hyperframes-cli`: preview for the person unless they asked for the file; render with
+`npx hyperframes render --quality looks -o ../renders/<name>.mp4` in `build/` once the review passes. Check free
+disk first. Confirm the file with `ffprobe` (duration equals the IR's), then pull frames from the **rendered
+file** and look at them once more.
+
+Report plainly: what the film is, what is a placeholder, and what you would still improve.
+
+## Sound
+
+Music and sound design need a real source: a track the person supplies, or `media-use` (the free catalogue
+needs `npx hyperframes auth login`). Synthesised effects are placeholders; mark them so.
+
+## Footage-led films
+
+People, places, live action and photoreal product footage are not drawn by HyperFrames. Get the footage
+through `media-use`, then use HyperStudio and HyperFrames for the edit, type and finish. Say when a brief
+needs this rather than faking it with graphics.
+
+## Limits
+
+- Camera moves and tilts are 2.5D transforms of flat images.
+- One recipe per scene.
+- `build/` is regenerated on every compile; manual edits there are lost.
+- The mechanical checks catch carelessness. Taste is judged in review, by you and then by the person.
