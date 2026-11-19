@@ -124,7 +124,7 @@ const Beat = z.strictObject({
   tilt: z.enum(["none", "left", "right", "up", "desk"]).optional(),
   focus: z.enum(["all", "band", "near", "centre"]).optional(),
   side: z.enum(["left", "centre", "right"]).optional(),
-  level: z.enum(["high", "middle", "low"]).optional(),
+  level: z.enum(["high", "middle", "low", "bleed"]).optional(),
   /** For `camera`: the closest this one move may magnify, overriding the take's `maxZoom`. */
   zoom: z.number().min(1).max(8).optional(),
   /** For `say`: where the line sits and how large it is. */
