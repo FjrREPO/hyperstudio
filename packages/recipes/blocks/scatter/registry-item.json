@@ -1,0 +1,191 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "scatter",
+  "type": "hyperframes:block",
+  "title": "Scatter",
+  "description": "The problem before the product: three to six short notes (requests, messages, file names) arrive scattered around the frame, a line of copy lands between them, and they are swept to the centre as the shot ends. Use it once, to open a film on what the viewer lives with today. Text only; it shows no figures.",
+  "tags": ["problem", "hook", "typography", "notes"],
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 2.4,
+  "hyperstudio": {
+    "minDuration": 1.6,
+    "maxDuration": 5,
+    "required": ["note1", "note2", "note3"],
+    "screen": false
+  },
+  "files": [
+    {
+      "path": "scatter.html",
+      "target": "compositions/scatter.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "note1",
+      "type": "string",
+      "role": "content",
+      "label": "Note 1",
+      "description": "One short request, message or file name, as the viewer would recognise it from their own week.",
+      "default": "Can someone pull Q3 by plan?",
+      "maxLength": 44
+    },
+    {
+      "id": "note2",
+      "type": "string",
+      "role": "content",
+      "label": "Note 2",
+      "description": "Another one.",
+      "default": "Asked in #finance, 3 days ago",
+      "maxLength": 44
+    },
+    {
+      "id": "note3",
+      "type": "string",
+      "role": "content",
+      "label": "Note 3",
+      "description": "Another one.",
+      "default": "export_final_v7.csv",
+      "maxLength": 44
+    },
+    {
+      "id": "note4",
+      "type": "string",
+      "role": "content",
+      "label": "Note 4",
+      "description": "Optional.",
+      "default": "",
+      "maxLength": 44
+    },
+    {
+      "id": "note5",
+      "type": "string",
+      "role": "content",
+      "label": "Note 5",
+      "description": "Optional.",
+      "default": "",
+      "maxLength": 44
+    },
+    {
+      "id": "note6",
+      "type": "string",
+      "role": "content",
+      "label": "Note 6",
+      "description": "Optional.",
+      "default": "",
+      "maxLength": 44
+    },
+    {
+      "id": "line",
+      "type": "string",
+      "role": "content",
+      "label": "Line",
+      "description": "Optional. One short sentence that names the problem, set between the notes.",
+      "default": "",
+      "maxLength": 32
+    },
+    {
+      "id": "collapse",
+      "type": "boolean",
+      "role": "motion",
+      "label": "Sweep away at the end",
+      "description": "The notes are pulled to the centre and gone as the shot ends, so the next shot arrives on a clean stage.",
+      "default": true
+    },
+    {
+      "id": "background",
+      "type": "color",
+      "role": "brand",
+      "label": "Stage background",
+      "default": "#f3efe6"
+    },
+    {
+      "id": "ink",
+      "type": "color",
+      "role": "brand",
+      "label": "Text colour",
+      "default": "#17150f"
+    },
+    {
+      "id": "accent",
+      "type": "color",
+      "role": "brand",
+      "label": "Accent colour",
+      "description": "The film's one accent. Used for emphasis only.",
+      "default": "#2747f0"
+    },
+    {
+      "id": "displayFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Display typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "Playfair Display",
+          "label": "Playfair Display"
+        },
+        {
+          "value": "EB Garamond",
+          "label": "EB Garamond"
+        },
+        {
+          "value": "Oswald",
+          "label": "Oswald"
+        },
+        {
+          "value": "Archivo Black",
+          "label": "Archivo Black"
+        }
+      ]
+    },
+    {
+      "id": "textFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Text typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "IBM Plex Mono",
+          "label": "IBM Plex Mono"
+        }
+      ]
+    }
+  ]
+}
