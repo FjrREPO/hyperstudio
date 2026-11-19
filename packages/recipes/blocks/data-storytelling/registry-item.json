@@ -1,0 +1,234 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "data-storytelling",
+  "type": "hyperframes:block",
+  "title": "Data Storytelling",
+  "description": "One number that matters, counted up large, with an optional bar chart that supports it: bars grow in turn, their values count with them, and one bar is picked out in the accent colour. Use it for a result, a benchmark, a growth figure or a comparison. No assets needed.",
+  "tags": ["cinematic", "data", "chart", "statistics", "numbers"],
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 6,
+  "hyperstudio": {
+    "minDuration": 3.5,
+    "maxDuration": 12,
+    "required": ["stat"]
+  },
+  "files": [
+    {
+      "path": "data-storytelling.html",
+      "target": "compositions/data-storytelling.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "stat",
+      "type": "number",
+      "role": "content",
+      "label": "The number",
+      "description": "The figure the scene is about. It counts up from zero.",
+      "default": 0,
+      "min": -1000000000000,
+      "max": 1000000000000
+    },
+    {
+      "id": "statPrefix",
+      "type": "string",
+      "role": "content",
+      "label": "Prefix",
+      "description": "Shown before the number, for example $.",
+      "default": ""
+    },
+    {
+      "id": "statSuffix",
+      "type": "string",
+      "role": "content",
+      "label": "Suffix",
+      "description": "Shown after the number, for example %, x, M.",
+      "default": ""
+    },
+    {
+      "id": "decimals",
+      "type": "number",
+      "role": "content",
+      "label": "Decimal places",
+      "default": 0,
+      "min": 0,
+      "max": 3,
+      "step": 1
+    },
+    {
+      "id": "statLabel",
+      "type": "string",
+      "role": "content",
+      "label": "What the number is",
+      "description": "A few words under the number. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "eyebrow",
+      "type": "string",
+      "role": "content",
+      "label": "Eyebrow",
+      "description": "Short line above the number. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "headline",
+      "type": "string",
+      "role": "content",
+      "label": "Takeaway",
+      "description": "One sentence saying what the number means. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "bars",
+      "type": "string",
+      "role": "content",
+      "label": "Bars",
+      "description": "Up to six bars as Label:Value pairs separated by commas, for example \"2023:120, 2024:310, 2025:842\". Values must be zero or more. Empty shows the number alone.",
+      "default": ""
+    },
+    {
+      "id": "highlight",
+      "type": "string",
+      "role": "content",
+      "label": "Highlighted bar",
+      "description": "The label of the bar to pick out. Empty highlights the largest.",
+      "default": ""
+    },
+    {
+      "id": "barSuffix",
+      "type": "string",
+      "role": "content",
+      "label": "Bar value suffix",
+      "description": "Shown after each bar's value, for example % or k.",
+      "default": ""
+    },
+    {
+      "id": "layout",
+      "type": "enum",
+      "role": "layout",
+      "label": "Layout",
+      "description": "Portrait canvases and scenes without bars ignore this.",
+      "default": "split",
+      "options": [
+        {
+          "value": "split",
+          "label": "Number left, chart right"
+        },
+        {
+          "value": "stacked",
+          "label": "Number on top, chart beneath"
+        }
+      ]
+    },
+    {
+      "id": "exit",
+      "type": "enum",
+      "role": "motion",
+      "label": "Exit",
+      "description": "hold keeps the final frame for a cut or a transition; fade clears the frame at the end.",
+      "default": "hold",
+      "options": [
+        {
+          "value": "hold",
+          "label": "Hold"
+        },
+        {
+          "value": "fade",
+          "label": "Fade out"
+        }
+      ]
+    },
+    {
+      "id": "accent",
+      "type": "color",
+      "role": "brand",
+      "label": "Accent colour",
+      "default": "#22d3ee"
+    },
+    {
+      "id": "background",
+      "type": "color",
+      "role": "brand",
+      "label": "Background",
+      "default": "#080a12"
+    },
+    {
+      "id": "ink",
+      "type": "color",
+      "role": "brand",
+      "label": "Text colour",
+      "default": "#f3f5fa"
+    },
+    {
+      "id": "headingFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Number typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Playfair Display",
+          "label": "Playfair Display"
+        },
+        {
+          "value": "EB Garamond",
+          "label": "EB Garamond"
+        },
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "Oswald",
+          "label": "Oswald"
+        },
+        {
+          "value": "Archivo Black",
+          "label": "Archivo Black"
+        }
+      ]
+    },
+    {
+      "id": "bodyFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Body typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        }
+      ]
+    }
+  ]
+}
