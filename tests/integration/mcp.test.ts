@@ -75,10 +75,10 @@ test("resources carry the real schema and guides", async () => {
 test("an agent can inspect, validate and compile a project", async () => {
   assert.deepEqual((await call("list_projects")).data.projects, ["showcase"]);
   const project = (await call("get_project", { name: "showcase" })).data;
-  assert.equal(project.plan.duration, 15);
+  assert.equal(project.plan.duration, 17);
   assert.equal(project.screens.length, 4);
   const plan = (await call("validate_video", { name: "showcase" })).data;
-  assert.equal(plan.scenes.length, 9);
+  assert.equal(plan.scenes.length, 10);
   assert.ok(plan.placeholders.includes("screen: home"));
   const built = (await call("compile_video", { name: "showcase" })).data;
   assert.equal(built.ok, true);
@@ -91,16 +91,16 @@ test("an agent can inspect, validate and compile a project", async () => {
 test("a bad IR comes back as problems the agent can fix, and is still saved", async () => {
   const ir = JSON.parse(readFileSync(join(workspace, "showcase/video.json"), "utf8"));
   await call("create_project", { name: "draft" });
-  ir.scenes[1].params.accent = "#ff0000";
-  ir.scenes[4].params.to = "nowhere";
+  ir.scenes[2].params.accent = "#ff0000";
+  ir.scenes[5].params.to = "nowhere";
   // The draft has no files of its own, so the screens will be reported missing too: that is the point.
   const outcome = (await call("save_ir", { name: "draft", ir })).data;
   assert.equal(outcome.ok, false);
   const paths = outcome.errors.map((e: { path: string }) => e.path);
-  assert.ok(paths.includes("scenes.1.params.accent"));
-  assert.ok(paths.includes("scenes.4.params.to"));
+  assert.ok(paths.includes("scenes.2.params.accent"));
+  assert.ok(paths.includes("scenes.5.params.to"));
   assert.ok(paths.includes("screens.home.src"));
-  assert.equal((await call("get_project", { name: "draft" })).data.ir.scenes.length, 9);
+  assert.equal((await call("get_project", { name: "draft" })).data.ir.scenes.length, 10);
 });
 
 test("tools cannot leave the workspace", async () => {
