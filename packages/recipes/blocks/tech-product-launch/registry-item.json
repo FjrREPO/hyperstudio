@@ -1,0 +1,169 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "tech-product-launch",
+  "type": "hyperframes:block",
+  "title": "Tech Product Launch",
+  "description": "A product screen in a device frame floats in perspective over a slow two-colour gradient field. A sheen crosses the screen, the headline rises word by word and feature chips pop in. Use it to show software: a dashboard, an app screen, a site. The tilt is a 2.5D transform of a flat screenshot, not a 3D model.",
+  "tags": ["cinematic", "product", "saas", "launch", "ui", "camera", "typography"],
+  "dimensions": { "width": 1920, "height": 1080 },
+  "duration": 6,
+  "hyperstudio": {
+    "minDuration": 4,
+    "maxDuration": 12,
+    "required": ["screen", "headline"]
+  },
+  "files": [
+    {
+      "path": "tech-product-launch.html",
+      "target": "compositions/tech-product-launch.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "screen",
+      "type": "image",
+      "role": "content",
+      "label": "Product screen",
+      "description": "Screenshot of the product, landscape, ideally 16:10. It is cropped from the top to fill the frame.",
+      "default": ""
+    },
+    {
+      "id": "eyebrow",
+      "type": "string",
+      "role": "content",
+      "label": "Eyebrow",
+      "description": "Short line above the headline. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "headline",
+      "type": "string",
+      "role": "content",
+      "label": "Headline",
+      "description": "Three to seven words; it rises word by word.",
+      "default": "Ship faster."
+    },
+    {
+      "id": "subline",
+      "type": "string",
+      "role": "content",
+      "label": "Subline",
+      "description": "One supporting sentence. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "chip1",
+      "type": "string",
+      "role": "content",
+      "label": "Feature chip 1",
+      "description": "Two or three words. Empty hides it.",
+      "default": ""
+    },
+    { "id": "chip2", "type": "string", "role": "content", "label": "Feature chip 2", "default": "" },
+    { "id": "chip3", "type": "string", "role": "content", "label": "Feature chip 3", "default": "" },
+    {
+      "id": "url",
+      "type": "string",
+      "role": "content",
+      "label": "Address bar text",
+      "description": "Shown in the browser frame's address bar. Empty leaves the bar blank.",
+      "default": ""
+    },
+    {
+      "id": "frame",
+      "type": "enum",
+      "role": "look",
+      "label": "Device frame",
+      "default": "browser",
+      "options": [{ "value": "browser", "label": "Browser window" }, { "value": "bare", "label": "Rounded screen, no chrome" }]
+    },
+    {
+      "id": "layout",
+      "type": "enum",
+      "role": "layout",
+      "label": "Screen position",
+      "description": "Where the screen sits; the copy takes the other side. Portrait canvases always stack copy over screen.",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Copy on top, screen beneath" },
+        { "value": "left", "label": "Screen left, copy right" },
+        { "value": "right", "label": "Screen right, copy left" }
+      ]
+    },
+    {
+      "id": "camera",
+      "type": "enum",
+      "role": "motion",
+      "label": "Camera move",
+      "description": "Runs for the whole scene. Simulated with perspective rotation, scale and translate.",
+      "default": "tilt-rise",
+      "options": [
+        { "value": "tilt-rise", "label": "Rise from a steep tilt to nearly flat" },
+        { "value": "dolly-in", "label": "Slow dolly in" },
+        { "value": "sweep", "label": "Sweep across (turn left to right)" },
+        { "value": "static", "label": "Locked off" }
+      ]
+    },
+    {
+      "id": "intensity",
+      "type": "number",
+      "role": "motion",
+      "label": "Camera intensity",
+      "description": "Multiplies the angle and distance of the camera move.",
+      "default": 1,
+      "min": 0.4,
+      "max": 1.6,
+      "step": 0.1
+    },
+    {
+      "id": "exit",
+      "type": "enum",
+      "role": "motion",
+      "label": "Exit",
+      "description": "hold keeps the final frame for a cut or a transition; fade clears the frame at the end.",
+      "default": "hold",
+      "options": [{ "value": "hold", "label": "Hold" }, { "value": "fade", "label": "Fade out" }]
+    },
+    { "id": "accent", "type": "color", "role": "brand", "label": "Accent colour", "default": "#6d5efc" },
+    {
+      "id": "accent2",
+      "type": "color",
+      "role": "brand",
+      "label": "Second gradient colour",
+      "default": "#22d3ee"
+    },
+    { "id": "background", "type": "color", "role": "brand", "label": "Background", "default": "#0a0b14" },
+    { "id": "ink", "type": "color", "role": "brand", "label": "Text colour", "default": "#f5f6fb" },
+    {
+      "id": "headingFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Headline typeface",
+      "default": "Inter",
+      "options": [
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Outfit", "label": "Outfit" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Poppins", "label": "Poppins" },
+        { "value": "Oswald", "label": "Oswald" },
+        { "value": "Archivo Black", "label": "Archivo Black" },
+        { "value": "Playfair Display", "label": "Playfair Display" },
+        { "value": "EB Garamond", "label": "EB Garamond" }
+      ]
+    },
+    {
+      "id": "bodyFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Body typeface",
+      "default": "Inter",
+      "options": [
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Outfit", "label": "Outfit" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Poppins", "label": "Poppins" }
+      ]
+    }
+  ]
+}

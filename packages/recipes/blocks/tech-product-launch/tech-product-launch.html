@@ -1,0 +1,456 @@
+<template>
+  <!--
+    TECH PRODUCT LAUNCH
+
+    One shot: a product screen in a device frame floats in perspective over a slow gradient field,
+    a sheen crosses it, the headline rises and feature chips pop in.
+    Variables are declared in registry-item.json (the compiler writes them onto #root).
+
+    Conventions (see docs/RECIPE-DEVELOPMENT.md): the composition id is the recipe name and every element
+    id starts with it; sizes are in --u (1% of the canvas's short side); every visible state is a function
+    of timeline time.
+
+    The tilt is a 2.5D simulation: perspective rotation, scale and translate of a flat screenshot.
+  -->
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #tech-product-launch-stage {
+      --u: 10.8px;
+      --tpl-accent: #6d5efc;
+      --tpl-accent2: #22d3ee;
+      --tpl-bg: #0a0b14;
+      --tpl-ink: #f5f6fb;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--tpl-bg);
+      color: var(--tpl-ink);
+    }
+
+    /* ── Field ── */
+    #tech-product-launch-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--tpl-ink) 7%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--tpl-ink) 7%, transparent) 1px, transparent 1px);
+      background-size: calc(var(--u) * 8) calc(var(--u) * 8);
+      mask-image: radial-gradient(ellipse at 50% 55%, black 10%, transparent 72%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 55%, black 10%, transparent 72%);
+    }
+    .tpl-blob {
+      position: absolute;
+      width: calc(var(--u) * 90);
+      height: calc(var(--u) * 90);
+      border-radius: 50%;
+    }
+    #tech-product-launch-blob-a {
+      left: -12%;
+      top: 18%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--tpl-accent) 60%, transparent), transparent);
+    }
+    #tech-product-launch-blob-b {
+      right: -12%;
+      top: -10%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--tpl-accent2) 46%, transparent), transparent);
+    }
+
+    /* ── Device ── */
+    #tech-product-launch-zone,
+    #tech-product-launch-copy {
+      position: absolute;
+    }
+    #tech-product-launch-rig {
+      position: absolute;
+      inset: 0;
+      perspective: calc(var(--u) * 170);
+      perspective-origin: 50% 40%;
+    }
+    #tech-product-launch-cam {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #tech-product-launch-device {
+      position: relative;
+      flex: none;
+    }
+    #tech-product-launch-halo {
+      position: absolute;
+      inset: -5%;
+      background: linear-gradient(120deg, var(--tpl-accent), var(--tpl-accent2));
+      filter: blur(calc(var(--u) * 7));
+      opacity: 0.38;
+    }
+    #tech-product-launch-window {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: calc(var(--u) * 1.6);
+      background: #12141f;
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--tpl-ink) 14%, transparent),
+        0 calc(var(--u) * 4) calc(var(--u) * 10) rgba(0, 0, 0, 0.55);
+    }
+    #tech-product-launch-bar {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: calc(var(--u) * 0.8);
+      height: calc(var(--u) * 3.6);
+      padding: 0 calc(var(--u) * 1.4);
+      background: #1b1e2e;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tpl-dot {
+      width: calc(var(--u) * 1.1);
+      height: calc(var(--u) * 1.1);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+    }
+    #tech-product-launch-url {
+      margin-left: calc(var(--u) * 1.6);
+      padding: calc(var(--u) * 0.3) calc(var(--u) * 1.6);
+      min-width: calc(var(--u) * 30);
+      height: calc(var(--u) * 2.2);
+      border-radius: calc(var(--u) * 1.1);
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.55);
+      font-size: calc(var(--u) * 1.3);
+      line-height: calc(var(--u) * 1.6);
+      white-space: nowrap;
+    }
+    #tech-product-launch-screen {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+    }
+    #tech-product-launch-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+    #tech-product-launch-sheen {
+      position: absolute;
+      left: 0;
+      top: -20%;
+      width: 30%;
+      height: 140%;
+      background: linear-gradient(100deg, transparent 15%, rgba(255, 255, 255, 0.16) 50%, transparent 85%);
+    }
+
+    /* ── Copy ── */
+    #tech-product-launch-copy {
+      display: flex;
+      flex-direction: column;
+    }
+    .tpl-center #tech-product-launch-copy,
+    .tpl-portrait #tech-product-launch-copy {
+      justify-content: flex-end;
+      align-items: center;
+      text-align: center;
+    }
+    .tpl-left #tech-product-launch-copy,
+    .tpl-right #tech-product-launch-copy {
+      justify-content: center;
+      align-items: flex-start;
+      text-align: left;
+    }
+    #tech-product-launch-eyebrow {
+      font-size: calc(var(--u) * 2.6);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: calc(var(--u) * 1.6);
+      background: linear-gradient(90deg, var(--tpl-accent), var(--tpl-accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      white-space: nowrap;
+    }
+    #tech-product-launch-headline {
+      font-size: calc(var(--u) * 7.4);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.03em;
+    }
+    .tpl-left #tech-product-launch-headline,
+    .tpl-right #tech-product-launch-headline,
+    .tpl-portrait #tech-product-launch-headline {
+      font-size: calc(var(--u) * 6.2);
+    }
+    .tpl-word {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      padding-bottom: 0.16em;
+      margin-bottom: -0.16em;
+    }
+    .tpl-word-in {
+      display: inline-block;
+    }
+    #tech-product-launch-sub {
+      margin-top: calc(var(--u) * 1.8);
+      font-size: calc(var(--u) * 2.9);
+      font-weight: 400;
+      line-height: 1.4;
+      opacity: 0.74;
+      max-width: calc(var(--u) * 72);
+    }
+    #tech-product-launch-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(var(--u) * 1.2);
+      margin-top: calc(var(--u) * 2.6);
+    }
+    .tpl-center #tech-product-launch-chips,
+    .tpl-portrait #tech-product-launch-chips {
+      justify-content: center;
+    }
+    .tpl-chip {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--u) * 0.9);
+      padding: calc(var(--u) * 0.8) calc(var(--u) * 1.8);
+      border-radius: calc(var(--u) * 3);
+      border: 1px solid color-mix(in srgb, var(--tpl-ink) 18%, transparent);
+      background: color-mix(in srgb, var(--tpl-ink) 7%, transparent);
+      font-size: calc(var(--u) * 2.6);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+    .tpl-chip-dot {
+      width: calc(var(--u) * 0.9);
+      height: calc(var(--u) * 0.9);
+      border-radius: 50%;
+      background: linear-gradient(120deg, var(--tpl-accent), var(--tpl-accent2));
+    }
+    .tpl-h-inter { font-family: "Inter", sans-serif; }
+    .tpl-h-outfit { font-family: "Outfit", sans-serif; }
+    .tpl-h-montserrat { font-family: "Montserrat", sans-serif; }
+    .tpl-h-poppins { font-family: "Poppins", sans-serif; }
+    .tpl-h-oswald { font-family: "Oswald", sans-serif; }
+    .tpl-h-archivo-black { font-family: "Archivo Black", sans-serif; }
+    .tpl-h-playfair-display { font-family: "Playfair Display", serif; }
+    .tpl-h-eb-garamond { font-family: "EB Garamond", serif; }
+    .tpl-b-inter { font-family: "Inter", sans-serif; }
+    .tpl-b-outfit { font-family: "Outfit", sans-serif; }
+    .tpl-b-montserrat { font-family: "Montserrat", sans-serif; }
+    .tpl-b-poppins { font-family: "Poppins", sans-serif; }
+  </style>
+
+  <div id="root" data-composition-id="tech-product-launch" data-start="0" data-duration="6" data-width="1920" data-height="1080">
+    <div id="tech-product-launch-stage" class="tpl-center">
+      <div id="tech-product-launch-blob-a" class="tpl-blob" data-layout-allow-overflow></div>
+      <div id="tech-product-launch-blob-b" class="tpl-blob" data-layout-allow-overflow></div>
+      <div id="tech-product-launch-grid"></div>
+
+      <div id="tech-product-launch-zone">
+        <div id="tech-product-launch-rig">
+          <div id="tech-product-launch-cam">
+            <div id="tech-product-launch-device">
+              <div id="tech-product-launch-halo" data-layout-allow-overflow></div>
+              <div id="tech-product-launch-window">
+                <div id="tech-product-launch-bar">
+                  <span class="tpl-dot"></span><span class="tpl-dot"></span><span class="tpl-dot"></span>
+                  <span id="tech-product-launch-url" data-layout-ignore></span>
+                </div>
+                <div id="tech-product-launch-screen">
+                  <img id="tech-product-launch-img" data-var-src="screen" alt="" />
+                  <div id="tech-product-launch-sheen" data-layout-allow-overflow></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tech-product-launch-copy">
+        <div id="tech-product-launch-eyebrow" data-var-text="eyebrow"></div>
+        <div id="tech-product-launch-headline"></div>
+        <div id="tech-product-launch-sub" data-var-text="subline"></div>
+        <div id="tech-product-launch-chips"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var ID = "tech-product-launch";
+      var $ = function (name) {
+        return document.getElementById(ID + "-" + name);
+      };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 6;
+      var U = Math.min(W, H) / 100;
+
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign(
+        {
+          screen: "",
+          eyebrow: "",
+          headline: "Ship faster.",
+          subline: "",
+          chip1: "",
+          chip2: "",
+          chip3: "",
+          url: "",
+          frame: "browser",
+          layout: "center",
+          camera: "tilt-rise",
+          intensity: 1,
+          exit: "hold",
+          accent: "#6d5efc",
+          accent2: "#22d3ee",
+          background: "#0a0b14",
+          ink: "#f5f6fb",
+          headingFont: "Inter",
+          bodyFont: "Inter",
+        },
+        given,
+      );
+      var slug = function (s) {
+        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      };
+      var layout = H > W ? "portrait" : v.layout;
+      var k = Number(v.intensity) || 1;
+
+      // ── Static setup ──
+      stage.style.setProperty("--u", U + "px");
+      stage.style.setProperty("--tpl-accent", v.accent);
+      stage.style.setProperty("--tpl-accent2", v.accent2);
+      stage.style.setProperty("--tpl-bg", v.background);
+      stage.style.setProperty("--tpl-ink", v.ink);
+      stage.className = "tpl-" + layout + " tpl-b-" + slug(v.bodyFont);
+      $("headline").className = "tpl-h-" + slug(v.headingFont);
+
+      // Boxes as [left, top, right, bottom] in percent of the canvas.
+      var boxes = {
+        center: { zone: [15, 44, 15, 5], copy: [10, 7, 10, 59] },
+        left: { zone: [5, 14, 50, 14], copy: [55, 12, 9, 12] },
+        right: { zone: [50, 14, 5, 14], copy: [9, 12, 55, 12] },
+        portrait: { zone: [6, 42, 20, 36], copy: [12, 12, 26, 60] },
+      }[layout];
+      var place = function (el, b) {
+        el.style.left = b[0] + "%";
+        el.style.top = b[1] + "%";
+        el.style.right = b[2] + "%";
+        el.style.bottom = b[3] + "%";
+      };
+      place($("zone"), boxes.zone);
+      place($("copy"), boxes.copy);
+
+      // Fit a 16:10 screen (plus the browser bar) inside the zone.
+      var bare = v.frame === "bare";
+      var bar = bare ? 0 : 3.6 * U;
+      var zoneW = (W * (100 - boxes.zone[0] - boxes.zone[2])) / 100;
+      var zoneH = (H * (100 - boxes.zone[1] - boxes.zone[3])) / 100;
+      var deviceW = Math.min(zoneW, (zoneH - bar) * 1.6);
+      $("device").style.width = deviceW + "px";
+      $("device").style.height = deviceW / 1.6 + bar + "px";
+      if (bare) $("bar").style.display = "none";
+      $("url").textContent = v.url;
+      if (!v.url) $("url").style.color = "transparent";
+
+      var src = typeof v.screen === "string" ? v.screen : (v.screen && v.screen.url) || "";
+      if (src) $("img").setAttribute("src", src);
+      else $("img").style.display = "none";
+
+      $("eyebrow").textContent = v.eyebrow;
+      $("sub").textContent = v.subline;
+      if (!v.eyebrow) $("eyebrow").style.display = "none";
+      if (!v.subline) $("sub").style.display = "none";
+      var words = String(v.headline).split(/\s+/).filter(Boolean);
+      var headline = $("headline");
+      words.forEach(function (word, i) {
+        var outer = document.createElement("span");
+        var inner = document.createElement("span");
+        outer.className = "tpl-word";
+        inner.className = "tpl-word-in";
+        inner.setAttribute("data-layout-allow-overflow", "");
+        inner.textContent = word;
+        outer.appendChild(inner);
+        headline.appendChild(outer);
+        if (i < words.length - 1) headline.appendChild(document.createTextNode(" "));
+      });
+      var chips = [v.chip1, v.chip2, v.chip3].filter(Boolean).map(function (text) {
+        var chip = document.createElement("div");
+        var dot = document.createElement("span");
+        chip.className = "tpl-chip";
+        dot.className = "tpl-chip-dot";
+        chip.appendChild(dot);
+        chip.appendChild(document.createTextNode(text));
+        $("chips").appendChild(chip);
+        return chip;
+      });
+      if (!chips.length) $("chips").style.display = "none";
+
+      // ── Timeline ──
+      var tl = gsap.timeline({ paused: true });
+      var end = D - 0.05;
+
+      // Field: two colour blobs drift for the whole scene.
+      tl.fromTo($("blob-a"), { opacity: 0, x: -6 * U, y: 4 * U }, { opacity: 0.55, x: 8 * U, y: -5 * U, duration: end, ease: "sine.inOut" }, 0);
+      tl.fromTo($("blob-b"), { opacity: 0, x: 6 * U, y: -3 * U }, { opacity: 0.5, x: -9 * U, y: 6 * U, duration: end, ease: "sine.inOut" }, 0);
+      tl.fromTo($("grid"), { opacity: 0 }, { opacity: 1, duration: 1.6, ease: "power2.out" }, 0);
+
+      // Device resolves, then the camera keeps moving.
+      tl.fromTo(
+        $("device"),
+        { opacity: 0, filter: "blur(" + 1.6 * U + "px)" },
+        { opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" },
+        0.15,
+      );
+      tl.fromTo($("halo"), { opacity: 0, scale: 0.9 }, { opacity: 0.38, scale: 1.04, duration: end - 0.3, ease: "power2.out" }, 0.3);
+      var move = {
+        "tilt-rise": [
+          { rotationX: 30 * k, rotationY: -12 * k, y: 12 * U * k, scale: 0.9 },
+          { rotationX: 5 * k, rotationY: -3 * k, y: 0, scale: 1, ease: "power3.out" },
+        ],
+        "dolly-in": [{ rotationX: 10 * k, scale: 1 - 0.14 * k }, { rotationX: 0, scale: 1 + 0.03 * k, ease: "power2.out" }],
+        sweep: [
+          { rotationY: -22 * k, rotationX: 4 * k, x: -3 * U * k },
+          { rotationY: 14 * k, rotationX: 4 * k, x: 3 * U * k, ease: "sine.inOut" },
+        ],
+      }[v.camera];
+      if (move) tl.fromTo($("cam"), move[0], Object.assign({ duration: end }, move[1]), 0);
+      tl.fromTo($("sheen"), { xPercent: -130 }, { xPercent: 360, duration: 1.4, ease: "power2.inOut" }, 1.0);
+      if (D >= 7) tl.fromTo($("sheen"), { xPercent: -130 }, { xPercent: 360, duration: 1.4, ease: "power2.inOut", immediateRender: false }, D - 3);
+
+      // Copy.
+      tl.fromTo($("eyebrow"), { opacity: 0, y: 1.4 * U }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0.5);
+      tl.fromTo(
+        headline.querySelectorAll(".tpl-word-in"),
+        { yPercent: 118 },
+        { yPercent: 0, duration: 0.95, ease: "expo.out", stagger: 0.07 },
+        0.65,
+      );
+      tl.fromTo($("sub"), { opacity: 0, y: 1.4 * U }, { opacity: 0.74, y: 0, duration: 0.8, ease: "power3.out" }, 1.25);
+      if (chips.length)
+        tl.fromTo(chips, { opacity: 0, scale: 0.8, y: 1.2 * U }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.7)", stagger: 0.12 }, 1.65);
+
+      if (v.exit === "fade") {
+        tl.fromTo($("copy"), { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.85);
+        tl.fromTo($("zone"), { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "power2.in", immediateRender: false }, D - 0.7);
+      }
+
+      tl.set({}, {}, D);
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>
