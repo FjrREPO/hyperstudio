@@ -1,0 +1,88 @@
+<template>
+  <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #close-stage { --bc-accent: #2747f0; --bc-ink: #17150f; --bc-paper: #f3efe6; position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--bc-ink); }
+    #close-lockup { display: flex; align-items: center; }
+    #close-mark { flex: none; display: block; }
+    #close-clip { overflow: hidden; padding: 0.1em 0; }
+    #close-name { font-weight: 600; letter-spacing: -0.035em; line-height: 1.1; white-space: nowrap; padding: 0 0.04em 0 0.28em; }
+    #close-tagline { font-weight: 400; opacity: 0.66; white-space: nowrap; }
+    #close-cta { font-weight: 600; color: var(--bc-paper); background: var(--bc-ink); white-space: nowrap; }
+    .bc-d-inter { font-family: "Inter", sans-serif; }
+    .bc-d-outfit { font-family: "Outfit", sans-serif; }
+    .bc-d-montserrat { font-family: "Montserrat", sans-serif; }
+    .bc-d-poppins { font-family: "Poppins", sans-serif; }
+    .bc-d-playfair-display { font-family: "Playfair Display", serif; }
+    .bc-d-eb-garamond { font-family: "EB Garamond", serif; }
+    .bc-d-oswald { font-family: "Oswald", sans-serif; }
+    .bc-d-archivo-black { font-family: "Archivo Black", sans-serif; }
+    .bc-t-inter { font-family: "Inter", sans-serif; }
+    .bc-t-outfit { font-family: "Outfit", sans-serif; }
+    .bc-t-montserrat { font-family: "Montserrat", sans-serif; }
+    .bc-t-poppins { font-family: "Poppins", sans-serif; }
+    .bc-t-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
+  </style>
+  <div id="root" data-composition-id="close" data-start="0" data-duration="2.8" data-width="1920" data-height="1080" data-composition-variables='[{"id":"mark","type":"image","role":"content","label":"Brand mark","description":"The logo mark as SVG or transparent PNG, square.","default":""},{"id":"name","type":"string","role":"content","label":"Brand name","default":"","maxLength":18},{"id":"tagline","type":"string","role":"content","label":"Tagline","description":"Empty hides it.","default":"","maxLength":44},{"id":"cta","type":"string","role":"content","label":"Button","description":"Two or three words. Empty hides it.","default":"","maxLength":22},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
+    <div id="close-stage">
+      <div id="close-lockup">
+        <img id="close-mark" data-var-src="mark" alt="" />
+        <div id="close-clip"><div id="close-name" data-var-text="name"></div></div>
+      </div>
+      <div id="close-tagline" data-var-text="tagline"></div>
+      <div id="close-cta" data-var-text="cta"></div>
+    </div>
+  </div>
+  <script>
+    (function () { window.__timelines = window.__timelines || {};
+      var ID = "close";
+      var $ = function (name) { return document.getElementById(ID + "-" + name);
+      };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 2.5;
+      var U = Math.min(W, H) / 100;
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign( { mark: "", name: "", tagline: "", cta: "", background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" }, given, );
+      var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      };
+      var portrait = H > W;
+      stage.style.setProperty("--bc-accent", v.accent);
+      stage.style.setProperty("--bc-ink", v.ink);
+      stage.style.setProperty("--bc-paper", v.background);
+      stage.className = "bc-t-" + slug(v.textFont);
+      if (portrait) stage.style.padding = "0 30% 18% 12%";
+      var k = portrait ? 0.78 : 1;
+      var mark = $("mark");
+      var src = typeof v.mark === "string" ? v.mark : (v.mark && v.mark.url) || "";
+      if (src) mark.setAttribute("src", src);
+      mark.style.width = mark.style.height = 11.2 * U * k + "px";
+      var name = $("name");
+      name.textContent = v.name;
+      name.className = "bc-d-" + slug(v.displayFont);
+      name.style.fontSize = 10.8 * U * k + "px";
+      var tagline = $("tagline");
+      tagline.textContent = v.tagline;
+      tagline.style.fontSize = 3.9 * U * k + "px";
+      tagline.style.marginTop = 2.6 * U + "px";
+      if (!v.tagline) tagline.style.display = "none";
+      var cta = $("cta");
+      cta.textContent = v.cta;
+      cta.style.fontSize = 3.1 * U * k + "px";
+      cta.style.marginTop = 4.2 * U + "px";
+      cta.style.padding = 1.25 * U + "px " + 2.8 * U + "px";
+      cta.style.borderRadius = 1.3 * U + "px";
+      if (!v.cta) cta.style.display = "none";
+      var tl = gsap.timeline({ paused: true });
+      tl.fromTo(mark, { opacity: 0.3, scale: 0.72, rotation: -40 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(1.5)" }, 0);
+      tl.fromTo(name, { xPercent: -102 }, { xPercent: 0, duration: 0.7, ease: "expo.out" }, 0.28);
+      tl.fromTo(tagline, { opacity: 0, y: 1.2 * U }, { opacity: 0.66, y: 0, duration: 0.6, ease: "power3.out" }, 0.4);
+      tl.fromTo(cta, { opacity: 0, y: 1.2 * U }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.5);
+      tl.fromTo(stage, { scale: 1 }, { scale: 1.03, duration: D, ease: "none" }, 0);
+      tl.set({}, {}, D);
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>
