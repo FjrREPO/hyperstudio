@@ -48,7 +48,7 @@ pnpm hyperstudio review examples/saas-product-showcase/video.json --motion
 ```
 
 `review` compiles, runs `hyperframes check` (0 errors, 0 warnings), takes two frames per take, and with
-`--motion` renders a draft and measures it: 32% of frames still, the longest freeze 1.6 s. The strips in
+`--motion` renders a draft and measures it: 35% of frames still, the longest freeze 1.7 s. The strips in
 `build/.hyperstudio/` show each take at eight frames a second. The answers are in `REVIEW.md`.
 
 ## 5. Render and verify
@@ -58,7 +58,7 @@ cd examples/saas-product-showcase/build
 npx hyperframes@0.9.69 render --quality looks -o ../renders/saas-product-showcase-30s.mp4
 ```
 
-Result: 30.200 s, 1920×1080, 30 fps, H.264 with AAC, about 9.5 MB; `ffprobe` duration equals the IR's. Frames
+Result: 29.600 s, 1920×1080, 30 fps, H.264 with AAC, about 9.5 MB; `ffprobe` duration equals the IR's. Frames
 pulled from the rendered file at one per second were looked at.
 
 ## What is still not real
