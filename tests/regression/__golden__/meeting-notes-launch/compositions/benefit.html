@@ -1,48 +1,14 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
   <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    #benefit-stage {
-      --st-accent: #2747f0;
-      --st-ink: #17150f;
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      color: var(--st-ink);
-    }
-    .st-center {
-      align-items: center;
-      text-align: center;
-    }
-    .st-left {
-      align-items: flex-start;
-      text-align: left;
-    }
-    .st-line {
-      font-weight: 500;
-      line-height: 1.22;
-      letter-spacing: -0.028em;
-      white-space: nowrap;
-    }
-    .st-word {
-      display: inline-block;
-      position: relative;
-    }
-    .st-chip {
-      position: absolute;
-      inset: -0.02em -0.2em -0.04em;
-      border-radius: 0.2em;
-      background: var(--st-accent);
-    }
-    .st-text {
-      position: relative;
-    }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #benefit-stage { --st-accent: #2747f0; --st-ink: #17150f; position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; color: var(--st-ink); }
+    .st-center { align-items: center; text-align: center; }
+    .st-left { align-items: flex-start; text-align: left; }
+    .st-line { font-weight: 500; line-height: 1.22; letter-spacing: -0.028em; white-space: nowrap; }
+    .st-word { display: inline-block; position: relative; }
+    .st-chip { position: absolute; inset: -0.02em -0.2em -0.04em; border-radius: 0.2em; background: var(--st-accent); }
+    .st-text { position: relative; }
     .st-d-inter { font-family: "Inter", sans-serif; }
     .st-d-outfit { font-family: "Outfit", sans-serif; }
     .st-d-montserrat { font-family: "Montserrat", sans-serif; }
@@ -59,11 +25,9 @@
     </div>
   </div>
   <script>
-    (function () {
-      window.__timelines = window.__timelines || {};
+    (function () { window.__timelines = window.__timelines || {};
       var ID = "benefit";
-      var $ = function (name) {
-        return document.getElementById(ID + "-" + name);
+      var $ = function (name) { return document.getElementById(ID + "-" + name);
       };
       var stage = $("stage");
       var scope = stage.closest("[data-composition-id]");
@@ -72,26 +36,10 @@
       var D = Number(scope.getAttribute("data-duration")) || 2;
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
-      var v = Object.assign(
-        {
-          line1: "Ask your revenue.",
-          line2: "",
-          emphasis: "",
-          size: "title",
-          align: "center",
-          reveal: "words",
-          background: "#f3efe6",
-          ink: "#17150f",
-          accent: "#2747f0",
-          displayFont: "Inter",
-        },
-        given,
-      );
-      var slug = function (s) {
-        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      var v = Object.assign( { line1: "Ask your revenue.", line2: "", emphasis: "", size: "title", align: "center", reveal: "words", background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", }, given, );
+      var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
       };
-      var bare = function (s) {
-        return String(s).toLowerCase().replace(/[^a-z0-9À-￿]+/g, "");
+      var bare = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9À-￿]+/g, "");
       };
       var portrait = H > W;
       stage.style.setProperty("--st-accent", v.accent);
@@ -103,21 +51,17 @@
       var hot = String(v.emphasis).split(/\s+/).map(bare).filter(Boolean);
       var words = [];
       var chips = [];
-      [v.line1, v.line2].forEach(function (text, i) {
-        var line = $("line" + (i + 1));
+      [v.line1, v.line2].forEach(function (text, i) { var line = $("line" + (i + 1));
         var parts = String(text).trim().split(/\s+/).filter(Boolean);
-        if (!parts.length) {
-          line.style.display = "none";
+        if (!parts.length) { line.style.display = "none";
           return;
         }
-        parts.forEach(function (part, n) {
-          var word = document.createElement("span");
+        parts.forEach(function (part, n) { var word = document.createElement("span");
           word.className = "st-word";
           var glyphs = document.createElement("span");
           glyphs.className = "st-text";
           glyphs.textContent = part;
-          if (hot.indexOf(bare(part)) >= 0) {
-            var chip = document.createElement("span");
+          if (hot.indexOf(bare(part)) >= 0) { var chip = document.createElement("span");
             chip.className = "st-chip";
             chip.setAttribute("data-layout-allow-overflow", "");
             chip.setAttribute("data-layout-allow-occlusion", "");
@@ -133,12 +77,10 @@
       });
       var tl = gsap.timeline({ paused: true });
       var landed = 0;
-      if (v.reveal !== "none") {
-        tl.fromTo(words, { opacity: 0.25, y: 0.3 * size }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.055 }, 0);
+      if (v.reveal !== "none") { tl.fromTo(words, { opacity: 0.25, y: 0.3 * size }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.055 }, 0);
         landed = 0.3 + words.length * 0.055;
       }
-      chips.forEach(function (c) {
-        tl.fromTo(c.chip, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.45, ease: "expo.out" }, landed);
+      chips.forEach(function (c) { tl.fromTo(c.chip, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.45, ease: "expo.out" }, landed);
         tl.fromTo(c.word, { color: v.ink }, { color: "#ffffff", duration: 0.2, ease: "none" }, landed + 0.05);
       });
       tl.fromTo(stage, { scale: 1 }, { scale: 1.03, duration: D, ease: "none" }, 0);

@@ -1,34 +1,11 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
   <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    #closing-stage {
-      --u: 10.8px;
-      --lpr-accent: #c9a35c;
-      --lpr-bg: #07070a;
-      --lpr-ink: #f4efe6;
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      color: var(--lpr-ink);
-    }
-    .lpr-fill {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    #closing-zone,
-    #closing-copy {
-      position: absolute;
-    }
-    #closing-copy {
-      display: flex;
-      flex-direction: column;
-    }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #closing-stage { --u: 10.8px; --lpr-accent: #c9a35c; --lpr-bg: #07070a; --lpr-ink: #f4efe6; position: absolute; inset: 0; overflow: hidden; color: var(--lpr-ink); }
+    .lpr-fill { position: absolute; inset: 0; pointer-events: none; }
+    #closing-zone, #closing-copy { position: absolute; }
+    #closing-copy { display: flex; flex-direction: column; }
     .lpr-center #closing-zone { left: 30%; right: 30%; top: 6%; bottom: 40%; }
     .lpr-center #closing-copy { left: 10%; right: 10%; top: 67%; bottom: 9%; align-items: center; text-align: center; }
     .lpr-left #closing-zone { left: 7%; right: 53%; top: 10%; bottom: 10%; }
@@ -37,131 +14,25 @@
     .lpr-right #closing-copy { left: 10%; right: 53%; top: 10%; bottom: 10%; justify-content: center; align-items: flex-start; text-align: left; }
     .lpr-portrait #closing-zone { left: 14%; right: 26%; top: 12%; bottom: 57%; }
     .lpr-portrait #closing-copy { left: 14%; right: 26%; top: 45%; bottom: 36%; justify-content: flex-start; align-items: center; text-align: center; }
-    #closing-glow {
-      position: absolute;
-      inset: -35%;
-      background: radial-gradient(closest-side, color-mix(in srgb, var(--lpr-accent) 34%, transparent), transparent);
-    }
-    #closing-halo {
-      position: absolute;
-      inset: -6%;
-      background: radial-gradient(closest-side, transparent 60%, color-mix(in srgb, var(--lpr-accent) 80%, white) 66%, transparent 76%);
-      filter: blur(calc(var(--u) * 1.4));
-    }
-    #closing-floor {
-      position: absolute;
-      left: 8%;
-      right: 8%;
-      bottom: -5%;
-      height: 14%;
-      background: radial-gradient(closest-side, color-mix(in srgb, var(--lpr-accent) 38%, transparent), transparent);
-    }
-    #closing-beam-wrap {
-      position: absolute;
-      left: 0;
-      top: -60%;
-      width: 100%;
-      height: 220%;
-      transform: rotate(20deg);
-      pointer-events: none;
-    }
-    #closing-beam {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 26%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.11), transparent);
-    }
-    #closing-rig {
-      position: absolute;
-      inset: 0;
-      perspective: calc(var(--u) * 150);
-    }
-    #closing-cam,
-    #closing-product {
-      position: absolute;
-      inset: 0;
-    }
-    #closing-img {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 calc(var(--u) * 2.4) calc(var(--u) * 3.2) rgba(0, 0, 0, 0.6));
-    }
-    #closing-glint {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      mix-blend-mode: screen;
-      mask-repeat: no-repeat;
-      mask-position: center;
-      mask-size: contain;
-      -webkit-mask-repeat: no-repeat;
-      -webkit-mask-position: center;
-      -webkit-mask-size: contain;
-    }
-    #closing-glint-bar {
-      position: absolute;
-      left: 0;
-      top: -20%;
-      width: 34%;
-      height: 140%;
-      background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.8) 50%, transparent 80%);
-    }
-    .lpr-dust {
-      position: absolute;
-      border-radius: 50%;
-      background: color-mix(in srgb, var(--lpr-accent) 55%, white);
-    }
-    #closing-eyebrow {
-      font-size: calc(var(--u) * 2.6);
-      font-weight: 400;
-      letter-spacing: 0.36em;
-      text-transform: uppercase;
-      color: var(--lpr-accent);
-      margin-bottom: calc(var(--u) * 2.2);
-      white-space: nowrap;
-    }
-    #closing-headline {
-      font-size: calc(var(--u) * 7.2);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-    }
-    .lpr-left #closing-headline,
-    .lpr-right #closing-headline {
-      font-size: calc(var(--u) * 6.6);
-    }
-    .lpr-portrait #closing-headline {
-      font-size: calc(var(--u) * 6);
-    }
-    .lpr-word {
-      display: inline-block;
-      overflow: hidden;
-      vertical-align: bottom;
-      padding-bottom: 0.14em;
-      margin-bottom: -0.14em;
-    }
-    .lpr-word-in {
-      display: inline-block;
-    }
-    #closing-rule {
-      width: calc(var(--u) * 9);
-      height: calc(var(--u) * 0.16);
-      background: var(--lpr-accent);
-      margin: calc(var(--u) * 2.6) 0 calc(var(--u) * 2.4);
-    }
-    #closing-sub {
-      font-size: calc(var(--u) * 2.9);
-      font-weight: 400;
-      line-height: 1.4;
-      opacity: 0.82;
-      max-width: calc(var(--u) * 70);
-    }
+    #closing-glow { position: absolute; inset: -35%; background: radial-gradient(closest-side, color-mix(in srgb, var(--lpr-accent) 34%, transparent), transparent); }
+    #closing-halo { position: absolute; inset: -6%; background: radial-gradient(closest-side, transparent 60%, color-mix(in srgb, var(--lpr-accent) 80%, white) 66%, transparent 76%); filter: blur(calc(var(--u) * 1.4)); }
+    #closing-floor { position: absolute; left: 8%; right: 8%; bottom: -5%; height: 14%; background: radial-gradient(closest-side, color-mix(in srgb, var(--lpr-accent) 38%, transparent), transparent); }
+    #closing-beam-wrap { position: absolute; left: 0; top: -60%; width: 100%; height: 220%; transform: rotate(20deg); pointer-events: none; }
+    #closing-beam { position: absolute; left: 0; top: 0; width: 26%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.11), transparent); }
+    #closing-rig { position: absolute; inset: 0; perspective: calc(var(--u) * 150); }
+    #closing-cam, #closing-product { position: absolute; inset: 0; }
+    #closing-img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 calc(var(--u) * 2.4) calc(var(--u) * 3.2) rgba(0, 0, 0, 0.6)); }
+    #closing-glint { position: absolute; inset: 0; overflow: hidden; mix-blend-mode: screen; mask-repeat: no-repeat; mask-position: center; mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: contain; }
+    #closing-glint-bar { position: absolute; left: 0; top: -20%; width: 34%; height: 140%; background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.8) 50%, transparent 80%); }
+    .lpr-dust { position: absolute; border-radius: 50%; background: color-mix(in srgb, var(--lpr-accent) 55%, white); }
+    #closing-eyebrow { font-size: calc(var(--u) * 2.6); font-weight: 400; letter-spacing: 0.36em; text-transform: uppercase; color: var(--lpr-accent); margin-bottom: calc(var(--u) * 2.2); white-space: nowrap; }
+    #closing-headline { font-size: calc(var(--u) * 7.2); font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; }
+    .lpr-left #closing-headline, .lpr-right #closing-headline { font-size: calc(var(--u) * 6.6); }
+    .lpr-portrait #closing-headline { font-size: calc(var(--u) * 6); }
+    .lpr-word { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+    .lpr-word-in { display: inline-block; }
+    #closing-rule { width: calc(var(--u) * 9); height: calc(var(--u) * 0.16); background: var(--lpr-accent); margin: calc(var(--u) * 2.6) 0 calc(var(--u) * 2.4); }
+    #closing-sub { font-size: calc(var(--u) * 2.9); font-weight: 400; line-height: 1.4; opacity: 0.82; max-width: calc(var(--u) * 70); }
     .lpr-h-inter { font-family: "Inter", sans-serif; }
     .lpr-h-outfit { font-family: "Outfit", sans-serif; }
     .lpr-h-montserrat { font-family: "Montserrat", sans-serif; }
@@ -211,11 +82,9 @@
     </div>
   </div>
   <script>
-    (function () {
-      window.__timelines = window.__timelines || {};
+    (function () { window.__timelines = window.__timelines || {};
       var ID = "closing";
-      var $ = function (name) {
-        return document.getElementById(ID + "-" + name);
+      var $ = function (name) { return document.getElementById(ID + "-" + name);
       };
       var stage = $("stage");
       var scope = stage.closest("[data-composition-id]");
@@ -224,28 +93,8 @@
       var D = Number(scope.getAttribute("data-duration")) || 6;
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
-      var v = Object.assign(
-        {
-          product: "",
-          eyebrow: "",
-          headline: "Time, distilled.",
-          subline: "",
-          layout: "center",
-          camera: "push-in",
-          intensity: 1,
-          lighting: "dramatic",
-          particles: false,
-          exit: "hold",
-          accent: "#c9a35c",
-          background: "#07070a",
-          ink: "#f4efe6",
-          displayFont: "Playfair Display",
-          textFont: "Inter",
-        },
-        given,
-      );
-      var slug = function (s) {
-        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      var v = Object.assign( { product: "", eyebrow: "", headline: "Time, distilled.", subline: "", layout: "center", camera: "push-in", intensity: 1, lighting: "dramatic", particles: false, exit: "hold", accent: "#c9a35c", background: "#07070a", ink: "#f4efe6", displayFont: "Playfair Display", textFont: "Inter", }, given, );
+      var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
       };
       var portrait = H > W;
       var layout = portrait ? "portrait" : v.layout;
@@ -257,12 +106,10 @@
       stage.className = "lpr-" + layout + " lpr-b-" + slug(v.textFont);
       $("headline").className = "lpr-h-" + slug(v.displayFont);
       var src = typeof v.product === "string" ? v.product : (v.product && v.product.url) || "";
-      if (src) {
-        $("img").setAttribute("src", src);
+      if (src) { $("img").setAttribute("src", src);
         $("glint").style.maskImage = 'url("' + src + '")';
         $("glint").style.webkitMaskImage = 'url("' + src + '")';
-      } else {
-        $("product").style.display = "none";
+      } else { $("product").style.display = "none";
       }
       $("eyebrow").textContent = v.eyebrow;
       $("sub").textContent = v.subline;
@@ -270,8 +117,7 @@
       if (!v.subline) $("sub").style.display = "none";
       var words = String(v.headline).split(/\s+/).filter(Boolean);
       var headline = $("headline");
-      words.forEach(function (word, i) {
-        var outer = document.createElement("span");
+      words.forEach(function (word, i) { var outer = document.createElement("span");
         var inner = document.createElement("span");
         outer.className = "lpr-word";
         inner.className = "lpr-word-in";
@@ -289,8 +135,7 @@
         "radial-gradient(ellipse at " + productX + "% 45%, transparent 38%, rgba(0,0,0," + look[4] + ") 100%)";
       var seed = 2166136261;
       for (var c = 0; c < ID.length; c++) seed = Math.imul(seed ^ ID.charCodeAt(c), 16777619);
-      var rand = function () {
-        seed = (seed + 0x6d2b79f5) | 0;
+      var rand = function () { seed = (seed + 0x6d2b79f5) | 0;
         var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
         t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
@@ -303,26 +148,14 @@
       tl.fromTo($("floor"), { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power2.out" }, 0.7);
       tl.fromTo($("vignette"), { opacity: 0.6 }, { opacity: 1, duration: 2, ease: "sine.out" }, 0);
       tl.fromTo($("beam"), { x: -0.45 * W, opacity: look[3] }, { x: 1.25 * W, opacity: look[3], duration: 2.6, ease: "power1.inOut" }, 0.5);
-      tl.fromTo(
-        $("product"),
-        { opacity: 0, scale: 0.88, y: 4 * U, filter: "blur(" + 2 * U + "px)" },
-        { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.6, ease: "expo.out" },
-        0.2,
-      );
+      tl.fromTo( $("product"), { opacity: 0, scale: 0.88, y: 4 * U, filter: "blur(" + 2 * U + "px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.6, ease: "expo.out" }, 0.2, );
       tl.fromTo($("glint-bar"), { xPercent: -120 }, { xPercent: 320, duration: 1.3, ease: "power2.inOut" }, 1.0);
       if (D >= 7) tl.fromTo($("glint-bar"), { xPercent: -120 }, { xPercent: 320, duration: 1.3, ease: "power2.inOut", immediateRender: false }, D - 3);
       var cam = $("cam");
-      var move = {
-        "push-in": [{ scale: 1 }, { scale: 1 + 0.12 * k, ease: "power1.out" }],
-        "pull-out": [{ scale: 1 + 0.14 * k }, { scale: 1, ease: "power1.out" }],
-        orbit: [{ rotationY: -24 * k, x: -2 * U * k }, { rotationY: 24 * k, x: 2 * U * k, ease: "sine.inOut" }],
-        pan: [{ x: -3.5 * U * k }, { x: 3.5 * U * k, ease: "sine.inOut" }],
-      }[v.camera];
+      var move = { "push-in": [{ scale: 1 }, { scale: 1 + 0.12 * k, ease: "power1.out" }], "pull-out": [{ scale: 1 + 0.14 * k }, { scale: 1, ease: "power1.out" }], orbit: [{ rotationY: -24 * k, x: -2 * U * k }, { rotationY: 24 * k, x: 2 * U * k, ease: "sine.inOut" }], pan: [{ x: -3.5 * U * k }, { x: 3.5 * U * k, ease: "sine.inOut" }], }[v.camera];
       if (move) tl.fromTo(cam, move[0], Object.assign({ duration: end }, move[1]), 0);
-      if (v.particles !== false && v.particles !== "false") {
-        var dust = $("dust");
-        for (var i = 0; i < 34; i++) {
-          var p = document.createElement("div");
+      if (v.particles !== false && v.particles !== "false") { var dust = $("dust");
+        for (var i = 0; i < 34; i++) { var p = document.createElement("div");
           var size = (0.18 + rand() * 0.34) * U;
           p.className = "lpr-dust";
           p.style.width = p.style.height = size + "px";
@@ -339,21 +172,10 @@
       }
       var centered = layout === "center" || layout === "portrait";
       tl.fromTo($("eyebrow"), { opacity: 0, y: 1.4 * U }, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, 1.25);
-      tl.fromTo(
-        headline.querySelectorAll(".lpr-word-in"),
-        { yPercent: 115 },
-        { yPercent: 0, duration: 1.05, ease: "expo.out", stagger: 0.09 },
-        1.45,
-      );
-      tl.fromTo(
-        $("rule"),
-        { scaleX: 0, transformOrigin: centered ? "50% 50%" : "0% 50%" },
-        { scaleX: 1, duration: 0.9, ease: "expo.out" },
-        1.9,
-      );
+      tl.fromTo( headline.querySelectorAll(".lpr-word-in"), { yPercent: 115 }, { yPercent: 0, duration: 1.05, ease: "expo.out", stagger: 0.09 }, 1.45, );
+      tl.fromTo( $("rule"), { scaleX: 0, transformOrigin: centered ? "50% 50%" : "0% 50%" }, { scaleX: 1, duration: 0.9, ease: "expo.out" }, 1.9, );
       tl.fromTo($("sub"), { opacity: 0, y: 1.4 * U }, { opacity: 0.82, y: 0, duration: 0.9, ease: "power3.out" }, 2.1);
-      if (v.exit === "fade") {
-        tl.fromTo($("copy"), { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.85);
+      if (v.exit === "fade") { tl.fromTo($("copy"), { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.85);
         tl.fromTo($("zone"), { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "power2.in", immediateRender: false }, D - 0.7);
       }
       tl.set({}, {}, D);
