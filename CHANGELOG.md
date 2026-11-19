@@ -25,6 +25,10 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - Art-direction rules in the compiler: brand variables only in `style`, no repeated shot, copy length limits, sourced statistics, real regions; warnings for slow pacing and a fade into the first scene; every placeholder listed.
 - One stage per film, drawn by the compiler; `STORYBOARD.md` written with every project.
 - Shot recipes `product-shot`, `statement` and `brand-close`.
+- Stage `light: aurora` with an optional `glow` colour: drifting glows, a vignette and grain behind every shot.
+- `product-shot`: perspective `up` and `desk`, stronger `left` and `right`, and `focus` for a shallow depth of field.
+- Recipe `scatter`: the problem before the product, as notes that arrive scattered and are swept away.
+- The benchmark film is re-cut on a dark aurora stage with a problem opening, and its example product has a redesigned interface.
 - `hyperstudio review`: `hyperframes check`, frames from every shot, and a `REVIEW.md` rubric.
 - CLI: readable output by default, `--json`, `recipes <name>`, `--version`, exit code 2 for usage errors.
 - Example `saas-product-showcase`: a 15-second, nine-shot benchmark with its product built as real HTML.

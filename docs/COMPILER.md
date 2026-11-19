@@ -70,7 +70,8 @@ has are removed; files without the marker are never touched.
 
 ### The stage
 
-One background and, with `light: soft`, one light that moves once across the whole film. It is drawn in
+One background and its light: `soft` is one pale light that moves once across the whole film; `aurora` is
+three glows in the film's `accent` and `glow` colours that drift once across it, under a vignette and grain. It is drawn in
 `index.html` behind every scene, and recipes are transparent. A cut therefore changes the picture and not the
 place. Fades dip to the stage colour, not to black.
 

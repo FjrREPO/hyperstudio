@@ -44,7 +44,17 @@ Write the eight `direction` sentences before any scene exists. Each is a decisio
 | `pacing` | Shot length, and where the film breathes |
 
 Restraint is the default: one stage, one accent, one camera move per shot, small type with space around it.
-No gradient blobs, glows, particles or grids standing in for design. A still frame is allowed.
+No particles or grids standing in for design. A still frame is allowed.
+
+A flat, empty stage reads as unfinished. Give the stage depth and the product presence:
+
+- `style.light`: `soft` for a calm light film, `aurora` (with `glow` as a second hue) for a dark stage with depth.
+  A white interface on a dark aurora stage is the strongest contrast available.
+- Wide shots of a whole screen get a `tilt` (`left`, `right`, `up`, `desk`) and usually `focus`, so they read as a
+  camera looking at a screen, not a screenshot pasted on a slide. Close shots of one component stay flat.
+- Fill the frame. A component alone in the middle of an empty stage is the look to avoid; raise `fill`, or show
+  the screen around it instead of using `isolate`.
+- Open on the problem when the product solves one (`scatter`), then show the product doing the thing.
 
 ## 3. Storyboard, in shots
 
@@ -71,6 +81,7 @@ pnpm -s hyperstudio recipes product-shot   # one recipe: every variable, where i
 | Recipe | Use it for |
 | --- | --- |
 | `product-shot` | One shot of a real screen: camera from one named region to another, optional cursor and click, typed text, outlined component, short label. `isolate` floats one component on the stage |
+| `scatter` | The problem before the product: three to six short notes arrive scattered, a line lands between them, they are swept away. Once, as an opening |
 | `statement` | One short line of copy, small, with at most one emphasised word |
 | `brand-close` | The ending: mark, name, tagline, optional button |
 | `luxury-product-reveal` | A physical product emerging from darkness (slow, 4 to 12 s) |
