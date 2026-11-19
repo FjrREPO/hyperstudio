@@ -174,8 +174,25 @@ See `docs/ASSET-ENGINE.md`.
 
 ## Sound
 
-Music and sound design need a real source: a track the person supplies, or `media-use` (the free catalogue
-needs `npx hyperframes auth login`). Synthesised effects are placeholders; mark them so.
+A film needs sound from a real source. In order of preference: what the person supplies; openly licensed
+music and effects from `hyperstudio assets search --kind audio`; a generated voice.
+
+```bash
+pnpm -s hyperstudio audio providers
+pnpm -s hyperstudio audio tts "One line of narration." --out <film>/assets/vo-1.m4a   # system draft voice
+pnpm -s hyperstudio audio inspect <film>/assets/vo-1.m4a                              # its real length
+```
+
+- Write narration per shot, one clip per line, and place it with `"role": "voice", "scene": "<id>", "start": 0.1,
+  "duration": <from inspect>`. It then follows the shot when the film is retimed.
+- The system voice is a **draft**: give it `"origin": "placeholder"` and say so in your report.
+- ElevenLabs runs only with `--provider elevenlabs` and its key. Start with `audio status` and `--dry-run`.
+  **Never pass `--confirm-cost` yourself**: show the estimate and ask the person. Free-plan output is
+  non-commercial; say that when you deliver.
+- Dubbing localises a finished film; it is a separate per-minute cost. Ask before starting one.
+- You cannot hear. Report measured facts (lengths, levels), not that it "sounds good".
+
+See `docs/AUDIO-ENGINE.md` and `docs/AUDIO-COST-CONTROLS.md`.
 
 ## Footage-led films
 
