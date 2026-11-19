@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Relay: the change (example product)</title>
+    <!--
+      Relay is an EXAMPLE PRODUCT made for a HyperStudio film. It is not a real company. This page is the developer's editor and terminal as a live page.
+      Code, commits, services, log lines and figures are invented sample data.
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; background: #07090c; }
+      .app { --bg: #0a0d11; --panel: #10151b; --line: #1d252f; --ink: #e6edf3; --dim: #7d8a99; --faint: #4a5563; --go: #3ddc97; --warn: #f5b84a; --hot: #5aa9ff; --bad: #ff6b6b;
+        width: 1440px; height: 900px; overflow: hidden; display: grid; grid-template-rows: 64px 1fr; background: var(--bg); color: var(--ink);
+        font: 20px/1.5 "IBM Plex Mono", ui-monospace, monospace; text-align: left; -webkit-font-smoothing: antialiased; }
+      svg { display: block; }
+      .top { display: flex; align-items: center; gap: 20px; padding: 0 28px; border-bottom: 1px solid var(--line); font-size: 16px; color: var(--dim); }
+      .mark { font-weight: 700; font-size: 22px; letter-spacing: -0.02em; color: var(--ink); }
+      .mark i { display: inline-block; width: 12px; height: 12px; margin-right: 10px; border-radius: 3px; background: var(--go); }
+      .top b { color: var(--ink); font-weight: 500; }
+      .top .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+      .chip { padding: 5px 12px; border: 1px solid var(--line); border-radius: 8px; }
+      .prompt { display: flex; gap: 14px; font-size: 26px; white-space: nowrap; }
+      .prompt b { color: var(--go); font-weight: 500; }
+      .ok { color: var(--go); } .dim { color: var(--dim); } .faint { color: var(--faint); }
+      .work { display: grid; grid-template-rows: 1fr auto; min-height: 0; }
+      .editor { padding: 34px 0 0; }
+      .tabs { display: flex; gap: 0; padding: 0 28px 18px; font-size: 16px; color: var(--dim); }
+      .tabs span { padding: 6px 16px; border: 1px solid var(--line); border-radius: 8px 8px 0 0; }
+      .tabs .on { color: var(--ink); background: var(--panel); }
+      .row { display: flex; gap: 28px; padding: 5px 28px; font-size: 30px; white-space: pre; border-left: 5px solid transparent; }
+      .no { width: 44px; text-align: right; color: var(--faint); }
+      .k { color: var(--hot); }
+      .row.edit { background: rgba(245, 184, 74, 0.07); border-left-color: var(--warn); }
+      .app:not([data-state="editing"]) .row.edit { background: rgba(61, 220, 151, 0.1); border-left-color: var(--go); }
+      .term { padding: 26px 28px 30px; border-top: 1px solid var(--line); background: #06080b; min-height: 250px; }
+      .in { color: var(--faint); } .in[data-typed] { color: var(--ink); }
+      .out { margin-top: 14px; font-size: 22px; color: var(--dim); }
+      .app:not([data-state="pushed"]) .out, .app[data-state="editing"] .saved, .app:not([data-state="editing"]) .unsaved { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="app" data-state="editing" data-states="editing changed pushed" data-region="window">
+      <div class="top"><span class="mark" data-region="brand"><i></i>relay</span><span>northwind / <b>api-gateway</b></span><span class="chip">main</span>
+        <div class="right"><span class="unsaved">editing</span><span class="saved ok">1 file changed</span></div></div>
+      <div class="work">
+        <div class="editor" data-region="editor">
+          <div class="tabs"><span class="on">src/upstream/retry.ts</span><span>client.ts</span></div>
+          <div class="row "><span class="no">11</span><span class="src"><span class='k'>export async function</span> callUpstream(req: Req) {</span></div>
+          <div class="row "><span class="no">12</span><span class="src">  <span class='k'>for</span> (<span class='k'>let</span> attempt = 0; attempt &lt; 5; attempt++) {</span></div>
+          <div class="row "><span class="no">13</span><span class="src">    <span class='k'>const</span> res = <span class='k'>await</span> send(req);</span></div>
+          <div class="row "><span class="no">14</span><span class="src">    <span class='k'>if</span> (res.ok) <span class='k'>return</span> res;</span></div>
+          <div class="row edit"><span class="no">15</span><span class="src" data-region="edit">    const delay = 250;</span></div>
+          <div class="row "><span class="no">16</span><span class="src">    <span class='k'>await</span> sleep(delay);</span></div>
+          <div class="row "><span class="no">17</span><span class="src">  }</span></div>
+          <div class="row "><span class="no">18</span><span class="src">  <span class='k'>throw new</span> UpstreamTimeout(req);</span></div>
+          <div class="row "><span class="no">19</span><span class="src">}</span></div>
+        </div>
+        <div class="term" data-region="terminal">
+          <div class="prompt" data-region="prompt"><b>~/api-gateway $</b><span class="in" data-region="prompt-input">_</span></div>
+          <div class="out" data-region="pushed">
+            <div data-reveal>To github.com:northwind/api-gateway · a41c9e2 → main</div>
+            <div data-reveal class="ok">relay: received a41c9e2 · deploy started</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.querySelector(".app").dataset.state = (location.hash || "#editing").slice(1);
+    </script>
+  </body>
+</html>

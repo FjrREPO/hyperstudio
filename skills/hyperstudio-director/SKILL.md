@@ -86,6 +86,17 @@ Decide these from the product, not from the last film:
 
 ## 3. Storyboard, in shots
 
+**Story before technique.** Write the film as milestones first: what has happened by the end of each, in
+the viewer's words. Only then choose how each is shown. Do not start from what a recipe can do.
+
+- Each milestone must change what the picture **is**: another view, or a state that redraws the frame. A
+  new camera position on the same interface is not an event; five of them are a tour of a screenshot.
+- If the product's main screen cannot show a milestone, show where that milestone really happens (an
+  editor, a terminal, a fleet, an inbox) as its own live page and cut to it.
+- What moves should be the thing the story is about (a line typed, a bar filling, machines turning). The
+  camera steps back to show how far it has got; it does not carry the story.
+- The last milestone is the payoff and gets the longest hold. The name comes after it, not instead of it.
+
 List the shots in plain words before writing JSON. For each: what the viewer sees, what happens in it, why it
 is there (`purpose`), and how long. Then check the list:
 

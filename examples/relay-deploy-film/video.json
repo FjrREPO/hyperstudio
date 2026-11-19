@@ -3,17 +3,17 @@
     "title": "Relay - launch film",
     "fps": 30,
     "aspectRatio": "16:9",
-    "duration": 27.4
+    "duration": 28.0
   },
   "direction": {
-    "concept": "One deploy, watched from inside the machine: a push, a build, a canary, a promotion, and an undo, with no narrator on screen.",
-    "audience": "Engineers who ship several times a day and have been burned by a deploy they could not take back.",
-    "message": "Relay rolls a release out in steps you can watch, and takes it back in one click.",
+    "concept": "One line of code travels from an editor to every machine in production, and each stop on the way is a different picture.",
+    "audience": "Engineers who ship several times a day and have been burned by a deploy that went everywhere at once.",
+    "message": "Relay moves a release across your fleet in steps you can watch, and it is live when the last machine turns.",
     "tone": "Terse and precise, like good tooling; nothing is explained twice and nothing is decorated.",
-    "palette": "The product's own near-black is the whole frame, with its green for what is healthy, amber for what is in flight, and a black void where the camera sees past its edge.",
-    "typography": "None of the film's own: every word on screen is the product's, in its monospace; the story is told by the log and by a voice.",
-    "motion": "The interface is an object the camera circles on a wide lens, a new angle for each stage of the deploy, coming square only when the release is live.",
-    "pacing": "Fast and even while the pipeline runs, one still breath when it is live, then the undo, and a slow pull back on the command that starts it all."
+    "palette": "The product's own near-black is the whole frame; amber marks what is being changed, green is the new release, and the fleet turning green is the film's one colour event.",
+    "typography": "None of the film's own until the name at the end: every word before it is code, a log or the product, in its monospace, set large enough to read.",
+    "motion": "What moves is the deploy itself, a line typed, a bar filling, shards finishing, machines turning; the camera only steps back to show how far it has got.",
+    "pacing": "Four milestones of about six seconds, each cut on its completion, with the longest hold on the fleet fully turned before the name."
   },
   "brand": {
     "name": "Relay",
@@ -29,8 +29,20 @@
     "light": "none"
   },
   "screens": {
-    "app": {
-      "html": "product/index.html",
+    "change": {
+      "html": "product/change.html",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder"
+    },
+    "build": {
+      "html": "product/build.html",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder"
+    },
+    "rollout": {
+      "html": "product/rollout.html",
       "width": 1440,
       "height": 900,
       "origin": "placeholder"
@@ -38,253 +50,308 @@
   },
   "scenes": [
     {
-      "id": "film",
+      "id": "change",
       "recipe": "product-take",
-      "duration": 27.4,
-      "screen": "app",
-      "purpose": "The whole film is one orbit of the product through one deploy: pushed, built, tested, tried on a tenth of traffic, promoted, rolled back, and started again.",
+      "duration": 6.4,
+      "screen": "change",
+      "purpose": "The journey starts with the smallest possible thing: one line rewritten in an editor, then pushed.",
       "params": {
-        "from": "prompt",
-        "fill": 0.92,
-        "tilt": "up",
-        "focus": "centre",
-        "lens": "wide",
-        "spill": true,
         "chrome": "none",
         "radius": 10,
-        "maxZoom": 2.2
+        "maxZoom": 2.6,
+        "tilt": "none",
+        "spill": true,
+        "from": "edit",
+        "fill": 0.96
       },
       "beats": [
         {
           "at": 0.2,
           "do": "camera",
-          "target": "prompt",
-          "fill": 0.8,
-          "tilt": "up",
-          "over": 1.6,
-          "ease": "power2.inOut"
+          "target": "edit",
+          "fill": 0.9,
+          "over": 2.0,
+          "ease": "none"
         },
         {
           "at": 0.3,
           "do": "type",
-          "target": "prompt-input",
-          "text": "git push origin main",
-          "over": 1.3
+          "target": "edit",
+          "text": "    const delay = backoff(attempt, { cap: 8_000 });",
+          "over": 1.9
         },
         {
-          "at": 1.9,
+          "at": 2.4,
           "do": "state",
-          "state": "building"
+          "state": "changed"
         },
         {
-          "at": 1.9,
-          "do": "reveal",
-          "target": "log-build",
-          "over": 1.8
+          "at": 2.5,
+          "do": "camera",
+          "target": "window",
+          "fill": 1,
+          "over": 1.1
         },
         {
-          "at": 2.0,
+          "at": 3.8,
           "do": "camera",
           "target": "terminal",
-          "fill": 0.86,
-          "tilt": "left",
-          "focus": "all",
-          "over": 1.5
+          "fill": 0.9,
+          "level": "bleed",
+          "over": 1.2
         },
         {
-          "at": 3.9,
+          "at": 4.0,
+          "do": "type",
+          "target": "prompt-input",
+          "text": "git push origin main",
+          "over": 1.1
+        },
+        {
+          "at": 5.3,
+          "do": "state",
+          "state": "pushed"
+        },
+        {
+          "at": 5.3,
+          "do": "reveal",
+          "target": "pushed",
+          "over": 0.5
+        },
+        {
+          "at": 5.3,
           "do": "camera",
-          "target": "pipeline",
-          "fill": 0.92,
-          "tilt": "right",
-          "over": 1.3
+          "target": "terminal",
+          "fill": 0.96,
+          "over": 1.1,
+          "ease": "none"
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "recipe": "product-take",
+      "duration": 6.2,
+      "screen": "build",
+      "purpose": "The second milestone is the machine's work: the build completes and six shards of tests finish.",
+      "params": {
+        "chrome": "none",
+        "radius": 10,
+        "maxZoom": 2.6,
+        "tilt": "none",
+        "spill": true,
+        "from": "window",
+        "fill": 1
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "do": "reveal",
+          "target": "build",
+          "over": 1.7
         },
         {
-          "at": 4.2,
+          "at": 0.2,
+          "do": "camera",
+          "target": "window",
+          "fill": 1,
+          "over": 2.0,
+          "ease": "none"
+        },
+        {
+          "at": 0.5,
           "do": "draw",
-          "target": "seg-1",
-          "over": 0.9
+          "target": "build-bar",
+          "over": 1.7
         },
         {
-          "at": 5.1,
+          "at": 2.3,
           "do": "state",
           "state": "testing"
         },
         {
-          "at": 5.1,
-          "do": "reveal",
-          "target": "log-test",
-          "over": 1.0
-        },
-        {
-          "at": 5.4,
-          "do": "draw",
-          "target": "seg-2",
+          "at": 2.4,
+          "do": "camera",
+          "target": "tests",
+          "fill": 0.94,
           "over": 0.9
         },
         {
-          "at": 6.5,
+          "at": 2.6,
+          "do": "draw",
+          "target": "shards",
+          "over": 2.0
+        },
+        {
+          "at": 4.8,
           "do": "state",
-          "state": "canary"
+          "state": "passed"
         },
         {
-          "at": 6.5,
+          "at": 4.8,
           "do": "reveal",
-          "target": "log-canary",
-          "over": 1.6
+          "target": "result",
+          "over": 0.4
         },
         {
-          "at": 6.6,
+          "at": 4.9,
+          "do": "camera",
+          "target": "window",
+          "fill": 1,
+          "over": 1.3
+        }
+      ]
+    },
+    {
+      "id": "rollout",
+      "recipe": "product-take",
+      "duration": 12.6,
+      "screen": "rollout",
+      "purpose": "The release moves across thirty machines in three waves, and the last wave is the payoff: live everywhere.",
+      "params": {
+        "chrome": "none",
+        "radius": 10,
+        "maxZoom": 2.6,
+        "tilt": "left",
+        "spill": true,
+        "from": "fleet",
+        "fill": 0.9,
+        "lens": "wide"
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "do": "camera",
+          "target": "fleet",
+          "fill": 0.9,
+          "tilt": "left",
+          "over": 1.6,
+          "ease": "none"
+        },
+        {
+          "at": 0.3,
+          "do": "reveal",
+          "target": "wave-1",
+          "over": 0.8
+        },
+        {
+          "at": 1.9,
           "do": "camera",
           "target": "traffic",
-          "fill": 0.8,
-          "tilt": "left",
-          "over": 1.3,
-          "zoom": 3.2
-        },
-        {
-          "at": 8.2,
-          "do": "camera",
-          "target": "latency",
-          "fill": 0.9,
+          "fill": 0.62,
           "tilt": "none",
-          "over": 1.2,
-          "zoom": 4
+          "over": 0.9
         },
         {
-          "at": 8.5,
+          "at": 3.0,
           "do": "draw",
-          "target": "latency",
-          "over": 1.6
+          "target": "health",
+          "over": 1.3
         },
         {
-          "at": 10.3,
+          "at": 3.0,
           "do": "camera",
-          "target": "deploy",
-          "fill": 0.94,
-          "tilt": "right",
+          "target": "window",
+          "fill": 1,
           "over": 1.2
         },
         {
-          "at": 11.0,
+          "at": 4.5,
+          "do": "state",
+          "state": "half"
+        },
+        {
+          "at": 4.5,
+          "do": "camera",
+          "target": "fleet",
+          "fill": 0.94,
+          "tilt": "right",
+          "over": 1.1
+        },
+        {
+          "at": 4.7,
+          "do": "reveal",
+          "target": "wave-2",
+          "over": 1.5
+        },
+        {
+          "at": 6.5,
+          "do": "camera",
+          "target": "window",
+          "fill": 1,
+          "tilt": "none",
+          "over": 1.0
+        },
+        {
+          "at": 6.6,
           "do": "cursor",
           "target": "promote",
           "over": 0.7
         },
         {
-          "at": 11.8,
+          "at": 7.6,
           "do": "click",
           "target": "promote",
           "state": "live",
           "over": 0.3
         },
         {
-          "at": 11.9,
-          "do": "draw",
-          "target": "seg-3",
-          "over": 0.9
-        },
-        {
-          "at": 11.9,
+          "at": 7.7,
           "do": "reveal",
-          "target": "log-live",
-          "over": 1.0
+          "target": "wave-3",
+          "over": 1.8
         },
         {
-          "at": 12.1,
+          "at": 7.8,
+          "do": "camera",
+          "target": "fleet",
+          "fill": 0.98,
+          "tilt": "up",
+          "over": 1.9
+        },
+        {
+          "at": 9.9,
           "do": "camera",
           "target": "window",
-          "fill": 0.94,
+          "fill": 1,
           "tilt": "none",
-          "over": 1.6
-        },
-        {
-          "at": 14.4,
-          "do": "camera",
-          "target": "pipeline",
-          "fill": 0.92,
-          "tilt": "left",
-          "over": 1.3
-        },
-        {
-          "at": 16.2,
-          "do": "camera",
-          "target": "deploy",
-          "fill": 0.94,
-          "tilt": "up",
           "over": 1.2
         },
         {
-          "at": 17.0,
-          "do": "cursor",
-          "target": "undo",
-          "over": 0.7
-        },
-        {
-          "at": 17.9,
-          "do": "click",
-          "target": "undo",
-          "state": "rolledback",
-          "over": 0.3
-        },
-        {
-          "at": 18.0,
-          "do": "reveal",
-          "target": "log-back",
-          "over": 0.9
-        },
-        {
-          "at": 18.1,
+          "at": 10.3,
           "do": "highlight",
           "target": "status",
           "over": 1.6
         },
         {
-          "at": 19.6,
+          "at": 11.2,
           "do": "camera",
-          "target": "terminal",
-          "fill": 0.8,
-          "tilt": "right",
-          "over": 1.4
-        },
-        {
-          "at": 21.6,
-          "do": "camera",
-          "target": "prompt",
-          "fill": 0.62,
-          "tilt": "up",
-          "focus": "near",
-          "over": 1.3
-        },
-        {
-          "at": 22.6,
-          "do": "type",
-          "target": "prompt-input",
-          "text": "npx relay init",
-          "over": 1.1
-        },
-        {
-          "at": 24.0,
-          "do": "camera",
-          "target": "top",
-          "fill": 0.96,
-          "tilt": "none",
-          "focus": "all",
-          "over": 1.3
-        },
-        {
-          "at": 25.0,
-          "do": "camera",
-          "target": "brand",
-          "fill": 0.3,
-          "zoom": 6,
-          "tilt": "none",
-          "over": 1.6,
-          "ease": "power2.inOut",
-          "side": "centre",
-          "level": "middle"
+          "target": "window",
+          "fill": 0.94,
+          "over": 1.4,
+          "ease": "none"
         }
       ]
+    },
+    {
+      "id": "close",
+      "recipe": "brand-close",
+      "duration": 2.8,
+      "purpose": "The name arrives only after the release is live, with the one promise the film has just shown.",
+      "assets": {
+        "mark": {
+          "src": "assets/relay-mark.svg",
+          "origin": "placeholder"
+        }
+      },
+      "text": {
+        "name": "Relay",
+        "tagline": "Ship in steps. Watch every one."
+      },
+      "transition": {
+        "type": "fade",
+        "duration": 0.4
+      }
     }
   ],
   "audio": [
@@ -296,76 +363,67 @@
       "volume": 0.6
     },
     {
+      "id": "vo-change",
+      "src": "assets/vo-change.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "change",
+      "start": 0.4,
+      "duration": 1.3333333333
+    },
+    {
       "id": "vo-push",
       "src": "assets/vo-push.m4a",
       "origin": "supplied",
       "role": "voice",
-      "scene": "film",
-      "start": 0.2,
-      "duration": 0.9
+      "scene": "change",
+      "start": 3.7,
+      "duration": 0.8666666667
     },
     {
       "id": "vo-build",
       "src": "assets/vo-build.m4a",
       "origin": "supplied",
       "role": "voice",
-      "scene": "film",
-      "start": 2.2,
-      "duration": 1.0
-    },
-    {
-      "id": "vo-test",
-      "src": "assets/vo-test.m4a",
-      "origin": "supplied",
-      "role": "voice",
-      "scene": "film",
-      "start": 5.2,
-      "duration": 0.7333333333
+      "scene": "build",
+      "start": 0.3,
+      "duration": 2.3666666667
     },
     {
       "id": "vo-canary",
       "src": "assets/vo-canary.m4a",
       "origin": "supplied",
       "role": "voice",
-      "scene": "film",
-      "start": 6.7,
-      "duration": 2.4333333333
+      "scene": "rollout",
+      "start": 0.3,
+      "duration": 2.1333333333
+    },
+    {
+      "id": "vo-half",
+      "src": "assets/vo-half.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "rollout",
+      "start": 4.6,
+      "duration": 1.7666666667
     },
     {
       "id": "vo-live",
       "src": "assets/vo-live.m4a",
       "origin": "supplied",
       "role": "voice",
-      "scene": "film",
-      "start": 12.0,
-      "duration": 2.1666666667
-    },
-    {
-      "id": "vo-mind",
-      "src": "assets/vo-mind.m4a",
-      "origin": "supplied",
-      "role": "voice",
-      "scene": "film",
-      "start": 16.4,
-      "duration": 1.1666666667
-    },
-    {
-      "id": "vo-back",
-      "src": "assets/vo-back.m4a",
-      "origin": "supplied",
-      "role": "voice",
-      "scene": "film",
-      "start": 18.1,
-      "duration": 1.1666666667
+      "scene": "rollout",
+      "start": 8.2,
+      "duration": 1.5333333333
     },
     {
       "id": "vo-close",
       "src": "assets/vo-close.m4a",
       "origin": "supplied",
       "role": "voice",
-      "scene": "film",
-      "start": 24.4,
-      "duration": 2.3333333333
+      "scene": "close",
+      "start": 0.3,
+      "duration": 1.5
     }
   ]
 }

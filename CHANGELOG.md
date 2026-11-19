@@ -35,8 +35,9 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
   can turn, pull focus and move the product to one side, `count` counts a figure up, `veil` resolves the
   interface into its own mark. Loading and result are one element in the page (`data-leave`, `data-shimmer`).
 - `hyperstudio compare <a.json> <b.json>`: where two films made the same choice, decision by decision.
-- A third benchmark, Relay: a dark, type-free film of a deploy tool on a wide lens. One input can be
-  typed into more than once in a take.
+- A third film, Relay, told as a deploy journey across three live views (editor, build log, fleet). Not
+  a benchmark until it is reviewed for motion and sound. One input can be typed into more than once in a take.
+- Director skill: story before technique. Milestones first; each must change what the picture is.
 - A local voice with no key: Kokoro (Apache 2.0) through `hyperstudio audio setup kokoro` and
   `audio tts`; it is the default voice once set up. Both benchmark films are narrated with it.
 - Benchmarks frozen as tags `lumen-benchmark-v1` and `marlow-benchmark-v1`, described in `docs/BENCHMARKS.md`.

@@ -61,22 +61,36 @@ Made with the same recipe (`product-take`) and compiler. Everything below was de
 | Ending                    | The interface closes like an iris onto its mark | The camera pulls back and leans; the name set in type  |
 | Sound                     | Music bed and interface sounds                  | Interface sounds only                                  |
 
-## Relay (not yet frozen)
+## Relay (not frozen)
 
-- Folder `examples/relay-deploy-film`, file `video.json`. No tag: nobody but its author has watched it
-- 27.4 s, 1920×1080, 30 fps. One take of `product/index.html`, a deploy tool for engineers
-- Direction: dimensional. A black stage, the interface as an object a wide lens circles, a new angle for each
-  stage of the deploy, and no type of the film's own: the log and a voice tell it
-- Measured: `hyperframes check` 0 errors, 1 warning (the first frame is nearly empty); 42% of frames still;
-  mean level -22.6 dB
-- Placeholders: the product and its interface are examples; the interface sounds are synthesised
+- Folder `examples/relay-deploy-film`, file `video.json`. No tag
+- 28.0 s, 1920×1080, 30 fps. Four scenes: an editor (`product/change.html`), a build log
+  (`product/build.html`), the fleet (`product/rollout.html`), and the name
+- Direction: a deploy as a journey. One changed line travels to thirty machines; each milestone is its own
+  picture, and the fleet turning green is the payoff. No type of the film's own until the name
+- Measured: `hyperframes check` 0 errors, 1 warning; 15% of frames still; mean level -22.9 dB
+- Placeholders: the product and all three views are examples; the interface sounds are synthesised
+- Its first version was one dashboard circled by a camera, and was judged worse than Lumen and Marlow: the
+  picture never changed while the story advanced. It was rebuilt, not adjusted
+
+## What a benchmark needs before it is frozen
+
+Three separate judgements, each by a person watching the rendered file:
+
+| Dimension              | What is judged                                        | Lumen | Marlow | Relay              |
+| ---------------------- | ----------------------------------------------------- | ----- | ------ | ------------------ |
+| Visual, art direction  | Composition, identity, type, consistency              | Yes   | Yes    | First version only |
+| Motion and editing     | Timing, transitions, choreography, pacing, continuity | Yes   | Yes    | No                 |
+| Audio and sound design | Voice, music, effects, mix, sync                      | No    | No     | No                 |
+
+"Yes" means the user reviewed the render. The narration on all three was added after those reviews and has
+not been heard by anyone. Still frames and level meters, which is all the author has, settle none of these.
 
 ## Comparing them
 
 `pnpm hyperstudio compare <a>/video.json <b>/video.json` reads two plans and lists eleven decisions (stage, type,
 how the product sits, camera, entrance, structure, ending, sound) and whether the films made the same one.
-Today: Lumen and Marlow share 2 of 11 (a light stage, large type); Lumen and Relay share none; Marlow and
-Relay share 4 (bare product, present from frame 0, one take, the same kinds of sound). It reads plans, not
+It reads plans, not
 pictures: two films can differ on every row and still feel alike, and only a viewer can say so.
 
 ## Since v1
