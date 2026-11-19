@@ -38,7 +38,10 @@ export interface Film {
   duration: number;
   /** The stage every scene sits on. */
   background: string;
-  light: "none" | "soft";
+  /** `soft`: one pale light. `aurora`: slow coloured glows, a vignette and grain, for a stage with depth. */
+  light: "none" | "soft" | "aurora";
+  /** Colours of the aurora's glows: the film's accent, then its optional second hue. */
+  glows: string[];
   scenes: PlannedScene[];
   audio: PlannedAudio[];
 }
@@ -93,6 +96,13 @@ export function renderIndex(film: Film): string {
       `tl.fromTo("#hs-light", { xPercent: -8, yPercent: -4 }, { xPercent: 8, yPercent: 4, duration: ${duration}, ease: "none" }, 0);`,
     );
 
+  const aurora = film.light === "aurora" ? auroraStage(film) : null;
+  if (aurora) tweens.push(...aurora.tweens);
+  const light =
+    film.light === "soft"
+      ? '<div id="hs-light" data-layout-allow-overflow data-layout-allow-occlusion></div>'
+      : (aurora?.html ?? "");
+
   return `<!doctype html>
 ${MARKER}
 <html lang="en">
@@ -108,12 +118,12 @@ ${MARKER}
       #hs-stage { position: absolute; inset: 0; overflow: hidden; background: ${film.background}; pointer-events: none; }
       #hs-light { position: absolute; left: -20%; top: -30%; width: 110%; height: 130%; pointer-events: none;
         background: radial-gradient(closest-side, color-mix(in srgb, ${film.background} 55%, white), transparent); }
-      .hs-dip { position: absolute; inset: 0; background: ${film.background}; opacity: 0; z-index: 1000; pointer-events: none; }
+${aurora?.css ?? ""}      .hs-dip { position: absolute; inset: 0; background: ${film.background}; opacity: 0; z-index: 1000; pointer-events: none; }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="${duration}" data-width="${width}" data-height="${height}">
-      <div id="hs-stage" data-layout-allow-occlusion>${film.light === "soft" ? '<div id="hs-light" data-layout-allow-overflow data-layout-allow-occlusion></div>' : ""}</div>
+      <div id="hs-stage" data-layout-allow-occlusion>${light}</div>
 ${[...hosts, ...audio, ...dips].join("\n")}
     </div>
     <script>
@@ -126,6 +136,40 @@ ${tweens.map((t) => `      ${t}`).join("\n")}
   </body>
 </html>
 `;
+}
+
+/** Fine static grain, so large soft gradients do not band and the stage reads as a surface. */
+const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
+
+/**
+ * The aurora stage: three large glows that drift once across the film, under a vignette and grain.
+ * Each glow is one element with one tween, so any frame can be drawn on its own.
+ */
+function auroraStage(film: Film): { css: string; html: string; tweens: string[] } {
+  const [a = "#ffffff", b = a] = film.glows;
+  // Position, size (in % of the frame), colour, strength, and how far each drifts.
+  const glows = [
+    { left: -18, top: -34, w: 78, h: 110, colour: a, mix: 46, dx: 9, dy: 6 },
+    { left: 48, top: 22, w: 82, h: 118, colour: b, mix: 38, dx: -8, dy: -7 },
+    { left: 14, top: 58, w: 60, h: 80, colour: a, mix: 22, dx: 6, dy: -5 },
+  ];
+  const allow = "data-layout-allow-overflow data-layout-allow-occlusion";
+  const css = `${glows
+    .map(
+      (g, i) =>
+        `      #hs-glow-${i} { position: absolute; left: ${g.left}%; top: ${g.top}%; width: ${g.w}%; height: ${g.h}%; pointer-events: none;
+        background: radial-gradient(closest-side, color-mix(in srgb, ${g.colour} ${g.mix}%, transparent), transparent); }\n`,
+    )
+    .join("")}      #hs-vignette { position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(ellipse at 50% 46%, transparent 42%, color-mix(in srgb, ${film.background} 62%, black) 118%); }
+      #hs-grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.16; mix-blend-mode: overlay; background: ${GRAIN}; }\n`;
+  const html = `${glows.map((_, i) => `<div id="hs-glow-${i}" ${allow}></div>`).join("")}<div id="hs-vignette" ${allow}></div><div id="hs-grain" ${allow}></div>`;
+  const tweens = glows.map(
+    (g, i) =>
+      `tl.fromTo("#hs-glow-${i}", { xPercent: ${-g.dx}, yPercent: ${-g.dy} }, { xPercent: ${g.dx}, yPercent: ${g.dy}, duration: ${film.duration}, ease: "sine.inOut" }, 0);`,
+  );
+  return { css, html, tweens };
 }
 
 /**

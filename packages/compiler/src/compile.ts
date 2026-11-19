@@ -56,7 +56,7 @@ export interface CompileResult {
 
 const RESERVED_IDS = new Set(["main", "root"]);
 /** Style keys the compiler itself reads for the stage; they need no recipe to declare them. */
-const STAGE_KEYS = new Set(["background", "light"]);
+const STAGE_KEYS = new Set(["background", "light", "glow"]);
 /** Above this average shot length a product film starts to read as a slideshow. */
 const SLOW_AVERAGE_SHOT = 3.5;
 
@@ -116,7 +116,7 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
   if (ir.brand.kind === "example")
     placeholders.push(`brand: ${ir.brand.name} is an example product, not a real one`);
 
-  const { background, light } = stage(ir.style, fail);
+  const { background, light, glow } = stage(ir.style, fail);
 
   // ── Screens ──
   const screens = new Map(
@@ -261,6 +261,10 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
     duration: seconds(total),
     background,
     light,
+    glows: [
+      typeof ir.style.accent === "string" && HEX.test(ir.style.accent) ? ir.style.accent : "#ffffff",
+      glow,
+    ].filter((c): c is string => c !== null),
     scenes: planned,
     audio,
   };
@@ -351,13 +355,24 @@ function checkLength(duration: number, meta: RecipeMeta, path: string, fail: Fai
 }
 
 /** The stage every scene sits on, from the film's style. */
-function stage(style: IR["style"], fail: Fail): { background: string; light: "none" | "soft" } {
+const HEX = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+const LIGHTS = ["none", "soft", "aurora"] as const;
+type Light = (typeof LIGHTS)[number];
+
+function stage(style: IR["style"], fail: Fail): { background: string; light: Light; glow: string | null } {
   const background = style.background ?? "#000000";
-  if (typeof background !== "string" || !/^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(background))
+  if (typeof background !== "string" || !HEX.test(background))
     fail("style.background", "must be a hex colour like #f3efe6");
-  const light = style.light ?? "none";
-  if (light !== "none" && light !== "soft") fail("style.light", "must be one of: none, soft");
-  return { background: String(background), light: light === "soft" ? "soft" : "none" };
+  const light = LIGHTS.find((l) => l === (style.light ?? "none"));
+  if (!light) fail("style.light", `must be one of: ${LIGHTS.join(", ")}`);
+  const glow = style.glow;
+  if (glow !== undefined && (typeof glow !== "string" || !HEX.test(glow)))
+    fail("style.glow", "must be a hex colour like #7a5cff");
+  return {
+    background: String(background),
+    light: light ?? "none",
+    glow: typeof glow === "string" ? glow : null,
+  };
 }
 
 /** Read and parse an IR file, or throw with every schema problem. */
