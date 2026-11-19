@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@hyperstudio/compiler": "workspace:*",
-    "@hyperstudio/assets": "workspace:*"
+    "@hyperstudio/assets": "workspace:*",
+    "@hyperstudio/audio": "workspace:*"
   }
 }

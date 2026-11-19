@@ -4,6 +4,7 @@
 import { parseArgs } from "node:util";
 import pkg from "../package.json" with { type: "json" };
 import { runAssets } from "./commands/assets.ts";
+import { runAudio } from "./commands/audio.ts";
 import { runCompile } from "./commands/compile.ts";
 import { runRecipes } from "./commands/recipes.ts";
 import { runReview } from "./commands/review.ts";
@@ -16,12 +17,14 @@ ${bold("Usage")}
   hyperstudio review  <ir.json> [--output <dir>]
   hyperstudio recipes [name]
   hyperstudio assets  providers | search <query> | download <#> | list [dir] | usage
+  hyperstudio audio   providers | tts <text> | voices | dub <file> | inspect <file> | status [job]
 
 ${bold("Commands")}
   compile   Validate a Creative IR and write a HyperFrames project.
   review    Compile, run hyperframes check, snapshot every shot and start a REVIEW.md rubric.
   recipes   List the recipes, or show one recipe's variables.
   assets    Find openly licensed media on free sources, gated by licence, and record what is used.
+  audio     Voiceover and dubbing: local and free by default; ElevenLabs only when named and keyed.
 
 ${bold("Options")}
   -o, --output <dir>   Project directory (default: build/ beside the IR file)
@@ -33,6 +36,13 @@ ${bold("Options")}
       --to <dir>       assets download: where to save, usually <film>/assets
       --name <name>    assets download: file name without extension
       --accept-review  assets download: you have read a needs-review licence and accept it
+      --provider <id>  audio tts: system (default, a draft voice) or elevenlabs
+      --voice <id>     audio tts: a system voice name, or an ElevenLabs voice id
+      --model <id>     audio tts: ElevenLabs model (default eleven_multilingual_v2)
+      --lang <code>    audio tts, dub: language code, for example id
+      --out <file>     audio tts, status: where to write the audio
+      --dry-run        audio tts, dub: show what it would use; generate nothing
+      --confirm-cost   audio tts, dub: agree to the estimate on a paid plan
       --json           Machine-readable output
       --pretty         Indented JSON (implies --json)
   -h, --help           Show this help
@@ -54,6 +64,18 @@ async function main(argv: string[]): Promise<number> {
   }
   const { values, positionals } = parsed;
   const [command, target, ...extra] = positionals;
+  if (command === "audio")
+    return await runAudio(target, extra, {
+      provider: values.provider,
+      voice: values.voice,
+      model: values.model,
+      lang: values.lang,
+      out: values.out,
+      confirmCost: values["confirm-cost"],
+      dryRun: values["dry-run"],
+      json: values.json || values.pretty,
+      pretty: values.pretty,
+    });
   if (command === "assets")
     return await runAssets(target, extra, {
       kind: values.kind,
@@ -105,6 +127,13 @@ function parse(argv: string[]) {
     options: {
       output: { type: "string", short: "o" },
       "validate-only": { type: "boolean", default: false },
+      provider: { type: "string" },
+      voice: { type: "string" },
+      model: { type: "string" },
+      lang: { type: "string" },
+      out: { type: "string" },
+      "confirm-cost": { type: "boolean", default: false },
+      "dry-run": { type: "boolean", default: false },
       kind: { type: "string" },
       source: { type: "string" },
       limit: { type: "string" },
