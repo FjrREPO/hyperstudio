@@ -15,6 +15,8 @@ export interface PlannedScene {
   html: string;
   variables: Variable[];
   values: Record<string, string | number | boolean>;
+  /** A live page for the scene to mount: its styles and markup. */
+  payload?: { css: string; html: string };
   /** Start and length in seconds. */
   start: number;
   duration: number;
@@ -177,7 +179,13 @@ function auroraStage(film: Film): { css: string; html: string; tweens: string[] 
  * element id, so renaming that one token gives each scene a unique scope and a recipe can be used many times.
  */
 export function instantiate(scene: PlannedScene, width: number, height: number): string {
-  const html = scene.html.replaceAll(scene.recipe, scene.id);
+  let html = scene.html.replaceAll(scene.recipe, scene.id);
+  // The page goes in as JSON on one line; `<` is escaped so no markup in it can end the script element.
+  if (scene.payload)
+    html = html.replace(
+      `id="${scene.id}-ui">{}</script>`,
+      () => `id="${scene.id}-ui">${JSON.stringify(scene.payload).replace(/</g, "\\u003c")}</script>`,
+    );
   const rootTag = new RegExp(`<div\\b[^>]*\\bdata-composition-id="${scene.id}"[^>]*>`).exec(html);
   if (!rootTag)
     throw new Error(`recipe ${scene.recipe}: no <div data-composition-id="${scene.recipe}"> root element`);

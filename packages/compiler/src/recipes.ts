@@ -44,8 +44,10 @@ const RecipeMeta = z.looseObject({
       required: z.array(z.string()).default([]),
       /** The recipe shows a screen: the scene names one and the compiler supplies it. */
       screen: z.boolean().default(false),
+      /** The recipe drives a live interface with the scene's beats. */
+      beats: z.boolean().default(false),
     })
-    .default({ required: [], screen: false }),
+    .default({ required: [], screen: false, beats: false }),
 });
 export type RecipeMeta = z.infer<typeof RecipeMeta>;
 
@@ -56,7 +58,7 @@ export interface Recipe {
 }
 
 /** Variables the compiler fills in for a recipe that shows a screen. A scene cannot set them. */
-export const SCREEN_VARIABLES = ["screen", "screenMeta"] as const;
+export const SCREEN_VARIABLES = ["screen", "screenMeta", "beats"] as const;
 
 /** Every recipe in `dir`, sorted by name. */
 export function listRecipes(dir: string = RECIPES_DIR): RecipeMeta[] {

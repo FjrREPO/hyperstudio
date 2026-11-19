@@ -13,6 +13,7 @@ import { ASPECT_RATIOS, IR, type Origin, type Scalar } from "@hyperstudio/ir";
 import { RECIPES_DIR } from "@hyperstudio/recipes";
 import { type Film, instantiate, MARKER, type PlannedScene, renderIndex, renderStoryboard } from "./emit.ts";
 import { CompileError, type Issue } from "./errors.ts";
+import { checkBeats, type LivePage, readLivePage } from "./live.ts";
 import { listRecipes, loadRecipe, type RecipeMeta } from "./recipes.ts";
 import { framing, resolveValues } from "./values.ts";
 
@@ -118,11 +119,28 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
 
   const { background, light, glow } = stage(ir.style, fail);
 
+  /** A live page: read it, and give its regions names the checks can look up. */
+  const liveScreen = (id: string, def: IR["screens"][string], file: string, at: string): PlacedScreen => {
+    const page = existsSync(file) ? readLivePage(file) : `file not found: ${def.html}`;
+    if (typeof page === "string") {
+      fail(`${at}.html`, page);
+      return { id, def, src: "" };
+    }
+    if (def.origin === "placeholder") placeholders.push(`screen: ${id}`);
+    const regions = Object.fromEntries(
+      page.regions.map((name) => [name, [0, 0, 1, 1]]),
+    ) as typeof def.regions;
+    return { id, def: { ...def, regions }, src: "", page };
+  };
+
   // ── Screens ──
   const screens = new Map(
     Object.entries(ir.screens).map(([id, def]) => {
       const at = `screens.${id}`;
-      const src = useAsset(def.src, `${at}.src`, def.origin, `screen: ${id}`);
+      if ((def.src === undefined) === (def.html === undefined))
+        fail(at, 'give exactly one of "src" (a screenshot) or "html" (the live page)');
+      if (def.html !== undefined) return [id, liveScreen(id, def, resolve(irDir, def.html), at)] as const;
+      const src = useAsset(def.src ?? "", `${at}.src`, def.origin, `screen: ${id}`);
       for (const [name, [x, y, w, h]] of Object.entries(def.regions))
         if (x + w > def.width || y + h > def.height)
           fail(`${at}.regions.${name}`, `extends outside the ${def.width}x${def.height} screen`);
@@ -152,15 +170,8 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
     const screen = sceneScreen(scene.screen, meta, screens, `${at}.screen`, fail);
 
     const values = resolveValues(scene, meta, ir.style, screen, at, { fail, useAsset, usedStyle });
-    if (screen && meta.hyperstudio.screen) {
-      usedScreens.add(screen.id);
-      values.screen = screen.src;
-      values.screenMeta = JSON.stringify({
-        width: screen.def.width,
-        height: screen.def.height,
-        regions: screen.def.regions,
-      });
-    }
+    if (screen && meta.hyperstudio.screen) usedScreens.add(screen.id);
+    Object.assign(values, screenValues(scene, meta, screen, at, fail, warnings));
 
     // A shot that frames the same thing the same way as the one before it is a repeat.
     const shot = framing(scene, meta, values as Record<string, Scalar>);
@@ -193,6 +204,7 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
       html: recipe.html,
       variables: meta.variables,
       values,
+      payload: screen?.page && { css: screen.page.css, html: screen.page.html },
       start: seconds(startFrame),
       duration: seconds(frames),
       transition: { type: t.type, duration: seconds(tFrames) },
@@ -304,7 +316,30 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
   return { ...result, output: out };
 }
 
-type PlacedScreen = { id: string; def: IR["screens"][string]; src: string };
+/** What the compiler itself hands a recipe that shows a screen: the screen, its geometry, and the beats. */
+function screenValues(
+  scene: IR["scenes"][number],
+  meta: RecipeMeta,
+  screen: PlacedScreen | undefined,
+  at: string,
+  fail: Fail,
+  warnings: Issue[],
+): Record<string, Scalar> {
+  const takes = meta.hyperstudio.beats;
+  if (!takes && screen?.page)
+    fail(`${at}.screen`, `${meta.name} shows a screenshot; "${screen.id}" is a live page. Use product-take`);
+  checkBeats(scene, meta, screen?.page, at, fail, (path, message) => void warnings.push({ path, message }));
+  const values: Record<string, Scalar> = takes ? { beats: JSON.stringify(scene.beats) } : {};
+  if (!(screen && meta.hyperstudio.screen)) return values;
+  const { width, height, regions } = screen.def;
+  return {
+    ...values,
+    screen: screen.src,
+    screenMeta: JSON.stringify(screen.page ? { width, height } : { width, height, regions }),
+  };
+}
+
+type PlacedScreen = { id: string; def: IR["screens"][string]; src: string; page?: LivePage };
 type Fail = (path: string, message: string) => void;
 
 /** The screen a scene looks at, checked against what its recipe expects. */
