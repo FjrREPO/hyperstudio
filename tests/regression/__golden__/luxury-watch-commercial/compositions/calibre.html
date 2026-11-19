@@ -27,7 +27,7 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      background: var(--lpr-bg);
+      /* Transparent: the film's stage is the background, so every scene shares one ground. */
       color: var(--lpr-ink);
     }
     .lpr-fill {
@@ -184,18 +184,19 @@
       opacity: 0.82;
       max-width: calc(var(--u) * 70);
     }
-    .lpr-h-playfair-display { font-family: "Playfair Display", serif; }
-    .lpr-h-eb-garamond { font-family: "EB Garamond", serif; }
     .lpr-h-inter { font-family: "Inter", sans-serif; }
     .lpr-h-outfit { font-family: "Outfit", sans-serif; }
     .lpr-h-montserrat { font-family: "Montserrat", sans-serif; }
     .lpr-h-poppins { font-family: "Poppins", sans-serif; }
+    .lpr-h-playfair-display { font-family: "Playfair Display", serif; }
+    .lpr-h-eb-garamond { font-family: "EB Garamond", serif; }
     .lpr-h-oswald { font-family: "Oswald", sans-serif; }
     .lpr-h-archivo-black { font-family: "Archivo Black", sans-serif; }
     .lpr-b-inter { font-family: "Inter", sans-serif; }
     .lpr-b-outfit { font-family: "Outfit", sans-serif; }
     .lpr-b-montserrat { font-family: "Montserrat", sans-serif; }
     .lpr-b-poppins { font-family: "Poppins", sans-serif; }
+    .lpr-b-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
 
   <div
@@ -205,9 +206,9 @@
     data-duration="5"
     data-width="1920"
     data-height="1080"
-   data-composition-variables='[{"id":"product","type":"image","label":"Product image","description":"Transparent PNG, WebP or SVG of the product. Its alpha channel shapes the glint, so a cut-out works and a photo on a background does not.","default":"","role":"content"},{"id":"eyebrow","type":"string","label":"Eyebrow","description":"Short line above the headline, set in tracked capitals. Empty hides it.","default":"","role":"content"},{"id":"headline","type":"string","label":"Headline","description":"Two to six words read best; it rises word by word.","default":"Time, distilled.","role":"content"},{"id":"subline","type":"string","label":"Subline","description":"One supporting sentence. Empty hides it.","default":"","role":"content"},{"id":"layout","type":"enum","label":"Product position","description":"Where the product sits; the copy takes the other side. Portrait canvases always stack product over copy.","default":"center","options":[{"value":"center","label":"Product centered, copy beneath"},{"value":"left","label":"Product left, copy right"},{"value":"right","label":"Product right, copy left"}],"role":"layout"},{"id":"camera","type":"enum","label":"Camera move","description":"Runs for the whole scene. Simulated with scale, translate and perspective rotation.","default":"push-in","options":[{"value":"push-in","label":"Slow push in"},{"value":"pull-out","label":"Slow pull out"},{"value":"orbit","label":"Orbit (perspective turn)"},{"value":"pan","label":"Lateral drift"},{"value":"static","label":"Locked off"}],"role":"motion"},{"id":"intensity","type":"number","label":"Camera intensity","description":"Multiplies the distance the camera travels.","default":1,"min":0.4,"max":1.6,"role":"motion","step":0.1},{"id":"lighting","type":"enum","label":"Lighting","default":"dramatic","options":[{"value":"dramatic","label":"Dramatic: hard top light, deep vignette"},{"value":"soft","label":"Soft: broad ambient glow"},{"value":"rim","label":"Rim: accent halo behind the product"}],"role":"look"},{"id":"particles","type":"boolean","label":"Dust particles","default":true,"role":"look"},{"id":"exit","type":"enum","label":"Exit","description":"hold keeps the final frame for a cut or a transition; fade clears the frame at the end.","default":"hold","options":[{"value":"hold","label":"Hold"},{"value":"fade","label":"Fade out"}],"role":"motion"},{"id":"accent","type":"color","label":"Accent colour","default":"#c9a35c","role":"brand"},{"id":"background","type":"color","label":"Background","default":"#07070a","role":"brand"},{"id":"ink","type":"color","label":"Text colour","default":"#f4efe6","role":"brand"},{"id":"headingFont","type":"enum","label":"Headline typeface","default":"Playfair Display","options":[{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}],"role":"brand"},{"id":"bodyFont","type":"enum","label":"Body typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"}],"role":"brand"}]'>
+   data-composition-variables='[{"id":"product","type":"image","role":"content","label":"Product image","description":"Transparent PNG, WebP or SVG of the product. Its alpha channel shapes the glint, so a cut-out works and a photo on a background does not.","default":""},{"id":"eyebrow","type":"string","role":"content","label":"Eyebrow","description":"Short line above the headline, set in tracked capitals. Empty hides it.","default":""},{"id":"headline","type":"string","role":"content","label":"Headline","description":"Two to six words read best; it rises word by word.","default":"Time, distilled."},{"id":"subline","type":"string","role":"content","label":"Subline","description":"One supporting sentence. Empty hides it.","default":""},{"id":"layout","type":"enum","role":"layout","label":"Product position","description":"Where the product sits; the copy takes the other side. Portrait canvases always stack product over copy.","default":"center","options":[{"value":"center","label":"Product centered, copy beneath"},{"value":"left","label":"Product left, copy right"},{"value":"right","label":"Product right, copy left"}]},{"id":"camera","type":"enum","role":"motion","label":"Camera move","description":"Runs for the whole scene. Simulated with scale, translate and perspective rotation.","default":"push-in","options":[{"value":"push-in","label":"Slow push in"},{"value":"pull-out","label":"Slow pull out"},{"value":"orbit","label":"Orbit (perspective turn)"},{"value":"pan","label":"Lateral drift"},{"value":"static","label":"Locked off"}]},{"id":"intensity","type":"number","role":"motion","label":"Camera intensity","description":"Multiplies the distance the camera travels.","default":1,"min":0.4,"max":1.6,"step":0.1},{"id":"lighting","type":"enum","role":"look","label":"Lighting","default":"dramatic","options":[{"value":"dramatic","label":"Dramatic: hard top light, deep vignette"},{"value":"soft","label":"Soft: broad ambient glow"},{"value":"rim","label":"Rim: accent halo behind the product"}]},{"id":"particles","type":"boolean","role":"look","label":"Dust particles","default":false},{"id":"exit","type":"enum","role":"motion","label":"Exit","description":"hold keeps the final frame for a cut or a transition; fade clears the frame at the end.","default":"hold","options":[{"value":"hold","label":"Hold"},{"value":"fade","label":"Fade out"}]},{"id":"accent","type":"color","role":"brand","label":"Accent colour","default":"#c9a35c"},{"id":"background","type":"color","role":"brand","label":"Background","default":"#07070a"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#f4efe6"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Playfair Display","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
     <div id="calibre-stage" class="lpr-center">
-      <div id="calibre-spot" class="lpr-fill"></div>
+      <div id="calibre-spot" class="lpr-fill" data-layout-allow-occlusion></div>
       <div id="calibre-beam-wrap" data-layout-allow-overflow><div id="calibre-beam" data-layout-allow-overflow></div></div>
 
       <div id="calibre-zone">
@@ -225,7 +226,7 @@
       </div>
 
       <div id="calibre-dust" class="lpr-fill"></div>
-      <div id="calibre-vignette" class="lpr-fill"></div>
+      <div id="calibre-vignette" class="lpr-fill" data-layout-allow-occlusion></div>
 
       <div id="calibre-copy">
         <div id="calibre-eyebrow" data-var-text="eyebrow"></div>
@@ -261,13 +262,13 @@
           camera: "push-in",
           intensity: 1,
           lighting: "dramatic",
-          particles: true,
+          particles: false,
           exit: "hold",
           accent: "#c9a35c",
           background: "#07070a",
           ink: "#f4efe6",
-          headingFont: "Playfair Display",
-          bodyFont: "Inter",
+          displayFont: "Playfair Display",
+          textFont: "Inter",
         },
         given,
       );
@@ -283,8 +284,8 @@
       stage.style.setProperty("--lpr-accent", v.accent);
       stage.style.setProperty("--lpr-bg", v.background);
       stage.style.setProperty("--lpr-ink", v.ink);
-      stage.className = "lpr-" + layout + " lpr-b-" + slug(v.bodyFont);
-      $("headline").className = "lpr-h-" + slug(v.headingFont);
+      stage.className = "lpr-" + layout + " lpr-b-" + slug(v.textFont);
+      $("headline").className = "lpr-h-" + slug(v.displayFont);
 
       var src = typeof v.product === "string" ? v.product : (v.product && v.product.url) || "";
       if (src) {
