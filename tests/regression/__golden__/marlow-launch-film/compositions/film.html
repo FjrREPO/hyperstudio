@@ -1,0 +1,292 @@
+<template>
+  <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #film-stage { --pt-accent: #2747f0; position: absolute; inset: 0; overflow: hidden; perspective: 2600px; }
+    #film-rig { position: absolute; inset: 0; }
+    #film-cam { position: absolute; left: 0; top: 0; }
+    #film-frame { overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.22), 0 14px 34px rgba(0, 0, 0, 0.14), 0 50px 130px rgba(0, 0, 0, 0.3); }
+    #film-bar { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; background: #f1f1f3; border-bottom: 1px solid #e2e2e6; }
+    #film-bar i { width: 12px; height: 12px; border-radius: 50%; background: #d3d4da; }
+    #film-over { position: absolute; left: 0; top: 0; pointer-events: none; }
+    #film-outline { position: absolute; border: 2.5px solid var(--pt-accent); border-radius: 14px; background: color-mix(in srgb, var(--pt-accent) 6%, transparent); }
+    #film-ripple { position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: color-mix(in srgb, var(--pt-accent) 30%, transparent); }
+    #film-cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28)); }
+    #film-dof { position: absolute; inset: 0; pointer-events: none; }
+    #film-veil { position: absolute; border-radius: 16px; }
+    #film-says { position: absolute; inset: 0; pointer-events: none; }
+    .pt-gutter { position: absolute; top: 0; bottom: 0; width: 46%; opacity: 0; }
+    #film-gutter-band { top: auto; left: 0; right: 0; width: auto; height: 31%; }
+    .pt-say { position: absolute; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; white-space: nowrap; }
+    .pt-d-inter { font-family: "Inter", sans-serif; } .pt-d-outfit { font-family: "Outfit", sans-serif; } .pt-d-montserrat { font-family: "Montserrat", sans-serif; } .pt-d-poppins { font-family: "Poppins", sans-serif; }
+    .pt-d-playfair-display { font-family: "Playfair Display", serif; } .pt-d-eb-garamond { font-family: "EB Garamond", serif; } .pt-d-oswald { font-family: "Oswald", sans-serif; } .pt-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; } .pt-d-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
+  </style>
+  <div id="root" data-composition-id="film" data-start="0" data-duration="29" data-width="1920" data-height="1080" data-composition-variables='[{"id":"screen","type":"image","role":"content","label":"Screen","description":"Supplied by the compiler from the scene&#39;s screen.","default":""},{"id":"screenMeta","type":"string","role":"content","label":"Screen geometry","description":"Supplied by the compiler: the screen&#39;s size and regions as JSON.","default":""},{"id":"beats","type":"string","role":"content","label":"Beats","description":"Supplied by the compiler from the scene&#39;s beats.","default":"[]"},{"id":"state","type":"string","role":"look","label":"Opening state","description":"The state the interface is in when the take starts. Empty uses the page&#39;s own.","default":""},{"id":"from","type":"string","role":"region","label":"Start framing","description":"The region the camera frames at the start. window is the whole interface.","default":"window"},{"id":"fill","type":"number","role":"layout","label":"Frame fill","description":"How much of the frame the framed region may take, by width or height. Lower leaves more space around it.","default":0.86,"min":0.3,"max":1,"step":0.02},{"id":"maxZoom","type":"number","role":"layout","label":"Closest zoom","description":"The camera never magnifies the interface beyond this, so close-ups keep their surroundings and stay readable.","default":1.8,"min":1,"max":6,"step":0.1},{"id":"side","type":"enum","role":"layout","label":"Side","description":"Where in the frame the interface sits. Put it to one side when the film&#39;s own lines share the frame; a camera beat can change it.","default":"centre","options":[{"value":"centre","label":"Centred"},{"value":"left","label":"Left, with room on the right"},{"value":"right","label":"Right, with room on the left"}]},{"id":"level","type":"enum","role":"layout","label":"Level","description":"How high in the frame the interface sits. Low lets it bleed off the bottom under a headline; a camera beat can change it.","default":"middle","options":[{"value":"top","label":"Near the top of the frame"},{"value":"high","label":"High"},{"value":"middle","label":"Middle"},{"value":"low","label":"Low"},{"value":"bleed","label":"Low enough to run off the bottom of the frame"}]},{"id":"lens","type":"enum","role":"look","label":"Lens","description":"Long keeps perspective gentle. Wide exaggerates it, so a turned interface reads as an object in space.","default":"long","options":[{"value":"long","label":"Long"},{"value":"wide","label":"Wide"}]},{"id":"chrome","type":"enum","role":"look","label":"Window","description":"Draw the interface inside an application window, or bare.","default":"window","options":[{"value":"window","label":"Application window"},{"value":"none","label":"Bare"}]},{"id":"radius","type":"number","role":"look","label":"Corner radius","description":"Corner radius of what is shown, in the screenshot&#39;s pixels. Match the isolated component&#39;s own corners.","default":14,"min":0,"max":48,"step":1},{"id":"tilt","type":"enum","role":"layout","label":"Perspective","description":"The angle the interface is seen from when the take starts. A camera beat can turn it to another angle.","default":"none","options":[{"value":"none","label":"Flat"},{"value":"left","label":"Turned to the left"},{"value":"right","label":"Turned to the right"},{"value":"up","label":"Leaning back"},{"value":"desk","label":"Lying on a desk, seen from above at an angle"}]},{"id":"focus","type":"enum","role":"layout","label":"Focus","description":"Which part of the frame is sharp when the take starts. A camera beat can pull focus.","default":"all","options":[{"value":"all","label":"Everything sharp"},{"value":"band","label":"A sharp band across the middle"},{"value":"near","label":"Sharp below, soft at the top (the far edge)"},{"value":"centre","label":"Sharp in the centre"}]},{"id":"drift","type":"boolean","role":"motion","label":"Slow push","description":"A slow, constant push-in under every camera move, so the picture never comes to a dead stop while text is typed or read.","default":true},{"id":"spill","type":"boolean","role":"look","label":"Light spill","description":"The screen throws a soft light in the film&#39;s accent on the stage around it. For a dark stage, so the interface belongs to it.","default":false},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
+    <div id="film-stage">
+      <div id="film-rig">
+        <div id="film-cam" data-layout-allow-overflow>
+          <div id="film-frame" data-layout-allow-overflow>
+            <div id="film-bar"><i></i><i></i><i></i></div>
+            <div id="film-world" data-layout-ignore></div>
+          </div>
+          <div id="film-over" data-layout-allow-overflow>
+            <div id="film-veil" data-layout-allow-occlusion data-layout-allow-overflow></div>
+            <div id="film-outline" data-layout-allow-occlusion></div>
+            <div id="film-ripple" data-layout-allow-occlusion></div>
+            <svg id="film-cursor" viewBox="0 0 30 30" data-layout-allow-occlusion>
+              <path d="M5 3l18 9.6-7.6 2.2-2.6 7.6z" fill="#17150f" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div id="film-dof" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="film-gutter-left" class="pt-gutter" style="left: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="film-gutter-right" class="pt-gutter" style="right: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="film-gutter-band" class="pt-gutter" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="film-says" data-layout-allow-occlusion></div>
+    </div>
+    <script type="application/json" id="film-ui">{"css":"\n      .app { --ui-bg: #fbfaf7; --ui-canvas: #ffffff; --ui-ink: #1b1814; --ui-muted: #726c62; --ui-faint: #a39d92; --ui-line: #e9e4da; --ui-green: #0e7a53; --ui-green-soft: #e6f4ee; }\n      * { margin: 0; padding: 0; box-sizing: border-box; }\n      html, body { width: 1440px; height: 900px; overflow: hidden; }\n      .app { width: 1440px; height: 900px; overflow: hidden; line-height: normal; text-align: left; font-family: Inter, sans-serif; color: var(--ui-ink); background: var(--ui-bg); font-size: 15px; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; }\n      svg { display: block; flex: none; }\n      header { height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: var(--ui-canvas); border-bottom: 1px solid var(--ui-line); }\n      .mark { width: 28px; height: 28px; }\n      header b { font-size: 18px; letter-spacing: -0.02em; }\n      .crumb { margin-left: 18px; color: var(--ui-faint); font-weight: 500; }\n      .crumb strong { color: var(--ui-ink); font-weight: 600; }\n      .people { margin-left: auto; display: flex; }\n      .face { width: 32px; height: 32px; margin-left: -8px; border-radius: 50%; border: 2px solid var(--ui-canvas); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; }\n      .cols { flex: 1; display: grid; grid-template-columns: 560px 1fr; gap: 28px; padding: 28px; min-height: 0; }\n      .pane { background: var(--ui-canvas); border: 1px solid var(--ui-line); border-radius: 20px; box-shadow: 0 1px 2px rgba(27, 24, 20, 0.04), 0 18px 44px rgba(27, 24, 20, 0.06); overflow: hidden; display: flex; flex-direction: column; }\n      .head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--ui-line); }\n      .head h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-faint); }\n      .head span { font-size: 13px; color: var(--ui-faint); }\n      .lines { padding: 8px 24px 20px; display: grid; gap: 4px; }\n      .say { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f3efe7; }\n      .say .face { margin: 0; width: 34px; height: 34px; border: 0; }\n      .say b { font-size: 13px; font-weight: 600; }\n      .say time { margin-left: 8px; font-size: 12px; color: var(--ui-faint); }\n      .say p { margin-top: 3px; color: var(--ui-muted); line-height: 1.45; }\n      .btn { display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 12px; background: var(--ui-ink); color: #fff; font-weight: 600; font-size: 15px; }\n      .btn.green { background: var(--ui-green); box-shadow: 0 10px 22px rgba(14, 122, 83, 0.28); }\n      .btn svg { width: 18px; height: 18px; }\n      .empty { flex: 1; display: grid; place-items: center; text-align: center; padding: 40px; }\n      .empty h3 { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; }\n      .empty p { margin: 10px auto 26px; max-width: 360px; color: var(--ui-muted); font-size: 16px; line-height: 1.5; }\n      .body { padding: 26px 28px; display: grid; gap: 22px; }\n      .title { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }\n      .sub { margin-top: 6px; color: var(--ui-muted); }\n      .label { margin-bottom: 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-faint); }\n      .decision { display: flex; gap: 12px; padding: 9px 0; font-size: 17px; font-weight: 500; line-height: 1.4; }\n      .decision i { flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%; background: var(--ui-green); }\n      .task { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 14px; padding: 13px 14px; margin: 0 -14px; border-radius: 13px; font-size: 16px; font-weight: 500; }\n      .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid #cfc8bb; display: grid; place-items: center; }\n      .who { display: flex; align-items: center; gap: 8px; padding: 5px 11px 5px 5px; border-radius: 999px; background: var(--ui-bg); border: 1px solid var(--ui-line); font-size: 13px; font-weight: 500; }\n      .who .face { margin: 0; width: 22px; height: 22px; border: 0; font-size: 9px; }\n      .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-top: 1px solid var(--ui-line); color: var(--ui-faint); font-size: 13px; position: relative; }\n      .toast { position: absolute; right: 28px; bottom: 76px; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; background: var(--ui-ink); color: #fff; font-size: 15px; font-weight: 600; box-shadow: 0 20px 44px rgba(27, 24, 20, 0.28); }\n      .toast small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: #b9b2a6; }\n      .tick { width: 22px; height: 22px; border-radius: 50%; background: var(--ui-green); display: grid; place-items: center; }\n          /* What each state shows. */\n      .app:not([data-state=\"meeting\"]) #view-empty,\n      .app[data-state=\"meeting\"] #view-notes,\n      .app:not([data-state=\"writing\"], [data-state=\"arriving\"]) :is(.skeleton, .working),\n      .app:is([data-state=\"meeting\"], [data-state=\"writing\"], [data-state=\"arriving\"]) .written,\n      .app:not([data-state=\"meeting\"]) .unwritten,\n      .app:not([data-state=\"sent\"]) #toast { display: none; }\n      .app[data-state=\"writing\"] [data-reveal] { opacity: 0; }\n      #view-notes { position: relative; display: flex; flex-direction: column; flex: 1; }\n      .skeleton { position: absolute; left: 28px; right: 28px; top: 26px; }\n      .skeleton i { display: block; margin-top: 14px; border-radius: 9px; background: linear-gradient(90deg, #efebe2, #f7f4ee); }\n      .lines { overflow: hidden; }\n      .task .box svg { opacity: 0; }\n      .app:is([data-state=\"done\"], [data-state=\"sent\"]) #task-1 { background: var(--ui-green-soft); }\n      .app:is([data-state=\"done\"], [data-state=\"sent\"]) #task-1 .box { background: var(--ui-green); border-color: var(--ui-green); }\n      .app:is([data-state=\"done\"], [data-state=\"sent\"]) #task-1 .box svg { opacity: 1; }\n      .app:is([data-state=\"done\"], [data-state=\"sent\"]) #task-1 .what { color: var(--ui-muted); text-decoration: line-through; text-decoration-color: #9bbfb0; }\n    ","html":"\u003cdiv class=\"app\" data-state=\"meeting\" data-states=\"meeting writing arriving summary done sent\" data-region=\"window\">\n\n    \u003cheader data-region=\"header\">\n      \u003csvg class=\"mark\" viewBox=\"0 0 26 26\">\u003crect x=\"1\" y=\"1\" width=\"24\" height=\"24\" rx=\"7\" fill=\"#1b1814\" />\u003cpath d=\"M7 18V8l6 6 6-6v10\" fill=\"none\" stroke=\"#fbfaf7\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />\u003c/svg>\n      \u003cb>Marlow\u003c/b>\n      \u003cspan class=\"crumb\">Meetings &nbsp;/&nbsp; \u003cstrong>Pricing page review\u003c/strong>\u003c/span>\n      \u003cdiv class=\"people\">\u003cspan class=\"face\" style=\"background: #c2603a\">AR\u003c/span>\u003cspan class=\"face\" style=\"background: #3a6ec2\">JO\u003c/span>\u003cspan class=\"face\" style=\"background: #7a4fb5\">MI\u003c/span>\u003cspan class=\"face\" style=\"background: #0e7a53\">SK\u003c/span>\u003c/div>\n    \u003c/header>\n    \u003cdiv class=\"cols\">\n      \u003csection class=\"pane\" data-region=\"transcript\">\n        \u003cdiv class=\"head\" data-region=\"transcript-head\">\u003ch2>Transcript\u003c/h2>\u003cspan>Today · 42 min\u003c/span>\u003c/div>\n        \u003cdiv class=\"lines\" data-region=\"lines\">\u003cdiv>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #c2603a\">AR\u003c/span>\u003cdiv>\u003cb>Ana\u003c/b>\u003ctime>02:10\u003c/time>\u003cp>The annual toggle is hidden below the fold. Most people never see it.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #3a6ec2\">JO\u003c/span>\u003cdiv>\u003cb>Jonas\u003c/b>\u003ctime>09:44\u003c/time>\u003cp>We can move it above the plans, but the comparison table has to shrink.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #7a4fb5\">MI\u003c/span>\u003cdiv>\u003cb>Mina\u003c/b>\u003ctime>17:02\u003c/time>\u003cp>Then let’s drop the Enterprise column and link to a contact form instead.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #0e7a53\">SK\u003c/span>\u003cdiv>\u003cb>Sam\u003c/b>\u003ctime>26:31\u003c/time>\u003cp>I can have copy for the three plans by Thursday if design is settled.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #c2603a\">AR\u003c/span>\u003cdiv>\u003cb>Ana\u003c/b>\u003ctime>38:15\u003c/time>\u003cp>Good. Ship it behind a flag first, and we look at it again next week.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #3a6ec2\">JO\u003c/span>\u003cdiv>\u003cb>Jonas\u003c/b>\u003ctime>39:02\u003c/time>\u003cp>Should we test the toggle position first, or just ship it?\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #7a4fb5\">MI\u003c/span>\u003cdiv>\u003cb>Mina\u003c/b>\u003ctime>39:40\u003c/time>\u003cp>Ship. We can read it off the flag in a week.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #0e7a53\">SK\u003c/span>\u003cdiv>\u003cb>Sam\u003c/b>\u003ctime>40:12\u003c/time>\u003cp>Who is writing this up? I have to run.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #c2603a\">AR\u003c/span>\u003cdiv>\u003cb>Ana\u003c/b>\u003ctime>40:31\u003c/time>\u003cp>I thought you were taking notes.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #3a6ec2\">JO\u003c/span>\u003cdiv>\u003cb>Jonas\u003c/b>\u003ctime>40:44\u003c/time>\u003cp>Not me.\u003c/p>\u003c/div>\u003c/div>\n          \u003cdiv class=\"say\">\u003cspan class=\"face\" style=\"background: #7a4fb5\">MI\u003c/span>\u003cdiv>\u003cb>Mina\u003c/b>\u003ctime>41:05\u003c/time>\u003cp>Does anyone remember who owns the header redesign?\u003c/p>\u003c/div>\u003c/div>\n        \u003c/div>\u003c/div>\n      \u003c/section>\n\n      \u003csection class=\"pane\">\n        \u003cdiv class=\"head\" data-region=\"notes-head\">\u003ch2>Notes\u003c/h2>\u003cspan>\u003cspan class=\"unwritten\">Not written yet\u003c/span>\u003cspan class=\"working\">Reading the transcript…\u003c/span>\u003cspan class=\"written\">Written just now\u003c/span>\u003c/span>\u003c/div>\n\n        \u003cdiv class=\"empty\" id=\"view-empty\">\n          \u003cdiv data-region=\"prompt\">\n            \u003ch3>42 minutes of talking.\u003c/h3>\n            \u003cp>Marlow reads the transcript and writes what was decided and who does what.\u003c/p>\n            \u003cspan class=\"btn green\" data-region=\"summarise-button\">\u003csvg viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\u003cpath d=\"M9 2v3M9 13v3M2 9h3M13 9h3M4.2 4.2l2 2M11.8 11.8l2 2M13.8 4.2l-2 2M6.2 11.8l-2 2\" />\u003c/svg>Write the notes\u003c/span>\n          \u003c/div>\n        \u003c/div>\n\n        \u003cdiv id=\"view-notes\" data-region=\"summary\">\n          \u003cdiv class=\"skeleton\" data-leave data-shimmer>\u003ci style=\"width: 70%; height: 36px\">\u003c/i>\u003ci style=\"width: 46%; height: 16px\">\u003c/i>\u003ci style=\"width: 100%; height: 132px; margin-top: 30px\">\u003c/i>\u003ci style=\"width: 100%; height: 170px; margin-top: 30px\">\u003c/i>\u003c/div>\n          \u003cdiv class=\"body\">\n            \u003cdiv data-reveal>\u003cdiv class=\"title\" data-region=\"title\">Annual pricing moves to the top.\u003c/div>\u003cp class=\"sub\">Pricing page review · four people · three decisions\u003c/p>\u003c/div>\n            \u003cdiv data-region=\"decisions\">\n              \u003cdiv class=\"label\" data-reveal>Decided\u003c/div>\n              \u003cdiv class=\"decision\" data-region=\"decision-1\" data-reveal>\u003ci>\u003c/i>Move the annual toggle above the plans.\u003c/div>\n              \u003cdiv class=\"decision\" data-region=\"decision-2\" data-reveal>\u003ci>\u003c/i>Drop the Enterprise column; link to a contact form.\u003c/div>\n              \u003cdiv class=\"decision\" data-region=\"decision-3\" data-reveal>\u003ci>\u003c/i>Ship behind a flag, review next week.\u003c/div>\n            \u003c/div>\n            \u003cdiv data-region=\"actions\">\n              \u003cdiv class=\"label\" data-reveal>Who does what\u003c/div>\n              \u003cdiv class=\"task\" id=\"task-1\" data-region=\"action-1\" data-reveal>\u003cspan class=\"box\" data-region=\"action-1-box\">\u003csvg width=\"14\" height=\"14\" viewBox=\"0 0 18 18\">\u003cpath d=\"M4.5 9.4l3 3L13.5 6\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />\u003c/svg>\u003c/span>\u003cspan class=\"what\">Redesign the plan header with the toggle on top\u003c/span>\u003cspan class=\"who\" data-region=\"owner-1\">\u003cspan class=\"face\" style=\"background: #3a6ec2\">JO\u003c/span>Jonas\u003c/span>\u003c/div>\n              \u003cdiv class=\"task\" data-reveal>\u003cspan class=\"box\">\u003c/span>\u003cspan class=\"what\">Write copy for the three plans by Thursday\u003c/span>\u003cspan class=\"who\" data-region=\"owner-2\">\u003cspan class=\"face\" style=\"background: #0e7a53\">SK\u003c/span>Sam\u003c/span>\u003c/div>\n              \u003cdiv class=\"task\" data-reveal>\u003cspan class=\"box\">\u003c/span>\u003cspan class=\"what\">Set up the feature flag\u003c/span>\u003cspan class=\"who\" data-region=\"owner-3\">\u003cspan class=\"face\" style=\"background: #7a4fb5\">MI\u003c/span>Mina\u003c/span>\u003c/div>\n            \u003c/div>\n          \u003c/div>\n          \u003cdiv class=\"foot\" data-region=\"foot\">\n            \u003cspan>Written from the transcript · edit anything\u003c/span>\n            \u003cspan class=\"btn\" data-region=\"send-button\">Send to the team\u003c/span>\n            \u003cdiv class=\"toast\" id=\"toast\" data-region=\"toast\">\u003cspan class=\"tick\">\u003csvg width=\"12\" height=\"12\" viewBox=\"0 0 18 18\">\u003cpath d=\"M4.5 9.4l3 3L13.5 6\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />\u003c/svg>\u003c/span>\u003cdiv>Sent to #pricing\u003csmall>Jonas, Sam and Mina were notified\u003c/small>\u003c/div>\u003c/div>\n          \u003c/div>\n        \u003c/div>\n      \u003c/section>\n    \u003c/div>\n    \u003c/div>"}</script>
+  </div>
+  <script>
+    (function () { window.__timelines = window.__timelines || {};
+      var ID = "film";
+      var $ = function (name) { return document.getElementById(ID + "-" + name); };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 6;
+      var U = Math.min(W, H) / 100;
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign( { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", level: "middle", lens: "long", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" }, given, );
+      var parse = function (text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } };
+      var meta = parse(v.screenMeta, { width: 1440, height: 900 });
+      var beats = parse(v.beats, []).slice().sort(function (a, b) { return a.at - b.at; });
+      var ui = parse($("ui").textContent, {});
+      stage.style.setProperty("--pt-accent", v.accent);
+      if (v.lens === "wide") stage.style.perspective = "1250px";
+      var world = $("world");
+      world.style.width = meta.width + "px";
+      world.style.height = meta.height + "px";
+      var root = world.attachShadow({ mode: "open" });
+      root.innerHTML = "<style>" + (ui.css || "") + "</style>" + (ui.html || "");
+      var app = root.querySelector(".app") || world;
+      var bar = v.chrome === "window" ? 38 : 0;
+      if (!bar) $("bar").style.display = "none";
+      $("frame").style.borderRadius = (Number(v.radius) || 0) + "px";
+      if (v.spill === true || v.spill === "true") $("frame").style.boxShadow = "0 0 0 1px rgba(128,128,128,.22), 0 0 " + 26 * U + "px color-mix(in srgb, " + v.accent + " 42%, transparent), 0 50px 130px rgba(0,0,0,.4)";
+      var over = $("over");
+      over.style.top = bar + "px";
+      var first = String(v.state || app.getAttribute("data-state") || "");
+      var changes = [{ at: 0, state: first }];
+      beats.forEach(function (b) { if (b.state) changes.push({ at: b.at + (b.do === "click" ? 0.07 : 0), state: b.state }); });
+      var stateAt = function (t) { var s = first;
+        changes.forEach(function (c) { if (c.at <= t + 1e-6) s = c.state; });
+        return s;
+      };
+      var rect = function (name, t) { if (!name || name === "window") return [0, 0, meta.width, meta.height];
+        app.setAttribute("data-state", stateAt(t));
+        var el = root.querySelector('[data-region="' + name + '"]');
+        if (!el) return null;
+        var a = app.getBoundingClientRect();
+        var r = el.getBoundingClientRect();
+        var k = a.width / meta.width || 1;
+        return r.width ? [(r.left - a.left) / k, (r.top - a.top) / k, r.width / k, r.height / k] : null;
+      };
+      var find = function (name) { return root.querySelector('[data-region="' + name + '"]'); };
+      var whole = [0, 0, meta.width, meta.height];
+      var fill = Number(v.fill) || 0.86;
+      var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
+      var side = SIDES[v.side] || 0.5;
+      var LEVELS = { top: 0.08, high: 0.36, middle: 0.5, low: 0.66, bleed: 0.78 };
+      var level = LEVELS[v.level] || 0.5;
+      var frame = function (r, f, cap) { var room = side === 0.5 ? 1 : 0.56;
+        var s = Math.min((W * f * room) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), cap || Number(v.maxZoom) || 1.8);
+        return { scale: s, x: W * side - s * (r[0] + r[2] / 2), y: H * level - s * (r[1] + bar + r[3] / 2) };
+      };
+      var plan = beats.map(function (b) { var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
+        if (b.do === "camera" && b.side) side = SIDES[b.side] || side;
+        if (b.do === "camera" && b.level) level = LEVELS[b.level] || level;
+        var r = rect(b.target, b.do === "camera" ? after : b.at) || whole;
+        return { b: b, r: r, to: b.do === "camera" ? frame(r, Number(b.fill) || fill, Number(b.zoom) || 0) : null };
+      });
+      side = SIDES[v.side] || 0.5;
+      level = LEVELS[v.level] || 0.5;
+      var start = frame(rect(v.from, 0) || whole, fill);
+      app.setAttribute("data-state", first);
+      var tl = gsap.timeline({ paused: true });
+      var cam = $("cam");
+      var cursor = $("cursor");
+      var ripple = $("ripple");
+      var outline = $("outline");
+      var here = start;
+      var pointer = null;
+      var rig = $("rig");
+      var dof = $("dof");
+      var veil = $("veil");
+      var says = [];
+      var holed = null;
+      var TURNS = { none: [0, 0, 0], left: [3, 12, 0], right: [3, -12, 0], up: [15, 0, 0], desk: [42, 0, -17] };
+      var turned = TURNS[v.tilt] || TURNS.none;
+      var soft = v.focus && v.focus !== "all" ? 1 : 0;
+      gsap.set(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2], transformOrigin: "50% 50%" });
+      gsap.set(veil, { opacity: 0, boxShadow: "0 0 0 9000px " + v.background });
+      tl.fromTo(cam, { x: start.x, y: start.y, scale: start.scale, transformOrigin: "0 0" }, { x: start.x, y: start.y, scale: start.scale, duration: 0.01 }, 0);
+      gsap.set([ripple, outline], { opacity: 0 });
+      gsap.set(cursor, { opacity: 0 });
+      plan.forEach(function (p) { var b = p.b;
+        var r = p.r;
+        var cx = r[0] + r[2] * 0.62;
+        var cy = r[1] + r[3] * 0.62;
+        if (b.do === "camera") { var to = p.to;
+          var length = Number(b.over) || 0.9;
+          tl.fromTo(cam, { x: here.x, y: here.y, scale: here.scale }, { x: to.x, y: to.y, scale: to.scale, duration: length, ease: b.ease || "power3.inOut", immediateRender: false }, b.at);
+          here = to;
+          if (b.tilt && TURNS[b.tilt]) { var next = TURNS[b.tilt];
+            tl.fromTo(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2] }, { rotationX: next[0], rotationY: next[1], rotationZ: next[2], duration: length, ease: "power2.inOut", immediateRender: false }, b.at);
+            turned = next;
+          }
+          if (b.focus) { var sharp = b.focus === "all" ? 0 : 1;
+            tl.fromTo(dof, { opacity: soft }, { opacity: sharp, duration: length, ease: "none", immediateRender: false }, b.at);
+            soft = sharp;
+          }
+        } else if (b.do === "cursor" || b.do === "click") { var travel = Math.min(Number(b.over) || 0.6, b.at);
+          var from = pointer || { x: cx + 260, y: cy + 170 };
+          if (!pointer) tl.fromTo(cursor, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, Math.max(0, b.at - travel));
+          tl.fromTo(cursor, { x: from.x - 5 }, { x: cx - 5, duration: travel, ease: "power2.inOut", immediateRender: !pointer }, b.at - travel);
+          tl.fromTo(cursor, { y: from.y - 3 }, { y: cy - 3, duration: travel, ease: "power3.out", immediateRender: !pointer }, b.at - travel);
+          pointer = { x: cx, y: cy };
+          if (b.do === "click") { tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.07 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%", immediateRender: false }, b.at);
+            tl.fromTo(ripple, { x: cx, y: cy, opacity: 0.9, scale: 0.3 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: "power2.out", immediateRender: false }, b.at);
+          }
+        } else if (b.do === "reveal") { var host = find(b.target);
+          var parts = host ? Array.prototype.slice.call(host.querySelectorAll("[data-reveal]")) : [];
+          if (!parts.length && host) parts = Array.prototype.slice.call(host.children);
+          var each = (Number(b.over) || 0.9) / Math.max(parts.length, 1);
+          if (parts.length) tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
+          var leaving = host ? host.querySelectorAll("[data-leave]") : [];
+          if (leaving.length) tl.fromTo(leaving, { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "none", immediateRender: false }, b.at);
+        } else if (b.do === "draw") { var plot = find(b.target);
+          var lines = plot ? Array.prototype.slice.call(plot.querySelectorAll("[data-draw]")) : [];
+          lines.forEach(function (line) { var n = line.getTotalLength();
+            line.style.strokeDasharray = n;
+            tl.fromTo(line, { strokeDashoffset: n }, { strokeDashoffset: 0, duration: Number(b.over) || 0.9, ease: "power2.inOut" }, b.at);
+          });
+          var fading = plot ? plot.querySelectorAll("[data-fade]") : [];
+          if (fading.length) tl.fromTo(fading, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
+        } else if (b.do === "scroll") { var pane = find(b.target);
+          if (pane && pane.firstElementChild) tl.fromTo(pane.firstElementChild, { y: 0 }, { y: -(Number(b.by) || 300), duration: Number(b.over) || 1.5, ease: b.ease || "power1.inOut" }, b.at);
+        } else if (b.do === "count") { var figure = find(b.target);
+          var parsed = figure && /^(\D*)(\d+(?:\.\d+)?)(.*)$/.exec(figure.textContent.trim());
+          if (parsed) { var places = (parsed[2].split(".")[1] || "").length;
+            var counter = Object.defineProperty({}, "n", { get: function () { return 0; }, set: function (n) { figure.textContent = parsed[1] + Number(n).toFixed(places) + parsed[3]; }, });
+            tl.fromTo(counter, { n: 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
+          }
+        } else if (b.do === "veil") { var gap = b.target === "window" ? 0 : 10;
+          var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };
+          var time = Number(b.over) || 0.6;
+          var wasHoled = !!holed;
+          if (!holed) { if (b.at <= 0.05) gsap.set(veil, hole);
+            else tl.set(veil, hole, b.at);
+            tl.fromTo(veil, { opacity: b.at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: time, ease: "power2.inOut", immediateRender: b.at <= 0.05 }, b.at);
+          } else { tl.fromTo(veil, Object.assign({}, holed), Object.assign({ duration: time, ease: "power3.inOut", immediateRender: false }, hole), b.at);
+            if (b.target === "window") tl.fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at + time);
+            else tl.fromTo(veil, { opacity: 1 }, { opacity: 1, duration: 0.05, immediateRender: false }, b.at);
+          }
+          holed = b.target === "window" && wasHoled ? null : hole;
+          if (b.target !== "window" && pointer) tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
+        } else if (b.do === "say") { says.push(b);
+        } else if (b.do === "highlight") { var pad = 8;
+          tl.set(outline, { left: r[0] - pad, top: r[1] - pad, width: r[2] + pad * 2, height: r[3] + pad * 2 }, b.at);
+          tl.fromTo(outline, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out", immediateRender: false }, b.at);
+          if (b.over) tl.fromTo(outline, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "none", immediateRender: false }, b.at + Number(b.over));
+        }
+      });
+      var typing = beats.filter(function (b) { return b.do === "type" && b.text; }).map(function (b) { var el = find(b.target);
+        return { el: el, text: String(b.text), at: b.at, end: b.at + (Number(b.over) || String(b.text).length * 0.042), placeholder: el ? el.textContent : "" };
+      });
+      var shown = null;
+      var clock = Object.defineProperty({}, "t", { get: function () { return 0; }, set: function (t) { var s = stateAt(t);
+          if (s !== shown) app.setAttribute("data-state", (shown = s));
+          typing.forEach(function (ty) { if (!ty.el) return;
+            var n = Math.round(Math.max(0, Math.min(1, (t - ty.at) / (ty.end - ty.at))) * ty.text.length);
+            ty.el.textContent = t < ty.at ? ty.placeholder : ty.text.slice(0, n) + (n < ty.text.length ? "▏" : "");
+            if (t >= ty.at) ty.el.setAttribute("data-typed", "");
+            else ty.el.removeAttribute("data-typed");
+          });
+        }, });
+      tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
+      if (v.drift !== false && v.drift !== "false") tl.fromTo(rig, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
+      var mask = { band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)", near: "linear-gradient(to bottom, #000 0%, transparent 46%)", centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)", }[v.focus === "all" ? "centre" : v.focus] || "";
+      dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
+      tl.fromTo(dof, { opacity: v.focus && v.focus !== "all" ? 1 : 0 }, { opacity: v.focus && v.focus !== "all" ? 1 : 0, duration: 0.01 }, 0);
+      var waiting = root.querySelectorAll("[data-shimmer]");
+      if (waiting.length) tl.fromTo(waiting, { filter: "brightness(1)" }, { filter: "brightness(0.955)", duration: 0.45, ease: "sine.inOut", repeat: Math.ceil(D / 0.45), yoyo: true }, 0);
+      var SIZES = { display: 17, hero: 11.5, title: 6.4, text: 3.4 };
+      var M = 7 * U + "px";
+      var edge = function (h, v, align) { var o = { yPercent: 0, textAlign: align }; o[h] = M; o[v] = M; return o; };
+      var mid = function (top, lift) { return { left: 0, right: 0, top: top, yPercent: lift, textAlign: "center" }; };
+      var PLACES = { left: { left: M, top: "50%", yPercent: -50, textAlign: "left" }, right: { right: M, top: "50%", yPercent: -50, textAlign: "right" }, under: mid("66%", 0), over: mid("22%", -100), foot: mid("80%", 0), "top-left": edge("left", "top", "left"), "top-right": edge("right", "top", "right"), "bottom-left": edge("left", "bottom", "left"), "bottom-right": edge("right", "bottom", "right"), band: { left: M, bottom: 7.5 * U + "px", yPercent: 0, textAlign: "left" }, };
+      var TOWARDS = { left: "right", right: "left", band: "top" };
+      ["left", "right", "band"].forEach(function (name) { var mine = says.filter(function (b) { return (b.place || "left") === name; });
+        if (!mine.length) return;
+        var gutter = $("gutter-" + name);
+        gutter.style.background = "linear-gradient(to " + TOWARDS[name] + ", " + v.background + " 78%, transparent)";
+        var last = mine[mine.length - 1];
+        var to = last.over ? last.at + Number(last.over) : D + 1;
+        tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
+        if (to < D) tl.fromTo(gutter, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, to - 0.1);
+      });
+      var placed = [];
+      says.forEach(function (b, i) { var place = PLACES[b.place] || PLACES.left;
+        var small = b.size === "text";
+        var block = document.createElement("div");
+        block.className = "pt-say pt-d-" + String(small ? v.textFont : v.displayFont).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        block.style.cssText += ";color:" + v.ink + ";font-size:" + (SIZES[b.size] || SIZES.title) * U + "px;text-align:" + place.textAlign;
+        ["left", "right", "top", "bottom"].forEach(function (key) { if (place[key] !== undefined) block.style[key] = place[key]; });
+        if (small) block.style.cssText += ";letter-spacing:0.01em;line-height:1.35;font-weight:500";
+        var lines = String(b.text || "").split("\n").map(function (text) { var mask = document.createElement("div");
+          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em;width:fit-content;margin-left:" + (place.textAlign === "left" ? "0" : "auto") + ";margin-right:" + (place.textAlign === "right" ? "0" : "auto");
+          var inner = document.createElement("div");
+          inner.textContent = text;
+          mask.appendChild(inner);
+          block.appendChild(mask);
+          return inner;
+        });
+        $("says").appendChild(block);
+        gsap.set(block, { yPercent: place.yPercent });
+        var after = says.slice(i + 1).filter(function (n) { return (n.place || "left") === (b.place || "left"); })[0];
+        var until = b.over ? b.at + Number(b.over) : after ? after.at : D + 1;
+        if (b.at <= 0.05) tl.fromTo(lines, { yPercent: 6, opacity: 1 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, 0);
+        else tl.fromTo(lines, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.75, ease: "expo.out", stagger: 0.1 }, b.at);
+        if (until < D) tl.fromTo(block, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, Math.max(b.at + 0.4, until - 0.3));
+        placed.push({ block: block, lines: lines, text: String(b.text || "").replace(/\n/g, " "), from: b.at + 0.8, to: Math.min(until - 0.3, D), beside: b.place === "left" || b.place === "right" || b.place === "band" || !b.place });
+      });
+      tl.set({}, {}, D);
+      (function () { var found = {};
+        var note = function (key, text) { if (!found[key]) { found[key] = 1; console.warn("hyperstudio: " + text); } };
+        plan.forEach(function (p) { if (!p.to || p.b.target === "window") return;
+          var l = p.to.x + p.to.scale * p.r[0], t = p.to.y + p.to.scale * (p.r[1] + bar);
+          if (l < 0 || t < 0 || l + p.to.scale * p.r[2] > W || t + p.to.scale * p.r[3] > H) note("crop" + p.b.at, "the camera at " + p.b.at + 's leaves part of "' + p.b.target + '" outside the frame; lower its fill or move it');
+        });
+        var box = function (els) { var u = null;
+          els.forEach(function (el) { var r = el.getBoundingClientRect(); u = u ? { l: Math.min(u.l, r.left), t: Math.min(u.t, r.top), r: Math.max(u.r, r.right), b: Math.max(u.b, r.bottom) } : { l: r.left, t: r.top, r: r.right, b: r.bottom }; });
+          return u;
+        };
+        for (var t = 0.05; t < D; t += 0.1) { tl.seek(t, false);
+          var view = stage.getBoundingClientRect(), k = view.width / W || 1, m = 0.03;
+          view = { left: view.left, top: view.top, right: view.left + W * k, bottom: view.top + H * k };
+          var solid = box([Number(gsap.getProperty(veil, "opacity")) > 0.5 ? veil : $("frame")]);
+          placed.forEach(function (s) { if (t < s.from || t > s.to) return;
+            var r = box(s.lines);
+            if (r.l - view.left < W * m * k || r.t - view.top < H * m * k || view.right - r.r < W * m * k || view.bottom - r.b < H * m * k) note("safe" + s.text, '"' + s.text + '" runs outside the safe area');
+            var ox = Math.min(r.r, solid.r) - Math.max(r.l, solid.l), oy = Math.min(r.b, solid.b) - Math.max(r.t, solid.t);
+            if (!s.beside && ox > 0 && oy > 0 && ox * oy > 0.02 * (r.r - r.l) * (r.b - r.t)) note("over" + s.text, '"' + s.text + '" sits on top of the interface from ' + t.toFixed(1) + "s; move the line, or the product");
+          });
+        }
+        tl.seek(0, false);
+      })();
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

@@ -20,7 +20,12 @@ const build = (name: string) => {
 const isText = (file: string) => /\.(html|md)$/.test(file);
 
 test("the examples are the ones the documentation describes", () => {
-  assert.deepEqual(names, ["luxury-watch-commercial", "meeting-notes-launch", "saas-product-showcase"]);
+  assert.deepEqual(names, [
+    "luxury-watch-commercial",
+    "marlow-launch-film",
+    "meeting-notes-launch",
+    "saas-product-showcase",
+  ]);
 });
 
 for (const name of names) {

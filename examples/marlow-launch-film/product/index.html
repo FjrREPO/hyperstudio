@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Marlow (example product)</title>
+    <!--
+      Marlow is an EXAMPLE PRODUCT made for a HyperStudio film. It is not a real company. This page is its
+      interface as a live page: one .app element whose data-state decides what is shown, driven by the film.
+      The people, meeting and decisions shown are invented sample data.
+    -->
+    <style>
+      .app { --bg: #fbfaf7; --canvas: #ffffff; --ink: #1b1814; --muted: #726c62; --faint: #a39d92; --line: #e9e4da; --green: #0e7a53; --green-soft: #e6f4ee; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; }
+      .app { width: 1440px; height: 900px; overflow: hidden; line-height: normal; text-align: left; font-family: Inter, sans-serif; color: var(--ink); background: var(--bg); font-size: 15px; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; }
+      svg { display: block; flex: none; }
+      header { height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: var(--canvas); border-bottom: 1px solid var(--line); }
+      .mark { width: 28px; height: 28px; }
+      header b { font-size: 18px; letter-spacing: -0.02em; }
+      .crumb { margin-left: 18px; color: var(--faint); font-weight: 500; }
+      .crumb strong { color: var(--ink); font-weight: 600; }
+      .people { margin-left: auto; display: flex; }
+      .face { width: 32px; height: 32px; margin-left: -8px; border-radius: 50%; border: 2px solid var(--canvas); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; }
+      .cols { flex: 1; display: grid; grid-template-columns: 560px 1fr; gap: 28px; padding: 28px; min-height: 0; }
+      .pane { background: var(--canvas); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 1px 2px rgba(27, 24, 20, 0.04), 0 18px 44px rgba(27, 24, 20, 0.06); overflow: hidden; display: flex; flex-direction: column; }
+      .head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+      .head h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+      .head span { font-size: 13px; color: var(--faint); }
+      .lines { padding: 8px 24px 20px; display: grid; gap: 4px; }
+      .say { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f3efe7; }
+      .say .face { margin: 0; width: 34px; height: 34px; border: 0; }
+      .say b { font-size: 13px; font-weight: 600; }
+      .say time { margin-left: 8px; font-size: 12px; color: var(--faint); }
+      .say p { margin-top: 3px; color: var(--muted); line-height: 1.45; }
+      .btn { display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 600; font-size: 15px; }
+      .btn.green { background: var(--green); box-shadow: 0 10px 22px rgba(14, 122, 83, 0.28); }
+      .btn svg { width: 18px; height: 18px; }
+      .empty { flex: 1; display: grid; place-items: center; text-align: center; padding: 40px; }
+      .empty h3 { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; }
+      .empty p { margin: 10px auto 26px; max-width: 360px; color: var(--muted); font-size: 16px; line-height: 1.5; }
+      .body { padding: 26px 28px; display: grid; gap: 22px; }
+      .title { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+      .sub { margin-top: 6px; color: var(--muted); }
+      .label { margin-bottom: 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+      .decision { display: flex; gap: 12px; padding: 9px 0; font-size: 17px; font-weight: 500; line-height: 1.4; }
+      .decision i { flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%; background: var(--green); }
+      .task { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 14px; padding: 13px 14px; margin: 0 -14px; border-radius: 13px; font-size: 16px; font-weight: 500; }
+      .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid #cfc8bb; display: grid; place-items: center; }
+      .who { display: flex; align-items: center; gap: 8px; padding: 5px 11px 5px 5px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 13px; font-weight: 500; }
+      .who .face { margin: 0; width: 22px; height: 22px; border: 0; font-size: 9px; }
+      .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; position: relative; }
+      .toast { position: absolute; right: 28px; bottom: 76px; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; background: var(--ink); color: #fff; font-size: 15px; font-weight: 600; box-shadow: 0 20px 44px rgba(27, 24, 20, 0.28); }
+      .toast small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: #b9b2a6; }
+      .tick { width: 22px; height: 22px; border-radius: 50%; background: var(--green); display: grid; place-items: center; }
+          /* What each state shows. */
+      .app:not([data-state="meeting"]) #view-empty,
+      .app[data-state="meeting"] #view-notes,
+      .app:not([data-state="writing"], [data-state="arriving"]) :is(.skeleton, .working),
+      .app:is([data-state="meeting"], [data-state="writing"], [data-state="arriving"]) .written,
+      .app:not([data-state="meeting"]) .unwritten,
+      .app:not([data-state="sent"]) #toast { display: none; }
+      .app[data-state="writing"] [data-reveal] { opacity: 0; }
+      #view-notes { position: relative; display: flex; flex-direction: column; flex: 1; }
+      .skeleton { position: absolute; left: 28px; right: 28px; top: 26px; }
+      .skeleton i { display: block; margin-top: 14px; border-radius: 9px; background: linear-gradient(90deg, #efebe2, #f7f4ee); }
+      .lines { overflow: hidden; }
+      .task .box svg { opacity: 0; }
+      .app:is([data-state="done"], [data-state="sent"]) #task-1 { background: var(--green-soft); }
+      .app:is([data-state="done"], [data-state="sent"]) #task-1 .box { background: var(--green); border-color: var(--green); }
+      .app:is([data-state="done"], [data-state="sent"]) #task-1 .box svg { opacity: 1; }
+      .app:is([data-state="done"], [data-state="sent"]) #task-1 .what { color: var(--muted); text-decoration: line-through; text-decoration-color: #9bbfb0; }
+    </style>
+  </head>
+  <body>
+    <div class="app" data-state="meeting" data-states="meeting writing arriving summary done sent" data-region="window">
+
+    <header data-region="header">
+      <svg class="mark" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="7" fill="#1b1814" /><path d="M7 18V8l6 6 6-6v10" fill="none" stroke="#fbfaf7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      <b>Marlow</b>
+      <span class="crumb">Meetings &nbsp;/&nbsp; <strong>Pricing page review</strong></span>
+      <div class="people"><span class="face" style="background: #c2603a">AR</span><span class="face" style="background: #3a6ec2">JO</span><span class="face" style="background: #7a4fb5">MI</span><span class="face" style="background: #0e7a53">SK</span></div>
+    </header>
+    <div class="cols">
+      <section class="pane" data-region="transcript">
+        <div class="head" data-region="transcript-head"><h2>Transcript</h2><span>Today · 42 min</span></div>
+        <div class="lines" data-region="lines"><div>
+          <div class="say"><span class="face" style="background: #c2603a">AR</span><div><b>Ana</b><time>02:10</time><p>The annual toggle is hidden below the fold. Most people never see it.</p></div></div>
+          <div class="say"><span class="face" style="background: #3a6ec2">JO</span><div><b>Jonas</b><time>09:44</time><p>We can move it above the plans, but the comparison table has to shrink.</p></div></div>
+          <div class="say"><span class="face" style="background: #7a4fb5">MI</span><div><b>Mina</b><time>17:02</time><p>Then let’s drop the Enterprise column and link to a contact form instead.</p></div></div>
+          <div class="say"><span class="face" style="background: #0e7a53">SK</span><div><b>Sam</b><time>26:31</time><p>I can have copy for the three plans by Thursday if design is settled.</p></div></div>
+          <div class="say"><span class="face" style="background: #c2603a">AR</span><div><b>Ana</b><time>38:15</time><p>Good. Ship it behind a flag first, and we look at it again next week.</p></div></div>
+          <div class="say"><span class="face" style="background: #3a6ec2">JO</span><div><b>Jonas</b><time>39:02</time><p>Should we test the toggle position first, or just ship it?</p></div></div>
+          <div class="say"><span class="face" style="background: #7a4fb5">MI</span><div><b>Mina</b><time>39:40</time><p>Ship. We can read it off the flag in a week.</p></div></div>
+          <div class="say"><span class="face" style="background: #0e7a53">SK</span><div><b>Sam</b><time>40:12</time><p>Who is writing this up? I have to run.</p></div></div>
+          <div class="say"><span class="face" style="background: #c2603a">AR</span><div><b>Ana</b><time>40:31</time><p>I thought you were taking notes.</p></div></div>
+          <div class="say"><span class="face" style="background: #3a6ec2">JO</span><div><b>Jonas</b><time>40:44</time><p>Not me.</p></div></div>
+          <div class="say"><span class="face" style="background: #7a4fb5">MI</span><div><b>Mina</b><time>41:05</time><p>Does anyone remember who owns the header redesign?</p></div></div>
+        </div></div>
+      </section>
+
+      <section class="pane">
+        <div class="head" data-region="notes-head"><h2>Notes</h2><span><span class="unwritten">Not written yet</span><span class="working">Reading the transcript…</span><span class="written">Written just now</span></span></div>
+
+        <div class="empty" id="view-empty">
+          <div data-region="prompt">
+            <h3>42 minutes of talking.</h3>
+            <p>Marlow reads the transcript and writes what was decided and who does what.</p>
+            <span class="btn green" data-region="summarise-button"><svg viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v3M9 13v3M2 9h3M13 9h3M4.2 4.2l2 2M11.8 11.8l2 2M13.8 4.2l-2 2M6.2 11.8l-2 2" /></svg>Write the notes</span>
+          </div>
+        </div>
+
+        <div id="view-notes" data-region="summary">
+          <div class="skeleton" data-leave data-shimmer><i style="width: 70%; height: 36px"></i><i style="width: 46%; height: 16px"></i><i style="width: 100%; height: 132px; margin-top: 30px"></i><i style="width: 100%; height: 170px; margin-top: 30px"></i></div>
+          <div class="body">
+            <div data-reveal><div class="title" data-region="title">Annual pricing moves to the top.</div><p class="sub">Pricing page review · four people · three decisions</p></div>
+            <div data-region="decisions">
+              <div class="label" data-reveal>Decided</div>
+              <div class="decision" data-region="decision-1" data-reveal><i></i>Move the annual toggle above the plans.</div>
+              <div class="decision" data-region="decision-2" data-reveal><i></i>Drop the Enterprise column; link to a contact form.</div>
+              <div class="decision" data-region="decision-3" data-reveal><i></i>Ship behind a flag, review next week.</div>
+            </div>
+            <div data-region="actions">
+              <div class="label" data-reveal>Who does what</div>
+              <div class="task" id="task-1" data-region="action-1" data-reveal><span class="box" data-region="action-1-box"><svg width="14" height="14" viewBox="0 0 18 18"><path d="M4.5 9.4l3 3L13.5 6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span class="what">Redesign the plan header with the toggle on top</span><span class="who" data-region="owner-1"><span class="face" style="background: #3a6ec2">JO</span>Jonas</span></div>
+              <div class="task" data-reveal><span class="box"></span><span class="what">Write copy for the three plans by Thursday</span><span class="who" data-region="owner-2"><span class="face" style="background: #0e7a53">SK</span>Sam</span></div>
+              <div class="task" data-reveal><span class="box"></span><span class="what">Set up the feature flag</span><span class="who" data-region="owner-3"><span class="face" style="background: #7a4fb5">MI</span>Mina</span></div>
+            </div>
+          </div>
+          <div class="foot" data-region="foot">
+            <span>Written from the transcript · edit anything</span>
+            <span class="btn" data-region="send-button">Send to the team</span>
+            <div class="toast" id="toast" data-region="toast"><span class="tick"><svg width="12" height="12" viewBox="0 0 18 18"><path d="M4.5 9.4l3 3L13.5 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span><div>Sent to #pricing<small>Jonas, Sam and Mina were notified</small></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    </div>
+    <script>
+      document.querySelector(".app").dataset.state = (location.hash || "#meeting").slice(1);
+    </script>
+  </body>
+</html>
