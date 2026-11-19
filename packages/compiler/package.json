@@ -1,0 +1,13 @@
+{
+  "name": "@hyperstudio/compiler",
+  "version": "0.1.0",
+  "description": "Deterministic Creative IR to HyperFrames project compiler",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@hyperstudio/ir": "workspace:*",
+    "@hyperstudio/recipes": "workspace:*",
+    "zod": "^4.0.0"
+  }
+}
