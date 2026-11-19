@@ -78,6 +78,25 @@ test("beats are checked against the page they drive", () => {
   assert.deepEqual(problems([{ at: 0.5, do: "type", target: "toggle" }]), ["scenes.0.beats.0.text"]);
   assert.deepEqual(problems([{ at: 9, do: "cursor", target: "menu" }]), ["scenes.0.beats.0.at"]);
   assert.deepEqual(problems([]), ["scenes.0.beats"]);
+  // The film's own lines: they need text, and long enough on screen to be read.
+  assert.deepEqual(problems([{ at: 0, do: "say", place: "left", size: "hero" }]), ["scenes.0.beats.0.text"]);
+  assert.deepEqual(problems([{ at: 0, do: "say", text: "Four words to read", over: 0.8 }]), [
+    "scenes.0.beats.0.over",
+  ]);
+  assert.deepEqual(
+    problems([
+      { at: 0, do: "say", text: "Four words to read", over: 1.7 },
+      { at: 1.8, do: "veil", target: "toggle" },
+    ]),
+    [],
+  );
+  assert.deepEqual(
+    problems([
+      { at: 0.2, do: "count", target: "menu" },
+      { at: 1, do: "camera", target: "menu", tilt: "left", focus: "all", side: "right" },
+    ]),
+    [],
+  );
 });
 
 test("a take in which nothing starts for too long is flagged as frozen", () => {
