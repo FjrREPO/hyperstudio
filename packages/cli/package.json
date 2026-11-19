@@ -10,6 +10,7 @@
   "dependencies": {
     "@hyperstudio/compiler": "workspace:*",
     "@hyperstudio/assets": "workspace:*",
-    "@hyperstudio/audio": "workspace:*"
+    "@hyperstudio/audio": "workspace:*",
+    "@hyperstudio/studio": "workspace:*"
   }
 }

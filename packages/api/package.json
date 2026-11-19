@@ -1,0 +1,14 @@
+{
+  "name": "@hyperstudio/api",
+  "version": "0.2.0",
+  "description": "Versioned REST API over the HyperStudio engine",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "hyperstudio-api": "src/server.ts"
+  },
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@hyperstudio/studio": "workspace:*"
+  }
+}

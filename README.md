@@ -44,6 +44,8 @@ npx hyperframes render --quality looks -o ../renders/saas-product-showcase.mp4
 | `pnpm hyperstudio review <ir.json>`                                             | Compile, run `hyperframes check`, snapshot every shot, start `REVIEW.md`               |
 | `pnpm hyperstudio recipes [name]`                                               | List the recipes, or show one recipe's variables                                       |
 | `pnpm hyperstudio audio providers \| tts \| voices \| dub \| inspect \| status` | Voiceover and dubbing: local and free by default; ElevenLabs only when named and keyed |
+| `pnpm mcp -- --workspace <dir>`                                                 | MCP server for agents (STDIO; `--http <port>` with a token)                            |
+| `pnpm api -- --workspace <dir>`                                                 | REST API (needs `HYPERSTUDIO_API_KEY`)                                                 |
 | `--json`, `--pretty`                                                            | Machine-readable output for any command that prints a result                           |
 | `pnpm verify`                                                                   | Biome, type check and tests                                                            |
 | `pnpm deps:update`                                                              | Update every dependency with npm-check-updates, then verify                            |
@@ -79,8 +81,12 @@ packages/
   recipes/     @hyperstudio/recipes   blocks/<name>/{registry-item.json, <name>.html}
   assets/      @hyperstudio/assets    Free asset search, the licence gate, the download ledger
   audio/       @hyperstudio/audio     Voiceover and dubbing providers, estimates, cost controls
+  studio/      @hyperstudio/studio    The whole engine behind one API: projects, review, render jobs
+  mcp/         @hyperstudio/mcp       MCP server: tools, resources, prompts (STDIO and HTTP)
+  api/         @hyperstudio/api       Versioned REST API, generated from a route table
+  sdk/         @hyperstudio/sdk       TypeScript client: local engine or remote API
   cli/         hyperstudio            compile, review, recipes, assets, audio
-skills/hyperstudio-director/          Claude Code skill: direction → shots → IR → review → render
+skills/                               hyperstudio-director (make a film), hyperstudio-review (judge one)
 examples/                             A film per folder: video.json, screens/, assets/, REVIEW.md
 tests/                                integration/ and regression/ (unit tests sit beside the code)
 docs/
@@ -93,6 +99,9 @@ docs/
 - [Recipe development](docs/RECIPE-DEVELOPMENT.md)
 - [Example workflow](docs/EXAMPLE-WORKFLOW.md)
 - [Asset engine](docs/ASSET-ENGINE.md) · [Asset licensing](docs/ASSET-LICENSING.md)
+- [Agent integration](docs/AGENT-INTEGRATION.md) · [MCP server](docs/MCP-SERVER.md) · [REST API](docs/REST-API.md) ·
+  [SDK](docs/SDK.md) · [Claude Code](docs/CLAUDE-CODE.md) · [Codex](docs/CODEX.md) · [Other agents](docs/OTHER-AGENTS.md) ·
+  [Security](docs/SECURITY.md)
 - [Audio engine](docs/AUDIO-ENGINE.md) · [ElevenLabs](docs/ELEVENLABS-INTEGRATION.md) ·
   [Cost controls](docs/AUDIO-COST-CONTROLS.md) · [Audio licensing](docs/AUDIO-LICENSING.md)
 - [Creative quality review and proposal](docs/CREATIVE-QUALITY-PROPOSAL.md): why the first approach was replaced

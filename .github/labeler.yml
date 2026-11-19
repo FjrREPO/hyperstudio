@@ -19,6 +19,10 @@
 "area: audio":
   - changed-files:
       - any-glob-to-any-file: "packages/audio/**"
+"area: integration":
+  - changed-files:
+      - any-glob-to-any-file:
+          ["packages/studio/**", "packages/mcp/**", "packages/api/**", "packages/sdk/**", ".mcp.json"]
 "area: examples":
   - changed-files:
       - any-glob-to-any-file: "examples/**"

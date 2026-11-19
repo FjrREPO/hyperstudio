@@ -148,3 +148,35 @@ An audio clip may name a `scene`; its `start` then counts from that scene. Retim
 with it, which a fixed timestamp would not. Two `voice` clips may not overlap.
 **Tradeoff:** the compiler does not read a file's length, so a voice clip states its `duration`
 (`hyperstudio audio inspect` gives it).
+
+## D20. An MCP server after all (D4 reversed)
+
+D4 skipped a local MCP server because Claude Code could already drive the CLI through a shell. The owner now
+wants HyperStudio usable by any agent, including ones with no shell and ones that are not Claude. MCP is the
+standard way to do that, so `@hyperstudio/mcp` exists, on the official SDK.
+**Tradeoff:** a second interface to keep in step with the CLI. That is why D21 exists.
+
+## D21. One engine, thin adapters
+
+`@hyperstudio/studio` holds everything an interface needs: the workspace, compile outcomes, the review gate,
+render jobs, assets and audio. The CLI, the MCP server, the REST API and the SDK call it and add only their own
+shape (arguments, tools, routes, methods). The review logic moved out of the CLI into it.
+**Tradeoff:** one more package; in exchange, a rule or a fix is made once.
+
+## D22. No storyboard-generating tool
+
+The brief asked for `analyze_creative_brief` and `generate_storyboard` tools. They would need a language model
+inside HyperStudio, which would tie it to a provider. The agent calling the tools is the model: it writes the
+direction and the shots, and `save_ir` and `review_video` check them. The method is served as a resource.
+
+## D23. The REST API is a route table
+
+Routes are data: path, summary, the one engine call behind each. The server and the OpenAPI document are both
+generated from that list. Webhooks, per-user keys and a persistent idempotency store are not built; they
+belong to a hosted service, and there is none.
+
+## D24. Two skills, not seven
+
+The brief listed seven skills. Making a film is one job with an order to it, and splitting it would let an
+agent load "motion design" without "real product first". So there is `hyperstudio-director` (make a film) and
+`hyperstudio-review` (judge one), which is the one part that is used on its own.

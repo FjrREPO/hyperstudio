@@ -1,0 +1,15 @@
+{
+  "name": "@hyperstudio/studio",
+  "version": "0.2.0",
+  "description": "The HyperStudio engine as one API: projects, compile, review, renders, assets, audio",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@hyperstudio/assets": "workspace:*",
+    "@hyperstudio/audio": "workspace:*",
+    "@hyperstudio/compiler": "workspace:*",
+    "@hyperstudio/ir": "workspace:*",
+    "zod": "^4.6.7"
+  }
+}

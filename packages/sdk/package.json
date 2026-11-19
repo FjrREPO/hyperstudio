@@ -1,0 +1,11 @@
+{
+  "name": "@hyperstudio/sdk",
+  "version": "0.2.0",
+  "description": "TypeScript client for HyperStudio: the same calls against a local engine or a remote API",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@hyperstudio/studio": "workspace:*"
+  }
+}

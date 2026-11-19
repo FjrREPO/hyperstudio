@@ -1,0 +1,16 @@
+{
+  "name": "@hyperstudio/mcp",
+  "version": "0.2.0",
+  "description": "Model Context Protocol server for HyperStudio: the same engine, callable by any MCP client",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "hyperstudio-mcp": "src/server.ts"
+  },
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@hyperstudio/studio": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  }
+}
