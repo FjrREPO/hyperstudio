@@ -191,6 +191,23 @@ Not chosen: an iframe (HyperFrames cannot seek what is inside one, and the captu
 recorded screen video (not editable, not deterministic at any frame rate); CSS transitions inside the page
 (they run on the wall clock, not the timeline).
 
+## D27. Type and brand live inside the take
+
+A review of the first live cuts found the same skeleton as before: a card of centred type, the product, a card
+of type, a logo on the stage. The cause was that the film's lines and its ending were separate scenes, so
+every film alternated type and product.
+
+A take can now hold the whole film. `say` sets a line in the frame, in a clear column beside the interface
+(`side` moves the interface over). Camera beats can turn (`tilt`) and pull focus (`focus`) as the product
+changes state, so the camera's behaviour follows the story. `veil` covers everything but one region in the
+stage's colour, so the film ends on the product's own mark, where it sits in the interface, instead of
+cutting to a logo card. `statement` and `brand-close` remain for films that want them.
+
+## D28. HyperFrames is pinned
+
+`npx hyperframes` takes the newest release. On 2026-11-19 a release appeared mid-session and the review
+stopped working. Every launch now names `hyperframes@0.9.69`; upgrading is a deliberate change.
+
 ## D26. Motion is reviewed from evidence
 
 `hyperstudio review --motion` renders a draft, reports the share of still frames and the longest freeze, and

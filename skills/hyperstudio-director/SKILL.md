@@ -84,6 +84,12 @@ Choose the structure the product calls for. They produce different films:
 | User journey, interaction, result, call to action | A demonstration; the product is best understood by watching it used |
 | Concept, explanation, product, positioning | A technical product that needs one idea explained first |
 
+A film does not have to alternate cards of type with shots of the product. With `product-take` the whole film
+can be one take: the film's lines are set in the frame beside the interface (`say`, with the interface moved
+over by `side`), the camera turns and pulls focus as the product changes state, and the film ends by resolving
+the interface into its own mark (`veil`). Use separate `statement` and `brand-close` scenes only when a cut to
+type is what the story needs.
+
 Then write the storyboard as actions, not pictures: who does what, what the product does back, and where the
 camera is while it happens. A change the viewer should understand (a click and its result) belongs in one
 take, not on either side of a cut.
