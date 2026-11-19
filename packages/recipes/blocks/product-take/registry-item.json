@@ -3,7 +3,7 @@
   "name": "product-take",
   "type": "hyperframes:block",
   "title": "Product Take",
-  "description": "One continuous take of a live interface: the product's own HTML, not a screenshot. The scene's beats drive it in order: the cursor travels and clicks, text is typed, the interface changes state, parts of it arrive or are drawn, and the camera follows the action. Use it whenever the product can be shown working; one take replaces several cut-together screenshots.",
+  "description": "One continuous take of a live interface: the product's own HTML, not a screenshot. The scene's beats drive it in order: the cursor travels and clicks, text is typed, the interface changes state, parts of it arrive, a chart is drawn, a figure counts up, and the camera follows the action, turning and pulling focus as it goes. The film's own lines can be set in the frame beside it, and the take can end by resolving the interface into the brand's own mark.",
   "tags": ["product", "interface", "demo", "interaction", "camera"],
   "dimensions": {
     "width": 1920,
@@ -12,7 +12,7 @@
   "duration": 6,
   "hyperstudio": {
     "minDuration": 1.5,
-    "maxDuration": 12,
+    "maxDuration": 20,
     "required": [],
     "screen": true,
     "beats": true
@@ -82,10 +82,32 @@
       "role": "layout",
       "label": "Closest zoom",
       "description": "The camera never magnifies the interface beyond this, so close-ups keep their surroundings and stay readable.",
-      "default": 2.2,
+      "default": 1.8,
       "min": 1,
-      "max": 3.2,
+      "max": 6,
       "step": 0.1
+    },
+    {
+      "id": "side",
+      "type": "enum",
+      "role": "layout",
+      "label": "Side",
+      "description": "Where in the frame the interface sits. Put it to one side when the film's own lines share the frame; a camera beat can change it.",
+      "default": "centre",
+      "options": [
+        {
+          "value": "centre",
+          "label": "Centred"
+        },
+        {
+          "value": "left",
+          "label": "Left, with room on the right"
+        },
+        {
+          "value": "right",
+          "label": "Right, with room on the left"
+        }
+      ]
     },
     {
       "id": "chrome",
@@ -121,7 +143,7 @@
       "type": "enum",
       "role": "layout",
       "label": "Perspective",
-      "description": "Turn the screen in perspective. A 2.5D transform of the flat screenshot: it eases from a slightly stronger angle to this one.",
+      "description": "The angle the interface is seen from when the take starts. A camera beat can turn it to another angle.",
       "default": "none",
       "options": [
         {
@@ -151,7 +173,7 @@
       "type": "enum",
       "role": "layout",
       "label": "Focus",
-      "description": "Which part of the frame stays sharp; the rest is softly blurred, as with a shallow depth of field. Use it with a tilt.",
+      "description": "Which part of the frame is sharp when the take starts. A camera beat can pull focus.",
       "default": "all",
       "options": [
         {
@@ -179,6 +201,14 @@
       "label": "Slow push",
       "description": "A slow, constant push-in under every camera move, so the picture never comes to a dead stop while text is typed or read.",
       "default": true
+    },
+    {
+      "id": "spill",
+      "type": "boolean",
+      "role": "look",
+      "label": "Light spill",
+      "description": "The screen throws a soft light in the film's accent on the stage around it. For a dark stage, so the interface belongs to it.",
+      "default": false
     },
     {
       "id": "background",

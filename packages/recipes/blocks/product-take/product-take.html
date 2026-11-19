@@ -1,18 +1,10 @@
 <template>
   <!--
-    PRODUCT TAKE
-
-    One continuous take of a live interface. The product's own HTML is mounted here (not a screenshot), and
-    the scene's beats drive it: the cursor travels and clicks, text is typed, the interface changes state,
-    parts of it arrive or are drawn, and the camera follows. The compiler supplies the page (#product-take-ui)
-    and the beats; variables are declared in registry-item.json.
-
-    The page lives in a shadow root, so its styles and the film's never meet. Regions are the page's own
-    data-region elements, measured here in the state they are used in.
-
-    Conventions (docs/RECIPE-DEVELOPMENT.md): the composition id is the recipe name and every element id
-    starts with it; every visible state is a function of timeline time.
+    PRODUCT TAKE: one continuous take of a live interface. The compiler supplies the product's own page
+    (#product-take-ui) and the scene's beats; this mounts the page in a shadow root and drives it.
+    Variables are declared in registry-item.json. Every visible state is a function of timeline time.
   -->
+
   <style>
     #root { position: absolute; inset: 0; overflow: hidden; }
     #product-take-stage { --pt-accent: #2747f0; position: absolute; inset: 0; overflow: hidden; perspective: 2600px; }
@@ -31,6 +23,16 @@
     #product-take-ripple { position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: color-mix(in srgb, var(--pt-accent) 30%, transparent); }
     #product-take-cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28)); }
     #product-take-dof { position: absolute; inset: 0; pointer-events: none; }
+    /* Covers the interface except one region, in the stage's colour: the product resolves into that part. */
+    #product-take-veil { position: absolute; border-radius: 16px; }
+    /* The film's own lines, set in the frame beside or under the product. */
+    #product-take-says { position: absolute; inset: 0; pointer-events: none; }
+    /* A column of clear stage for the film's lines: the interface is seen beside it, never under it. */
+    .pt-gutter { position: absolute; top: 0; bottom: 0; width: 46%; opacity: 0; }
+    .pt-say { position: absolute; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; white-space: pre-line; }
+    /* Font names are written out: HyperFrames loads a bundled font only when it finds its name in the styles. */
+    .pt-d-inter { font-family: "Inter", sans-serif; } .pt-d-outfit { font-family: "Outfit", sans-serif; } .pt-d-montserrat { font-family: "Montserrat", sans-serif; } .pt-d-poppins { font-family: "Poppins", sans-serif; }
+    .pt-d-playfair-display { font-family: "Playfair Display", serif; } .pt-d-eb-garamond { font-family: "EB Garamond", serif; } .pt-d-oswald { font-family: "Oswald", sans-serif; } .pt-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; }
   </style>
 
   <div id="root" data-composition-id="product-take" data-start="0" data-duration="6" data-width="1920" data-height="1080">
@@ -42,6 +44,7 @@
             <div id="product-take-world" data-layout-ignore></div>
           </div>
           <div id="product-take-over" data-layout-allow-overflow>
+            <div id="product-take-veil" data-layout-allow-occlusion data-layout-allow-overflow></div>
             <div id="product-take-outline" data-layout-allow-occlusion></div>
             <div id="product-take-ripple" data-layout-allow-occlusion></div>
             <svg id="product-take-cursor" viewBox="0 0 30 30" data-layout-allow-occlusion>
@@ -51,6 +54,9 @@
         </div>
       </div>
       <div id="product-take-dof" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="product-take-gutter-left" class="pt-gutter" style="left: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="product-take-gutter-right" class="pt-gutter" style="right: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="product-take-says" data-layout-allow-occlusion></div>
     </div>
     <script type="application/json" id="product-take-ui">{}</script>
   </div>
@@ -68,7 +74,7 @@
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
       var v = Object.assign(
-        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 2.2, chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, accent: "#2747f0" },
+        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter" },
         given,
       );
       var parse = function (text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } };
@@ -87,6 +93,8 @@
       var bar = v.chrome === "window" ? 38 : 0;
       if (!bar) $("bar").style.display = "none";
       $("frame").style.borderRadius = (Number(v.radius) || 0) + "px";
+      // Light from the screen falling on the stage around it, for a dark stage.
+      if (v.spill === true || v.spill === "true") $("frame").style.boxShadow = "0 0 0 1px rgba(128,128,128,.22), 0 0 " + 26 * U + "px color-mix(in srgb, " + v.accent + " 42%, transparent), 0 50px 130px rgba(0,0,0,.4)";
       var over = $("over");
       over.style.top = bar + "px";
 
@@ -115,14 +123,21 @@
 
       // ── Measure everything before any tween touches a transform ──
       var fill = Number(v.fill) || 0.86;
+      // Where in the frame the subject sits: centred, or to one side when type shares the frame.
+      var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
+      var side = SIDES[v.side] || 0.5;
       var frame = function (r, f) {
-        var s = Math.min((W * f) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), Number(v.maxZoom) || 2.2);
-        return { scale: s, x: W / 2 - s * (r[0] + r[2] / 2), y: H / 2 - s * (r[1] + bar + r[3] / 2) };
+        var room = side === 0.5 ? 1 : 0.56;
+        var s = Math.min((W * f * room) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), Number(v.maxZoom) || 1.8);
+        return { scale: s, x: W * side - s * (r[0] + r[2] / 2), y: H / 2 - s * (r[1] + bar + r[3] / 2) };
       };
       var plan = beats.map(function (b) {
         var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
-        return { b: b, r: rect(b.target, b.do === "camera" ? after : b.at) || whole };
+        if (b.do === "camera" && b.side) side = SIDES[b.side] || side;
+        var r = rect(b.target, b.do === "camera" ? after : b.at) || whole;
+        return { b: b, r: r, to: b.do === "camera" ? frame(r, Number(b.fill) || fill) : null };
       });
+      side = SIDES[v.side] || 0.5;
       var start = frame(rect(v.from, 0) || whole, fill);
       app.setAttribute("data-state", first);
 
@@ -134,6 +149,15 @@
       var outline = $("outline");
       var here = start;
       var pointer = null;
+      var rig = $("rig");
+      var dof = $("dof");
+      var veil = $("veil");
+      var says = [];
+      var TURNS = { none: [0, 0, 0], left: [3, 12, 0], right: [3, -12, 0], up: [15, 0, 0], desk: [42, 0, -17] };
+      var turned = TURNS[v.tilt] || TURNS.none;
+      var soft = v.focus && v.focus !== "all" ? 1 : 0;
+      gsap.set(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2], transformOrigin: "50% 50%" });
+      gsap.set(veil, { opacity: 0 });
       tl.fromTo(cam, { x: start.x, y: start.y, scale: start.scale, transformOrigin: "0 0" }, { x: start.x, y: start.y, scale: start.scale, duration: 0.01 }, 0);
       gsap.set([ripple, outline], { opacity: 0 });
       gsap.set(cursor, { opacity: 0 });
@@ -144,9 +168,21 @@
         var cx = r[0] + r[2] * 0.62;
         var cy = r[1] + r[3] * 0.62;
         if (b.do === "camera") {
-          var to = frame(r, Number(b.fill) || fill);
-          tl.fromTo(cam, { x: here.x, y: here.y, scale: here.scale }, { x: to.x, y: to.y, scale: to.scale, duration: Number(b.over) || 0.9, ease: b.ease || "power3.inOut", immediateRender: false }, b.at);
+          var to = p.to;
+          var length = Number(b.over) || 0.9;
+          tl.fromTo(cam, { x: here.x, y: here.y, scale: here.scale }, { x: to.x, y: to.y, scale: to.scale, duration: length, ease: b.ease || "power3.inOut", immediateRender: false }, b.at);
           here = to;
+          // The camera can come round the screen, or pull focus, as it moves.
+          if (b.tilt && TURNS[b.tilt]) {
+            var next = TURNS[b.tilt];
+            tl.fromTo(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2] }, { rotationX: next[0], rotationY: next[1], rotationZ: next[2], duration: length, ease: "power2.inOut", immediateRender: false }, b.at);
+            turned = next;
+          }
+          if (b.focus) {
+            var sharp = b.focus === "all" ? 0 : 1;
+            tl.fromTo(dof, { opacity: soft }, { opacity: sharp, duration: length, ease: "none", immediateRender: false }, b.at);
+            soft = sharp;
+          }
         } else if (b.do === "cursor" || b.do === "click") {
           // The cursor arrives at `at`; it leaves its last place just in time to get there.
           var travel = Math.min(Number(b.over) || 0.6, b.at);
@@ -165,6 +201,8 @@
           if (!parts.length && host) parts = Array.prototype.slice.call(host.children);
           var each = (Number(b.over) || 0.9) / Math.max(parts.length, 1);
           tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
+          // What stood in for the content (a skeleton, a status) leaves as the content arrives.
+          if (host) tl.fromTo(host.querySelectorAll("[data-leave]"), { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "none", immediateRender: false }, b.at);
         } else if (b.do === "draw") {
           var plot = find(b.target);
           var lines = plot ? Array.prototype.slice.call(plot.querySelectorAll("[data-draw]")) : [];
@@ -174,6 +212,25 @@
             tl.fromTo(line, { strokeDashoffset: n }, { strokeDashoffset: 0, duration: Number(b.over) || 0.9, ease: "power2.inOut" }, b.at);
           });
           if (plot) tl.fromTo(plot.querySelectorAll("[data-fade]"), { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
+        } else if (b.do === "count") {
+          // A figure the page already shows counts up to its own value; nothing is invented here.
+          var figure = find(b.target);
+          var parsed = figure && /^(\D*)(\d+(?:\.\d+)?)(.*)$/.exec(figure.textContent.trim());
+          if (parsed) {
+            var places = (parsed[2].split(".")[1] || "").length;
+            var counter = Object.defineProperty({}, "n", {
+              get: function () { return 0; },
+              set: function (n) { figure.textContent = parsed[1] + Number(n).toFixed(places) + parsed[3]; },
+            });
+            tl.fromTo(counter, { n: 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
+          }
+        } else if (b.do === "veil") {
+          var gap = 10;
+          gsap.set(veil, { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2, boxShadow: "0 0 0 6000px " + v.background });
+          tl.fromTo(veil, { opacity: 0 }, { opacity: 1, duration: Number(b.over) || 0.6, ease: "power2.inOut" }, b.at);
+          tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
+        } else if (b.do === "say") {
+          says.push(b);
         } else if (b.do === "highlight") {
           var pad = 8;
           tl.set(outline, { left: r[0] - pad, top: r[1] - pad, width: r[2] + pad * 2, height: r[3] + pad * 2 }, b.at);
@@ -206,17 +263,59 @@
       tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
 
       // The camera never comes to a dead stop: a slow push runs under every move, for the whole take.
-      if (v.drift !== false && v.drift !== "false") tl.fromTo($("rig"), { scale: 1 }, { scale: 1.045, duration: D, ease: "none" }, 0);
-      // Perspective and focus, as in product-shot: the turn eases for the whole take.
-      var turn = { left: [5, 18, 0, 3, 11, 0], right: [5, -18, 0, 3, -11, 0], up: [22, 0, 0, 14, 0, 0], desk: [48, 0, -22, 42, 0, -17] }[v.tilt];
-      if (turn) tl.fromTo($("rig"), { rotationX: turn[0], rotationY: turn[1], rotationZ: turn[2], transformOrigin: "50% 50%" }, { rotationX: turn[3], rotationY: turn[4], rotationZ: turn[5], duration: D - 0.04, ease: "power2.out" }, 0);
+      if (v.drift !== false && v.drift !== "false") tl.fromTo(stage, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
+      // Focus: the mask leaves the plane of focus sharp; a camera beat can fade the whole effect in or out.
       var mask = {
         band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
         near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
         centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)",
-      }[v.focus];
-      if (mask) $("dof").style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
-      else $("dof").style.display = "none";
+      }[v.focus === "all" ? "centre" : v.focus] || "";
+      dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
+      tl.fromTo(dof, { opacity: v.focus && v.focus !== "all" ? 1 : 0 }, { opacity: v.focus && v.focus !== "all" ? 1 : 0, duration: 0.01 }, 0);
+
+      // Anything marked as waiting (a skeleton) breathes for as long as it is on screen.
+      var waiting = root.querySelectorAll("[data-shimmer]");
+      if (waiting.length) tl.fromTo(waiting, { filter: "brightness(1)" }, { filter: "brightness(0.955)", duration: 0.45, ease: "sine.inOut", repeat: Math.ceil(D / 0.45), yoyo: true }, 0);
+
+      // The film's own lines. Each stays until the next one, or for its own length.
+      var SIZES = { hero: 11.5, title: 6.4, text: 3.6 };
+      var PLACES = {
+        left: { left: 7 * U + "px", top: "50%", yPercent: -50, textAlign: "left" },
+        right: { right: 7 * U + "px", top: "50%", yPercent: -50, textAlign: "right" },
+        under: { left: 0, right: 0, top: "63%", yPercent: 0, textAlign: "center" },
+        foot: { left: 0, right: 0, top: "76%", yPercent: 0, textAlign: "center" },
+        over: { left: 0, right: 0, top: "24%", yPercent: -100, textAlign: "center" },
+      };
+      // The column behind side-set lines appears with the first of them and leaves with the last.
+      ["left", "right"].forEach(function (name) {
+        var mine = says.filter(function (b) { return (b.place || "left") === name; });
+        if (!mine.length) return;
+        var gutter = $("gutter-" + name);
+        gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 66%, transparent)";
+        var last = mine[mine.length - 1];
+        var from = mine[0].at;
+        var to = last.over ? last.at + Number(last.over) : D + 1;
+        tl.fromTo(gutter, { opacity: from <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, from);
+        if (to < D) tl.fromTo(gutter, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, to - 0.1);
+      });
+      says.forEach(function (b, i) {
+        var place = PLACES[b.place] || PLACES.left;
+        var line = document.createElement("div");
+        line.className = "pt-say pt-d-" + String(v.displayFont).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        line.textContent = String(b.text || "");
+        line.style.color = v.ink;
+        line.style.fontSize = (SIZES[b.size] || SIZES.title) * U + "px";
+        line.style.textAlign = place.textAlign;
+        ["left", "right", "top"].forEach(function (key) { if (place[key] !== undefined) line.style[key] = place[key]; });
+        if (b.size === "text") { line.style.opacity = 0.7; line.style.letterSpacing = "-0.01em"; line.style.lineHeight = 1.3; }
+        $("says").appendChild(line);
+        // A line stays until the next line set in the same place, or for its own length.
+        var after = says.slice(i + 1).filter(function (n) { return (n.place || "left") === (b.place || "left"); })[0];
+        var until = b.over ? b.at + Number(b.over) : after ? after.at : D + 1;
+        // A line that opens the film is already arriving at frame 0: that frame is the thumbnail.
+        tl.fromTo(line, { opacity: b.at <= 0.05 ? 0.5 : 0, y: 2.4 * U, yPercent: place.yPercent }, { opacity: b.size === "text" ? 0.7 : 1, y: 0, duration: 0.55, ease: "power3.out" }, b.at);
+        if (until < D) tl.fromTo(line, { opacity: b.size === "text" ? 0.7 : 1 }, { opacity: 0, duration: 0.25, ease: "none", immediateRender: false }, Math.max(b.at + 0.3, until - 0.25));
+      });
 
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
