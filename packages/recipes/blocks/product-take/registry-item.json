@@ -110,6 +110,46 @@
       ]
     },
     {
+      "id": "level",
+      "type": "enum",
+      "role": "layout",
+      "label": "Level",
+      "description": "How high in the frame the interface sits. Low lets it bleed off the bottom under a headline; a camera beat can change it.",
+      "default": "middle",
+      "options": [
+        {
+          "value": "high",
+          "label": "High"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "low",
+          "label": "Low"
+        }
+      ]
+    },
+    {
+      "id": "lens",
+      "type": "enum",
+      "role": "look",
+      "label": "Lens",
+      "description": "Long keeps perspective gentle. Wide exaggerates it, so a turned interface reads as an object in space.",
+      "default": "long",
+      "options": [
+        {
+          "value": "long",
+          "label": "Long"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ]
+    },
+    {
       "id": "chrome",
       "type": "enum",
       "role": "look",

@@ -54,6 +54,11 @@ everything, notes or cards floating for decoration, a line of centred type betwe
 into a dashboard, and a logo on the same background to finish. Use any of these only when this product's
 story needs it, and say why in `purpose`.
 
+Two films of one product in two colours are one direction, not two. A direction is a composition system:
+where type and product sit and whether they trade places, how the product first appears (whole, or through
+one element that opens), what the camera does (holds flat while the layout moves, or orbits an object), and
+how it ends (on the mark, or on the product). Write those four down before any beat.
+
 Decide these from the product, not from the last film:
 
 - **The stage.** Usually plain: the product's own surface colour, or black, with nothing on it. `light: soft`

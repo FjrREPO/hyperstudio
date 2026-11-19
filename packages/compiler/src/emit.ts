@@ -199,7 +199,15 @@ export function instantiate(scene: PlannedScene, width: number, height: number):
   tag = set(tag, "data-width", String(width));
   tag = set(tag, "data-height", String(height));
   tag = set(tag, "data-composition-variables", jsonAttr(scene.variables), "'");
-  return html.replace(rootTag[0], tag).replace(/<template>/, `<template>\n  ${MARKER}`);
+  // The scene file is generated, not edited: the recipe's explanations stay in the recipe. Dropping whole-line
+  // comments and blank lines keeps each scene small enough for HyperFrames' own size check.
+  const lean = html
+    .replace(rootTag[0], tag)
+    .replace(/^[ \t]*<!--[\s\S]*?-->[ \t]*\n/gm, "")
+    .replace(/^[ \t]*\/\/.*\n/gm, "")
+    .replace(/^[ \t]*\/\*.*\*\/[ \t]*\n/gm, "")
+    .replace(/\n[ \t]*\n/g, "\n");
+  return lean.replace(/<template>/, `<template>\n  ${MARKER}`);
 }
 
 /** The plan beside the project, in the STORYBOARD.md format HyperFrames reads. */

@@ -1,19 +1,19 @@
 {
   "project": {
-    "title": "Lumen - editorial cut",
+    "title": "Lumen - editorial luxury cut",
     "fps": 30,
     "aspectRatio": "16:9",
-    "duration": 14.8
+    "duration": 15.1
   },
   "direction": {
-    "concept": "A magazine spread that happens to be alive: large type on the left, the product working on the right, one unbroken take.",
+    "concept": "A magazine layout that happens to be alive: the headline and the product trade places on the page as the story moves.",
     "audience": "People who run a subscription business and wait on someone else for every revenue number.",
     "message": "You can ask Lumen a revenue question in plain words and have the answer before the meeting.",
     "tone": "Composed and unhurried, like a well-set page; the type states, the product proves.",
     "palette": "A pale stone stage, ink for type, the product's white interface, and cobalt only where the product itself uses it.",
-    "typography": "Playfair Display at headline size, flush left on the margin, two lines at most; the interface keeps its own Inter.",
-    "motion": "The frame is split and stays split: type holds still on the left while the camera follows the cursor on the right, flat and frontal.",
-    "pacing": "A fast first second, time to read the answer when it lands, and a slow last move as the product resolves into its mark."
+    "typography": "Playfair Display at two scales, a very large headline and a small caption, never in the same place twice; the interface keeps its own Inter.",
+    "motion": "The page is recomposed four times: headline over a product that bleeds off the corner, product alone with a caption, product left with the headline low on the right, headline again with a close product. The camera is flat and frontal; only the layout moves.",
+    "pacing": "A fast first second, time to read the answer when it lands, and a slow last move as the product closes down to its mark."
   },
   "brand": {
     "name": "Lumen",
@@ -40,165 +40,159 @@
     {
       "id": "film",
       "recipe": "product-take",
-      "duration": 14.8,
+      "duration": 15.1,
       "screen": "app",
       "purpose": "The whole film is one take: the product is used from question to shared answer, the film's lines sit beside it, and it resolves into its own mark.",
       "params": {
         "from": "window",
-        "fill": 0.84,
+        "fill": 0.9,
         "side": "right",
-        "maxZoom": 5
+        "level": "low",
+        "maxZoom": 1.6
       },
       "beats": [
         {
           "at": 0.0,
           "do": "say",
           "text": "Ask your\nrevenue.",
-          "place": "left",
-          "size": "hero"
-        },
-        {
-          "at": 0.5,
-          "do": "camera",
-          "target": "ask-bar",
-          "fill": 0.92,
-          "over": 1.1
+          "place": "top-left",
+          "size": "display",
+          "over": 1.5
         },
         {
           "at": 1.1,
+          "do": "camera",
+          "target": "ask-bar",
+          "fill": 0.92,
+          "level": "low",
+          "over": 1.1
+        },
+        {
+          "at": 1.2,
           "do": "cursor",
           "target": "ask-input",
           "over": 0.5
         },
         {
-          "at": 1.3,
+          "at": 1.4,
           "do": "type",
           "target": "ask-input",
           "text": "Which plan grew fastest last quarter?",
           "over": 1.4
         },
         {
-          "at": 3.0,
+          "at": 3.1,
           "do": "click",
           "target": "send",
           "state": "thinking",
           "over": 0.4
         },
         {
-          "at": 3.1,
-          "do": "say",
-          "text": "No ticket.\nNo waiting.",
-          "place": "left",
-          "size": "hero"
-        },
-        {
-          "at": 3.1,
+          "at": 3.2,
           "do": "camera",
           "target": "answer",
-          "fill": 0.86,
-          "over": 0.9
+          "fill": 0.78,
+          "side": "centre",
+          "level": "middle",
+          "over": 1.1
         },
         {
-          "at": 4.2,
+          "at": 4.3,
           "do": "state",
           "state": "arriving"
         },
         {
-          "at": 4.2,
+          "at": 4.3,
           "do": "reveal",
           "target": "answer",
           "over": 1.0
         },
         {
-          "at": 4.5,
+          "at": 4.6,
           "do": "draw",
           "target": "plot",
           "over": 1.0
         },
         {
-          "at": 4.7,
+          "at": 4.8,
           "do": "count",
           "target": "team-value",
           "over": 0.9
         },
         {
           "at": 6.2,
+          "do": "camera",
+          "target": "answer",
+          "fill": 0.9,
+          "side": "left",
+          "over": 1.1
+        },
+        {
+          "at": 6.5,
           "do": "say",
           "text": "An answer,\nnot a\ndashboard.",
-          "place": "left",
-          "size": "hero"
+          "place": "bottom-right",
+          "size": "hero",
+          "over": 2.3
         },
         {
-          "at": 6.3,
-          "do": "camera",
-          "target": "chart",
-          "fill": 0.9,
-          "over": 1.0
-        },
-        {
-          "at": 6.7,
+          "at": 6.9,
           "do": "cursor",
           "target": "bar-team",
           "over": 0.6
         },
         {
-          "at": 6.9,
+          "at": 7.1,
           "do": "highlight",
           "target": "bar-team",
           "over": 1.4
         },
         {
-          "at": 8.4,
+          "at": 8.8,
           "do": "camera",
           "target": "foot",
           "fill": 0.9,
-          "over": 0.8
+          "side": "right",
+          "over": 1.0
         },
         {
-          "at": 9.2,
+          "at": 9.7,
           "do": "click",
           "target": "share-button",
           "state": "share",
           "over": 0.6
         },
         {
-          "at": 9.3,
-          "do": "say",
-          "text": "Shared\nin a click.",
-          "place": "left",
-          "size": "hero",
-          "over": 1.9
-        },
-        {
-          "at": 9.4,
+          "at": 9.8,
           "do": "camera",
           "target": "share-popover",
-          "fill": 0.74,
-          "over": 0.7
+          "fill": 0.8,
+          "over": 0.8
         },
         {
-          "at": 11.2,
+          "at": 11.5,
           "do": "camera",
           "target": "brand",
           "fill": 0.3,
           "side": "centre",
+          "zoom": 5,
           "over": 1.2
         },
         {
-          "at": 11.4,
+          "at": 11.7,
           "do": "veil",
           "target": "brand",
           "over": 0.7
         },
         {
-          "at": 12.3,
+          "at": 12.6,
           "do": "say",
-          "text": "Ask your revenue.",
+          "text": "The answer, before the meeting starts.",
           "place": "under",
           "size": "title"
         },
         {
-          "at": 12.55,
+          "at": 12.85,
           "do": "say",
           "text": "lumen.example",
           "place": "foot",

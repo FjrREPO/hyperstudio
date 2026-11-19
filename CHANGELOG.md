@@ -34,6 +34,10 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - Takes can carry the whole film: `say` sets the film's lines in the frame beside the product, camera beats
   can turn, pull focus and move the product to one side, `count` counts a figure up, `veil` resolves the
   interface into its own mark. Loading and result are one element in the page (`data-leave`, `data-shimmer`).
+- Two directions that differ in composition, not colour: `say` takes corner placements and a `display` size
+  with masked line reveals; camera beats take `level` and `zoom`; `veil` can open as well as close, so a
+  product can be introduced through one element; `lens: wide` for an interface seen as an object in space.
+- Generated scene files drop comments and blank lines.
 - The HyperFrames release is pinned (0.9.69) wherever HyperStudio launches it.
 - `hyperstudio review --motion`: a draft render, the share of still frames, the longest freeze, and one strip
   per shot at eight frames a second.
