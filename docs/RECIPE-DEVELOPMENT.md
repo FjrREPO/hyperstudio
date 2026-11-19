@@ -68,6 +68,20 @@ Rules from HyperFrames that bite most often:
 - Mark deliberate overflow with `data-layout-allow-overflow`, or `check` reports it.
 - Reading text must be at least 2.6% of the canvas's short side.
 
+Learned while building the four recipes:
+
+- **Measuring text needs the typeface.** If a recipe sizes text from glyph widths, load the face first
+  (`document.fonts.load(...)`) and build and register the timeline in its `then`. Registering late is fine;
+  registering before the tweens exist renders blank.
+- **Counting numbers need a setter, not `onUpdate`.** HyperFrames seeks with events suppressed, so a callback
+  never fires. Tween an object whose property setter writes the text (see `data-storytelling`).
+- **Frame 0 is the thumbnail.** `check` warns when the first frame is only background. A recipe that can open
+  a film should already show something at time 0 (see the `opening` case in `kinetic-typography`).
+- **Decorative layers behind text** can be reported as covering it; mark them `data-layout-allow-occlusion`.
+- **Portrait safe areas.** Keep text out of the top 12%, the bottom 36% and the right 30% of a 9:16 canvas.
+- **Share variable ids and option lists** (`accent`, `background`, `ink`, `headingFont`, `bodyFont`) so one
+  project `style` can drive a film that mixes recipes.
+
 ## Develop and verify
 
 ```bash
@@ -88,7 +102,8 @@ Before calling it done, compile it at least twice in one project with different 
 
 ## Reference recipe
 
-`luxury-product-reveal` is the template to copy. Its variables:
+`luxury-product-reveal` is the template to copy; `kinetic-typography` shows measured text and
+`data-storytelling` shows counters. The variables of `luxury-product-reveal`:
 
 | Id                            | Type           | Default                 | Notes                                                                |
 | ----------------------------- | -------------- | ----------------------- | -------------------------------------------------------------------- |

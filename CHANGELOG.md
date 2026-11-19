@@ -6,6 +6,9 @@ Notable changes, newest first. Versions follow [Semantic Versioning](https://sem
 
 ### Added
 
+- Recipes `tech-product-launch`, `kinetic-typography` and `data-storytelling`.
+- Six more example videos: SaaS launch, kinetic typography, data visualization, Web3 promo, luxury brand, social short.
+- Tests that compile every example and require every recipe to have one.
 - Repository essentials: licence, CI, issue forms, pull request template, automatic area labels.
 
 ## 0.1.0 - 2026-11-19
