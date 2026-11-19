@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Marlow (example product)</title>
+    <!--
+      Marlow is an EXAMPLE PRODUCT made for a HyperStudio benchmark film. It is not a real company.
+      This page is the product's interface, built as real HTML so the film can show an actual UI.
+      The state is chosen in the URL hash: #meeting, #summary, #done, #sent.
+      capture.mjs screenshots each state and reads the [data-region] rectangles from #hs-regions.
+      The people, meeting and decisions shown are invented sample data.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=block" rel="stylesheet" />
+    <style>
+      :root { --bg: #fbfaf7; --canvas: #ffffff; --ink: #1b1814; --muted: #726c62; --faint: #a39d92; --line: #e9e4da; --green: #0e7a53; --green-soft: #e6f4ee; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; }
+      body { font-family: Inter, sans-serif; color: var(--ink); background: var(--bg); font-size: 15px; -webkit-font-smoothing: antialiased; display: flex; flex-direction: column; }
+      svg { display: block; flex: none; }
+      header { height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 28px; background: var(--canvas); border-bottom: 1px solid var(--line); }
+      .mark { width: 28px; height: 28px; }
+      header b { font-size: 18px; letter-spacing: -0.02em; }
+      .crumb { margin-left: 18px; color: var(--faint); font-weight: 500; }
+      .crumb strong { color: var(--ink); font-weight: 600; }
+      .people { margin-left: auto; display: flex; }
+      .face { width: 32px; height: 32px; margin-left: -8px; border-radius: 50%; border: 2px solid var(--canvas); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; }
+      .cols { flex: 1; display: grid; grid-template-columns: 560px 1fr; gap: 28px; padding: 28px; min-height: 0; }
+      .pane { background: var(--canvas); border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 1px 2px rgba(27, 24, 20, 0.04), 0 18px 44px rgba(27, 24, 20, 0.06); overflow: hidden; display: flex; flex-direction: column; }
+      .head { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+      .head h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+      .head span { font-size: 13px; color: var(--faint); }
+      .lines { padding: 8px 24px 20px; display: grid; gap: 4px; }
+      .say { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f3efe7; }
+      .say .face { margin: 0; width: 34px; height: 34px; border: 0; }
+      .say b { font-size: 13px; font-weight: 600; }
+      .say time { margin-left: 8px; font-size: 12px; color: var(--faint); }
+      .say p { margin-top: 3px; color: var(--muted); line-height: 1.45; }
+      .btn { display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 600; font-size: 15px; }
+      .btn.green { background: var(--green); box-shadow: 0 10px 22px rgba(14, 122, 83, 0.28); }
+      .btn svg { width: 18px; height: 18px; }
+      .empty { flex: 1; display: grid; place-items: center; text-align: center; padding: 40px; }
+      .empty h3 { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; }
+      .empty p { margin: 10px auto 26px; max-width: 360px; color: var(--muted); font-size: 16px; line-height: 1.5; }
+      .body { padding: 26px 28px; display: grid; gap: 22px; }
+      .title { font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+      .sub { margin-top: 6px; color: var(--muted); }
+      .label { margin-bottom: 10px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+      .decision { display: flex; gap: 12px; padding: 9px 0; font-size: 17px; font-weight: 500; line-height: 1.4; }
+      .decision i { flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%; background: var(--green); }
+      .task { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 14px; padding: 13px 14px; margin: 0 -14px; border-radius: 13px; font-size: 16px; font-weight: 500; }
+      .box { width: 24px; height: 24px; border-radius: 8px; border: 2px solid #cfc8bb; display: grid; place-items: center; }
+      .task.ok { background: var(--green-soft); }
+      .task.ok .box { background: var(--green); border-color: var(--green); }
+      .task.ok .what { color: var(--muted); text-decoration: line-through; text-decoration-color: #9bbfb0; }
+      .who { display: flex; align-items: center; gap: 8px; padding: 5px 11px 5px 5px; border-radius: 999px; background: var(--bg); border: 1px solid var(--line); font-size: 13px; font-weight: 500; }
+      .who .face { margin: 0; width: 22px; height: 22px; border: 0; font-size: 9px; }
+      .foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13px; position: relative; }
+      .toast { position: absolute; right: 28px; bottom: 76px; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; background: var(--ink); color: #fff; font-size: 15px; font-weight: 600; box-shadow: 0 20px 44px rgba(27, 24, 20, 0.28); }
+      .toast small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: #b9b2a6; }
+      .tick { width: 22px; height: 22px; border-radius: 50%; background: var(--green); display: grid; place-items: center; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body data-region="window">
+    <header>
+      <svg class="mark" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="7" fill="#1b1814" /><path d="M7 18V8l6 6 6-6v10" fill="none" stroke="#fbfaf7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      <b>Marlow</b>
+      <span class="crumb">Meetings &nbsp;/&nbsp; <strong>Pricing page review</strong></span>
+      <div class="people"><span class="face" style="background: #c2603a">AR</span><span class="face" style="background: #3a6ec2">JO</span><span class="face" style="background: #7a4fb5">MI</span><span class="face" style="background: #0e7a53">SK</span></div>
+    </header>
+    <div class="cols">
+      <section class="pane" data-region="transcript">
+        <div class="head"><h2>Transcript</h2><span>Today · 42 min</span></div>
+        <div class="lines">
+          <div class="say"><span class="face" style="background: #c2603a">AR</span><div><b>Ana</b><time>02:10</time><p>The annual toggle is hidden below the fold. Most people never see it.</p></div></div>
+          <div class="say"><span class="face" style="background: #3a6ec2">JO</span><div><b>Jonas</b><time>09:44</time><p>We can move it above the plans, but the comparison table has to shrink.</p></div></div>
+          <div class="say"><span class="face" style="background: #7a4fb5">MI</span><div><b>Mina</b><time>17:02</time><p>Then let’s drop the Enterprise column and link to a contact form instead.</p></div></div>
+          <div class="say"><span class="face" style="background: #0e7a53">SK</span><div><b>Sam</b><time>26:31</time><p>I can have copy for the three plans by Thursday if design is settled.</p></div></div>
+          <div class="say"><span class="face" style="background: #c2603a">AR</span><div><b>Ana</b><time>38:15</time><p>Good. Ship it behind a flag first, and we look at it again next week.</p></div></div>
+        </div>
+      </section>
+
+      <section class="pane">
+        <div class="head"><h2>Notes</h2><span id="status">Not written yet</span></div>
+
+        <div class="empty" id="view-empty">
+          <div data-region="prompt">
+            <h3>42 minutes of talking.</h3>
+            <p>Marlow reads the transcript and writes what was decided and who does what.</p>
+            <span class="btn green" data-region="summarise-button"><svg viewBox="0 0 18 18" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v3M9 13v3M2 9h3M13 9h3M4.2 4.2l2 2M11.8 11.8l2 2M13.8 4.2l-2 2M6.2 11.8l-2 2" /></svg>Write the notes</span>
+          </div>
+        </div>
+
+        <div id="view-notes" hidden data-region="summary" style="display: flex; flex-direction: column; flex: 1">
+          <div class="body">
+            <div><div class="title" data-region="title">Annual pricing moves to the top.</div><p class="sub">Pricing page review · four people · three decisions</p></div>
+            <div data-region="decisions">
+              <div class="label">Decided</div>
+              <div class="decision"><i></i>Move the annual toggle above the plans.</div>
+              <div class="decision"><i></i>Drop the Enterprise column; link to a contact form.</div>
+              <div class="decision"><i></i>Ship behind a flag, review next week.</div>
+            </div>
+            <div data-region="actions">
+              <div class="label">Who does what</div>
+              <div class="task" id="task-1" data-region="action-1"><span class="box" data-region="action-1-box"><svg width="14" height="14" viewBox="0 0 18 18"><path d="M4.5 9.4l3 3L13.5 6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span class="what">Redesign the plan header with the toggle on top</span><span class="who"><span class="face" style="background: #3a6ec2">JO</span>Jonas</span></div>
+              <div class="task"><span class="box"></span><span class="what">Write copy for the three plans by Thursday</span><span class="who"><span class="face" style="background: #0e7a53">SK</span>Sam</span></div>
+              <div class="task"><span class="box"></span><span class="what">Set up the feature flag</span><span class="who"><span class="face" style="background: #7a4fb5">MI</span>Mina</span></div>
+            </div>
+          </div>
+          <div class="foot" data-region="foot">
+            <span>Written from the transcript · edit anything</span>
+            <span class="btn" data-region="send-button">Send to the team</span>
+            <div class="toast" id="toast" data-region="toast" hidden><span class="tick"><svg width="12" height="12" viewBox="0 0 18 18"><path d="M4.5 9.4l3 3L13.5 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span><div>Sent to #pricing<small>Jonas, Sam and Mina were notified</small></div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="application/json" id="hs-regions"></script>
+    <script>
+      const state = (location.hash || "#meeting").slice(1);
+      if (state !== "meeting") {
+        document.getElementById("view-empty").hidden = true;
+        document.getElementById("view-notes").hidden = false;
+        document.getElementById("status").textContent = "Written just now";
+      }
+      if (state === "done" || state === "sent") document.getElementById("task-1").classList.add("ok");
+      if (state === "sent") document.getElementById("toast").hidden = false;
+
+      // Publish where each named component is, for the film's camera, cursor and highlights.
+      document.fonts.ready.then(() => {
+        const regions = {};
+        for (const el of document.querySelectorAll("[data-region]")) {
+          const r = el.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) regions[el.dataset.region] = [r.x, r.y, r.width, r.height].map((n) => Math.round(n));
+        }
+        document.getElementById("hs-regions").textContent = JSON.stringify(regions);
+      });
+    </script>
+  </body>
+</html>
