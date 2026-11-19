@@ -13,7 +13,8 @@
   "hyperstudio": {
     "minDuration": 4,
     "maxDuration": 12,
-    "required": ["product", "headline"]
+    "required": ["product", "headline"],
+    "screen": false
   },
   "files": [
     {
@@ -144,7 +145,7 @@
       "type": "boolean",
       "role": "look",
       "label": "Dust particles",
-      "default": true
+      "default": false
     },
     {
       "id": "exit",
@@ -186,20 +187,12 @@
       "default": "#f4efe6"
     },
     {
-      "id": "headingFont",
+      "id": "displayFont",
       "type": "enum",
       "role": "brand",
-      "label": "Headline typeface",
+      "label": "Display typeface",
       "default": "Playfair Display",
       "options": [
-        {
-          "value": "Playfair Display",
-          "label": "Playfair Display"
-        },
-        {
-          "value": "EB Garamond",
-          "label": "EB Garamond"
-        },
         {
           "value": "Inter",
           "label": "Inter"
@@ -217,6 +210,14 @@
           "label": "Poppins"
         },
         {
+          "value": "Playfair Display",
+          "label": "Playfair Display"
+        },
+        {
+          "value": "EB Garamond",
+          "label": "EB Garamond"
+        },
+        {
           "value": "Oswald",
           "label": "Oswald"
         },
@@ -227,10 +228,10 @@
       ]
     },
     {
-      "id": "bodyFont",
+      "id": "textFont",
       "type": "enum",
       "role": "brand",
-      "label": "Body typeface",
+      "label": "Text typeface",
       "default": "Inter",
       "options": [
         {
@@ -248,6 +249,10 @@
         {
           "value": "Poppins",
           "label": "Poppins"
+        },
+        {
+          "value": "IBM Plex Mono",
+          "label": "IBM Plex Mono"
         }
       ]
     }

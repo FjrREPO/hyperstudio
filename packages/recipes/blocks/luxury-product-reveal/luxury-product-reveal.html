@@ -26,7 +26,7 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      background: var(--lpr-bg);
+      /* Transparent: the film's stage is the background, so every scene shares one ground. */
       color: var(--lpr-ink);
     }
     .lpr-fill {
@@ -183,18 +183,19 @@
       opacity: 0.82;
       max-width: calc(var(--u) * 70);
     }
-    .lpr-h-playfair-display { font-family: "Playfair Display", serif; }
-    .lpr-h-eb-garamond { font-family: "EB Garamond", serif; }
     .lpr-h-inter { font-family: "Inter", sans-serif; }
     .lpr-h-outfit { font-family: "Outfit", sans-serif; }
     .lpr-h-montserrat { font-family: "Montserrat", sans-serif; }
     .lpr-h-poppins { font-family: "Poppins", sans-serif; }
+    .lpr-h-playfair-display { font-family: "Playfair Display", serif; }
+    .lpr-h-eb-garamond { font-family: "EB Garamond", serif; }
     .lpr-h-oswald { font-family: "Oswald", sans-serif; }
     .lpr-h-archivo-black { font-family: "Archivo Black", sans-serif; }
     .lpr-b-inter { font-family: "Inter", sans-serif; }
     .lpr-b-outfit { font-family: "Outfit", sans-serif; }
     .lpr-b-montserrat { font-family: "Montserrat", sans-serif; }
     .lpr-b-poppins { font-family: "Poppins", sans-serif; }
+    .lpr-b-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
 
   <div
@@ -206,7 +207,7 @@
     data-height="1080"
   >
     <div id="luxury-product-reveal-stage" class="lpr-center">
-      <div id="luxury-product-reveal-spot" class="lpr-fill"></div>
+      <div id="luxury-product-reveal-spot" class="lpr-fill" data-layout-allow-occlusion></div>
       <div id="luxury-product-reveal-beam-wrap" data-layout-allow-overflow><div id="luxury-product-reveal-beam" data-layout-allow-overflow></div></div>
 
       <div id="luxury-product-reveal-zone">
@@ -224,7 +225,7 @@
       </div>
 
       <div id="luxury-product-reveal-dust" class="lpr-fill"></div>
-      <div id="luxury-product-reveal-vignette" class="lpr-fill"></div>
+      <div id="luxury-product-reveal-vignette" class="lpr-fill" data-layout-allow-occlusion></div>
 
       <div id="luxury-product-reveal-copy">
         <div id="luxury-product-reveal-eyebrow" data-var-text="eyebrow"></div>
@@ -260,13 +261,13 @@
           camera: "push-in",
           intensity: 1,
           lighting: "dramatic",
-          particles: true,
+          particles: false,
           exit: "hold",
           accent: "#c9a35c",
           background: "#07070a",
           ink: "#f4efe6",
-          headingFont: "Playfair Display",
-          bodyFont: "Inter",
+          displayFont: "Playfair Display",
+          textFont: "Inter",
         },
         given,
       );
@@ -282,8 +283,8 @@
       stage.style.setProperty("--lpr-accent", v.accent);
       stage.style.setProperty("--lpr-bg", v.background);
       stage.style.setProperty("--lpr-ink", v.ink);
-      stage.className = "lpr-" + layout + " lpr-b-" + slug(v.bodyFont);
-      $("headline").className = "lpr-h-" + slug(v.headingFont);
+      stage.className = "lpr-" + layout + " lpr-b-" + slug(v.textFont);
+      $("headline").className = "lpr-h-" + slug(v.displayFont);
 
       var src = typeof v.product === "string" ? v.product : (v.product && v.product.url) || "";
       if (src) {
