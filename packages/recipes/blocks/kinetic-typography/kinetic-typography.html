@@ -1,0 +1,275 @@
+<template>
+  <!--
+    KINETIC TYPOGRAPHY
+
+    Text is the picture: up to four short lines, sized to fill the canvas and choreographed word by word.
+    Variables are declared in registry-item.json (the compiler writes them onto #root).
+
+    Conventions (see docs/RECIPE-DEVELOPMENT.md): the composition id is the recipe name and every element
+    id starts with it; sizes are in --u (1% of the canvas's short side); every visible state is a function
+    of timeline time.
+
+    The timeline is built after the typeface has loaded, because line sizes are measured from it.
+  -->
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #kinetic-typography-stage {
+      --u: 10.8px;
+      --kt-accent: #ff5a36;
+      --kt-bg: #0b0b0f;
+      --kt-ink: #f6f4ee;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--kt-bg);
+      color: var(--kt-ink);
+    }
+    #kinetic-typography-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--kt-ink) 8%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--kt-ink) 8%, transparent) 1px, transparent 1px);
+      background-size: calc(var(--u) * 8) calc(var(--u) * 8);
+      mask-image: radial-gradient(ellipse at 50% 50%, black 5%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black 5%, transparent 75%);
+    }
+    #kinetic-typography-glow {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: calc(var(--u) * 120);
+      height: calc(var(--u) * 120);
+      margin: calc(var(--u) * -60) 0 0 calc(var(--u) * -60);
+      border-radius: 50%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--kt-accent) 42%, transparent), transparent);
+    }
+    #kinetic-typography-lines {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .kt-line {
+      white-space: nowrap;
+      line-height: 1.04;
+      letter-spacing: -0.02em;
+    }
+    .kt-sequence .kt-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+    }
+    .kt-center .kt-line {
+      text-align: center;
+      justify-content: center;
+    }
+    .kt-upper .kt-line {
+      text-transform: uppercase;
+    }
+    .kt-word {
+      display: inline-block;
+      vertical-align: bottom;
+    }
+    .kt-mask {
+      overflow: hidden;
+      padding: 0.12em 0.04em 0.16em;
+      margin: -0.12em -0.04em -0.16em;
+    }
+    .kt-word-in {
+      display: inline-block;
+    }
+    .kt-em {
+      color: var(--kt-accent);
+    }
+    .kt-f-inter { font-family: "Inter", sans-serif; font-weight: 900; }
+    .kt-f-outfit { font-family: "Outfit", sans-serif; font-weight: 900; }
+    .kt-f-montserrat { font-family: "Montserrat", sans-serif; font-weight: 900; }
+    .kt-f-poppins { font-family: "Poppins", sans-serif; font-weight: 900; }
+    .kt-f-oswald { font-family: "Oswald", sans-serif; font-weight: 700; }
+    .kt-f-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; }
+    .kt-f-playfair-display { font-family: "Playfair Display", serif; font-weight: 700; }
+    .kt-f-eb-garamond { font-family: "EB Garamond", serif; font-weight: 700; }
+  </style>
+
+  <div id="root" data-composition-id="kinetic-typography" data-start="0" data-duration="5" data-width="1920" data-height="1080">
+    <div id="kinetic-typography-stage">
+      <div id="kinetic-typography-glow" data-layout-allow-overflow></div>
+      <div id="kinetic-typography-grid"></div>
+      <div id="kinetic-typography-lines"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var ID = "kinetic-typography";
+      var $ = function (name) {
+        return document.getElementById(ID + "-" + name);
+      };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 5;
+      var U = Math.min(W, H) / 100;
+
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign(
+        {
+          line1: "Make it move.",
+          line2: "",
+          line3: "",
+          line4: "",
+          emphasis: "",
+          mode: "stack",
+          motion: "rise",
+          align: "center",
+          textCase: "upper",
+          backdrop: "glow",
+          exit: "hold",
+          accent: "#ff5a36",
+          background: "#0b0b0f",
+          ink: "#f6f4ee",
+          headingFont: "Inter",
+        },
+        given,
+      );
+      var slug = function (s) {
+        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      };
+      var portrait = H > W;
+      var align = portrait ? "center" : v.align;
+      var upper = v.textCase !== "none";
+      var sequence = v.mode === "sequence";
+      var weight = { oswald: 700, "archivo-black": 400, "playfair-display": 700, "eb-garamond": 700 }[slug(v.headingFont)] || 900;
+
+      // ── Static setup ──
+      stage.style.setProperty("--u", U + "px");
+      stage.style.setProperty("--kt-accent", v.accent);
+      stage.style.setProperty("--kt-bg", v.background);
+      stage.style.setProperty("--kt-ink", v.ink);
+      var box = $("lines");
+      // Text box as [left, top, right, bottom] percent. Portrait keeps clear of social interface areas.
+      var b = portrait ? [12, 18, 31, 38] : [9, 12, 9, 12];
+      box.style.left = b[0] + "%";
+      box.style.top = b[1] + "%";
+      box.style.right = b[2] + "%";
+      box.style.bottom = b[3] + "%";
+      box.className = "kt-f-" + slug(v.headingFont) + " kt-" + align + (upper ? " kt-upper" : "") + (sequence ? " kt-sequence" : "");
+      var boxW = (W * (100 - b[0] - b[2])) / 100;
+      var boxH = (H * (100 - b[1] - b[3])) / 100;
+      if (v.backdrop === "plain") $("glow").style.display = "none";
+      if (v.backdrop !== "grid") $("grid").style.display = "none";
+
+      var texts = [v.line1, v.line2, v.line3, v.line4].map(String).map(function (s) {
+        return s.trim();
+      }).filter(Boolean);
+      var emphasis = String(v.emphasis).toLowerCase().split(/\s+/).filter(Boolean);
+      var bare = function (word) {
+        return word.toLowerCase().replace(/[^a-z0-9À-￿]+/g, "");
+      };
+      var emphasised = emphasis.map(bare);
+      var masked = v.motion === "rise";
+
+      var lines = texts.map(function (text) {
+        var line = document.createElement("div");
+        var row = document.createElement("div");
+        line.className = "kt-line";
+        text.split(/\s+/).forEach(function (word, i, all) {
+          var outer = document.createElement("span");
+          var inner = document.createElement("span");
+          outer.className = "kt-word" + (masked ? " kt-mask" : "");
+          inner.className = "kt-word-in" + (emphasised.indexOf(bare(word)) >= 0 ? " kt-em" : "");
+          inner.setAttribute("data-layout-allow-overflow", "");
+          inner.textContent = word;
+          outer.appendChild(inner);
+          row.appendChild(outer);
+          if (i < all.length - 1) row.appendChild(document.createTextNode(" "));
+        });
+        line.appendChild(row);
+        box.appendChild(line);
+        return { el: line, text: upper ? text.toUpperCase() : text, words: row.querySelectorAll(".kt-word-in") };
+      });
+
+      function build() {
+        // Size from the real glyph widths: the widest line fills the box.
+        var ctx = document.createElement("canvas").getContext("2d");
+        ctx.font = weight + ' 100px "' + v.headingFont + '"';
+        var fit = function (text, maxHeight) {
+          var width = ctx.measureText(text).width * 0.98 + 4; // -0.02em tracking, plus mask padding
+          return Math.max(2.8 * U, Math.min(26 * U, (boxW / width) * 100, maxHeight / 1.04));
+        };
+        if (sequence) {
+          lines.forEach(function (l) {
+            l.el.style.fontSize = fit(l.text, boxH).toFixed(2) + "px";
+          });
+        } else {
+          var size = Math.min.apply(
+            null,
+            lines.map(function (l) {
+              return fit(l.text, boxH / lines.length);
+            }),
+          );
+          box.style.fontSize = size.toFixed(2) + "px";
+        }
+
+        var tl = gsap.timeline({ paused: true });
+        var end = D - 0.05;
+        tl.fromTo($("glow"), { opacity: 0, scale: 0.7, x: -6 * U }, { opacity: v.backdrop === "grid" ? 0.45 : 0.8, scale: 1.1, x: 6 * U, duration: end, ease: "sine.inOut" }, 0);
+        tl.fromTo($("grid"), { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out" }, 0);
+
+        var enter = function (words, at) {
+          if (v.motion === "slam")
+            tl.fromTo(words, { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.34, ease: "expo.out", stagger: 0.09 }, at);
+          else if (v.motion === "blur")
+            tl.fromTo(
+              words,
+              { opacity: 0, y: 1.2 * U, filter: "blur(" + 1.4 * U + "px)" },
+              { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out", stagger: 0.07 },
+              at,
+            );
+          else tl.fromTo(words, { yPercent: 118 }, { yPercent: 0, duration: 0.85, ease: "expo.out", stagger: 0.06 }, at);
+        };
+
+        var first = 0.25;
+        var n = lines.length;
+        if (sequence) {
+          // Each line owns a slot: in, hold, out. The last line stays.
+          var slot = (end - first) / n;
+          lines.forEach(function (l, i) {
+            var at = first + i * slot;
+            if (i > 0) tl.fromTo(l.el, { opacity: 0 }, { opacity: 1, duration: 0.01 }, at);
+            enter(l.words, at);
+            if (i < n - 1) tl.fromTo(l.el, { opacity: 1, y: 0 }, { opacity: 0, y: -2 * U, duration: 0.28, ease: "power2.in", immediateRender: false }, at + slot - 0.3);
+          });
+        } else {
+          // Lines land one after another, then hold together.
+          var gap = Math.min(0.6, (end - first - 1.4) / Math.max(1, n));
+          lines.forEach(function (l, i) {
+            enter(l.words, first + i * Math.max(0.15, gap));
+          });
+        }
+
+        if (v.exit === "fade")
+          tl.fromTo(box, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.7);
+
+        tl.set({}, {}, D);
+        window.__timelines[ID] = tl;
+      }
+
+      // Measuring needs the face; register the timeline once it is available.
+      var face = weight + ' 100px "' + v.headingFont + '"';
+      if (document.fonts && document.fonts.load) document.fonts.load(face).then(build, build);
+      else build();
+    })();
+  </script>
+</template>
