@@ -102,10 +102,18 @@
   },
   "overrides": [
     {
-      "includes": ["packages/cli/src/**"],
+      "includes": ["packages/cli/src/**", "examples/**/*.mjs"],
       "linter": {
         "rules": {
           "suspicious": { "noConsole": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["packages/*/src/index.ts"],
+      "linter": {
+        "rules": {
+          "performance": { "noBarrelFile": "off" }
         }
       }
     },

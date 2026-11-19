@@ -5,19 +5,22 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-// The CLI as a user runs it: a real process, real files, JSON on stdout, exit codes.
+// The CLI as a user runs it: a real process, real files, exit codes, and both output modes.
 
 const ROOT = join(import.meta.dirname, "../..");
 const CLI = join(ROOT, "packages/cli/src/cli.ts");
-const EXAMPLE = join(ROOT, "examples/luxury-watch-commercial/video.json");
+const EXAMPLE = join(ROOT, "examples/saas-product-showcase/video.json");
 const run = (...args: string[]) => {
-  const r = spawnSync(process.execPath, [CLI, ...args], { encoding: "utf8" });
+  const r = spawnSync(process.execPath, [CLI, ...args], {
+    encoding: "utf8",
+    env: { ...process.env, NO_COLOR: "1" },
+  });
   return { code: r.status, out: r.stdout, err: r.stderr };
 };
 
 test("compile writes a complete HyperFrames project", () => {
   const out = mkdtempSync(join(tmpdir(), "hs-cli-"));
-  const r = run("compile", EXAMPLE, "--output", out);
+  const r = run("compile", EXAMPLE, "--output", out, "--json");
   assert.equal(r.code, 0, r.err);
   const result = JSON.parse(r.out);
   assert.equal(result.ok, true);
@@ -26,55 +29,78 @@ test("compile writes a complete HyperFrames project", () => {
     assert.ok(existsSync(join(out, f)), f);
 
   const index = readFileSync(join(out, "index.html"), "utf8");
-  assert.match(index, /data-composition-id="main"[^>]*data-duration="16.2"/);
-  assert.equal(index.match(/data-composition-src="compositions\//g)?.length, 3);
-  assert.match(index, /<audio id="bed" class="clip" src="assets\/night-bed.m4a"/);
+  assert.match(index, /data-composition-id="main"[^>]*data-duration="15"/);
+  assert.equal(index.match(/data-composition-src="compositions\//g)?.length, 9);
+  assert.match(index, /<audio id="sfx" class="clip" src="assets\/ui-sfx.m4a"/);
   assert.match(index, /window.__timelines\["main"\] = tl/);
 });
 
-test("--validate-only reports timing and writes nothing", () => {
+test("the default output is a readable summary", () => {
   const r = run("compile", EXAMPLE, "--validate-only");
   assert.equal(r.code, 0, r.err);
-  const result = JSON.parse(r.out);
-  assert.equal(result.output, null);
-  assert.equal(result.frames, 486);
+  assert.match(r.out, /✓ Lumen - 15 second product showcase/);
+  assert.match(r.out, /9 shots \(average 1\.7s\)/);
+  assert.match(r.out, /product-shot\s+hook/);
+  assert.match(r.out, /Placeholders \(7\)/);
+  assert.match(r.out, /Validated\. Nothing written\./);
 });
 
-test("--pretty indents the same result", () => {
-  const plain = run("compile", EXAMPLE, "--validate-only").out;
+test("--json and --pretty give the same machine-readable result", () => {
+  const plain = run("compile", EXAMPLE, "--validate-only", "--json").out;
   const pretty = run("compile", EXAMPLE, "--validate-only", "--pretty").out;
   assert.ok(pretty.includes('\n  "ok": true'));
   assert.deepEqual(JSON.parse(pretty), JSON.parse(plain));
+  assert.equal(JSON.parse(plain).output, null);
 });
 
-test("a rejected IR exits 1 with machine-readable errors", () => {
+test("a rejected IR exits 1 and says where the mistake is", () => {
+  const ir = JSON.parse(readFileSync(EXAMPLE, "utf8"));
+  ir.screens = {};
+  ir.audio = [];
+  ir.scenes = [
+    {
+      id: "a",
+      recipe: "statement",
+      duration: 2,
+      purpose: "Say the one thing the film is about.",
+      text: { line1: "Hello." },
+      params: { size: "huge" },
+    },
+  ];
+  ir.project = { title: ir.project.title };
   const file = join(mkdtempSync(join(tmpdir(), "hs-cli-")), "bad.json");
-  writeFileSync(
-    file,
-    JSON.stringify({
-      project: { title: "x" },
-      scenes: [{ id: "a", recipe: "luxury-product-reveal", duration: 5, params: { camera: "crane" } }],
-    }),
+  writeFileSync(file, JSON.stringify(ir));
+
+  const json = run("compile", file, "--json");
+  assert.equal(json.code, 1);
+  const size = JSON.parse(json.out).errors.find((e: { path: string }) => e.path === "scenes.0.params.size");
+  assert.match(size.message, /title, display/);
+
+  const human = run("compile", file);
+  assert.equal(human.code, 1);
+  assert.match(human.out, /✗ 1 problem in/);
+  assert.match(human.out, /scenes\.0\.params\.size/);
+});
+
+test("recipes lists every recipe and shows one in detail", () => {
+  const list = JSON.parse(run("recipes", "--json").out);
+  assert.deepEqual(
+    list.map((r: { name: string }) => r.name),
+    ["brand-close", "luxury-product-reveal", "product-shot", "statement"],
   );
-  const r = run("compile", file);
-  assert.equal(r.code, 1);
-  const result = JSON.parse(r.out);
-  assert.equal(result.ok, false);
-  const camera = result.errors.find((e: { path: string }) => e.path === "scenes.0.params.camera");
-  assert.match(camera.message, /push-in, pull-out, orbit, pan, static/);
+  const one = run("recipes", "product-shot");
+  assert.equal(one.code, 0, one.err);
+  assert.match(one.out, /Shows a screen/);
+  assert.match(one.out, /cursor\s+params/);
+  assert.match(one.out, /accent\s+style/);
+  assert.equal(run("recipes", "nope").code, 1);
 });
 
-test("recipes lists every recipe with its variables", () => {
-  const r = run("recipes");
-  assert.equal(r.code, 0, r.err);
-  const recipes = JSON.parse(r.out);
-  const reveal = recipes.find((x: { name: string }) => x.name === "luxury-product-reveal");
-  assert.deepEqual(reveal.required, ["product", "headline"]);
-  assert.ok(reveal.variables.some((v: { id: string }) => v.id === "camera"));
-});
-
-test("usage errors exit 1 and --help exits 0", () => {
-  assert.equal(run("compile").code, 1);
-  assert.equal(run("frobnicate").code, 1);
+test("help, version and usage errors", () => {
   assert.equal(run("--help").code, 0);
+  assert.match(run("--version").out, /^\d+\.\d+\.\d+\n$/);
+  assert.equal(run().code, 2);
+  assert.equal(run("compile").code, 2);
+  assert.equal(run("frobnicate").code, 2);
+  assert.equal(run("compile", EXAMPLE, "--bogus").code, 2);
 });

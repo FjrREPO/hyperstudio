@@ -1,0 +1,198 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "statement",
+  "type": "hyperframes:block",
+  "title": "Statement",
+  "description": "One short line of copy on the film's stage, set small with space around it, with at most one emphasised word in an accent chip. Use it for a hook, a benefit or a bridge between product shots. It can be still.",
+  "tags": ["typography", "statement", "copy", "hook"],
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 2,
+  "hyperstudio": {
+    "minDuration": 1,
+    "maxDuration": 4,
+    "required": ["line1"],
+    "screen": false
+  },
+  "files": [
+    {
+      "path": "statement.html",
+      "target": "compositions/statement.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "line1",
+      "type": "string",
+      "role": "content",
+      "label": "Line",
+      "description": "A short sentence in sentence case.",
+      "default": "Ask your revenue.",
+      "maxLength": 36
+    },
+    {
+      "id": "line2",
+      "type": "string",
+      "role": "content",
+      "label": "Second line",
+      "description": "Optional. Appears after the first.",
+      "default": "",
+      "maxLength": 36
+    },
+    {
+      "id": "emphasis",
+      "type": "string",
+      "role": "content",
+      "label": "Emphasised word",
+      "description": "One word or short phrase from the lines, set in an accent chip. Empty for none.",
+      "default": "",
+      "maxLength": 20
+    },
+    {
+      "id": "size",
+      "type": "enum",
+      "role": "layout",
+      "label": "Size",
+      "default": "title",
+      "options": [
+        {
+          "value": "title",
+          "label": "Title"
+        },
+        {
+          "value": "display",
+          "label": "Display (one very short line)"
+        }
+      ]
+    },
+    {
+      "id": "align",
+      "type": "enum",
+      "role": "layout",
+      "label": "Alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "center",
+          "label": "Centered"
+        },
+        {
+          "value": "left",
+          "label": "Left, on the film's margin"
+        }
+      ]
+    },
+    {
+      "id": "reveal",
+      "type": "enum",
+      "role": "motion",
+      "label": "Reveal",
+      "default": "words",
+      "options": [
+        {
+          "value": "words",
+          "label": "Word by word"
+        },
+        {
+          "value": "none",
+          "label": "Still"
+        }
+      ]
+    },
+    {
+      "id": "background",
+      "type": "color",
+      "role": "brand",
+      "label": "Stage background",
+      "default": "#f3efe6"
+    },
+    {
+      "id": "ink",
+      "type": "color",
+      "role": "brand",
+      "label": "Text colour",
+      "default": "#17150f"
+    },
+    {
+      "id": "accent",
+      "type": "color",
+      "role": "brand",
+      "label": "Accent colour",
+      "description": "The film's one accent. Used for emphasis only.",
+      "default": "#2747f0"
+    },
+    {
+      "id": "displayFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Display typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "Playfair Display",
+          "label": "Playfair Display"
+        },
+        {
+          "value": "EB Garamond",
+          "label": "EB Garamond"
+        },
+        {
+          "value": "Oswald",
+          "label": "Oswald"
+        },
+        {
+          "value": "Archivo Black",
+          "label": "Archivo Black"
+        }
+      ]
+    },
+    {
+      "id": "textFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Text typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "IBM Plex Mono",
+          "label": "IBM Plex Mono"
+        }
+      ]
+    }
+  ]
+}

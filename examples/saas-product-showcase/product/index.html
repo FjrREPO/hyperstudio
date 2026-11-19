@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Lumen (example product)</title>
+    <!--
+      Lumen is an EXAMPLE PRODUCT made for the HyperStudio benchmark film. It is not a real company.
+      This page is the product's interface, built as real HTML so the film can show an actual UI.
+      The state is chosen in the URL hash: #home, #asked, #answer, #share.
+      capture.mjs screenshots each state and reads the [data-region] rectangles from #hs-regions.
+      The names, figures and sources shown in the UI are invented sample data.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=block" rel="stylesheet" />
+    <style>
+      :root {
+        --paper: #f6f3ec;
+        --canvas: #ffffff;
+        --ink: #17150f;
+        --muted: #6f6a5f;
+        --line: #e7e2d6;
+        --accent: #2747f0;
+        --accent-soft: #e9edff;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; }
+      body { font-family: Inter, sans-serif; color: var(--ink); background: var(--canvas); display: flex; font-size: 15px; -webkit-font-smoothing: antialiased; }
+
+      /* Sidebar */
+      aside { width: 232px; background: var(--paper); border-right: 1px solid var(--line); padding: 22px 16px; display: flex; flex-direction: column; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; padding: 0 8px 22px; }
+      .mark { width: 26px; height: 26px; }
+      nav a { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 9px; color: var(--muted); font-weight: 500; }
+      nav a.on { background: var(--canvas); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+      nav i { width: 16px; height: 16px; border-radius: 5px; border: 1.6px solid currentColor; opacity: 0.8; }
+      nav a.on i { background: var(--accent); border-color: var(--accent); opacity: 1; }
+      .who { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; font-size: 13px; color: var(--muted); }
+      .avatar { width: 30px; height: 30px; border-radius: 50%; background: #f0c9a2; color: #6b3d12; font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+      .who b { display: block; color: var(--ink); font-weight: 600; font-size: 14px; }
+
+      /* Main */
+      main { flex: 1; display: flex; flex-direction: column; }
+      header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; border-bottom: 1px solid var(--line); color: var(--muted); font-weight: 500; }
+      .sources { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+      .chip { padding: 5px 11px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); color: var(--ink); font-weight: 500; font-size: 13px; }
+      .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #2fa66a; margin-right: 6px; }
+      .column { width: 760px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
+
+      /* Ask bar */
+      .ask { display: flex; align-items: center; gap: 14px; height: 68px; padding: 0 12px 0 24px; border-radius: 18px; background: var(--canvas); border: 1px solid #d9d3c4; box-shadow: 0 1px 0 #fff inset, 0 10px 30px rgba(23, 21, 15, 0.07); }
+      .ask .input { flex: 1; height: 26px; line-height: 26px; font-size: 18px; color: #a8a294; white-space: nowrap; overflow: hidden; }
+      .ask.filled .input { color: var(--ink); }
+      .send { width: 44px; height: 44px; border-radius: 50%; background: #d9d3c4; display: grid; place-items: center; flex: none; }
+      .ask.filled .send { background: var(--accent); }
+      .send svg { width: 18px; height: 18px; }
+
+      /* Home */
+      .home { padding-top: 150px; }
+      h1 { font-size: 40px; font-weight: 600; letter-spacing: -0.03em; }
+      .lede { margin: 10px 0 34px; font-size: 18px; color: var(--muted); }
+      .suggest { display: flex; gap: 10px; margin-top: 18px; }
+      .recent { margin-top: 64px; }
+      .recent h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+      .row { display: flex; justify-content: space-between; padding: 14px 2px; border-top: 1px solid var(--line); font-weight: 500; }
+      .row span { color: var(--muted); font-weight: 400; }
+
+      /* Answer */
+      .thread { padding-top: 44px; flex: 1; display: flex; flex-direction: column; }
+      .question { align-self: flex-end; max-width: 520px; padding: 13px 20px; border-radius: 18px 18px 4px 18px; background: var(--paper); border: 1px solid var(--line); font-size: 17px; font-weight: 500; }
+      .card { margin-top: 26px; padding: 30px 32px 24px; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 16px 40px rgba(23, 21, 15, 0.06); }
+      .card .by { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
+      .card .by .mark { width: 18px; height: 18px; }
+      .answer-line { font-size: 30px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
+      .answer-line em { font-style: normal; color: var(--accent); }
+      .detail { margin-top: 8px; color: var(--muted); font-size: 16px; }
+      .chart { margin-top: 26px; display: grid; gap: 14px; }
+      .bar { display: grid; grid-template-columns: 76px 1fr 56px; align-items: center; gap: 14px; font-weight: 500; }
+      .bar .track { height: 26px; border-radius: 8px; background: var(--paper); }
+      .bar .fill { height: 100%; border-radius: 8px; background: #cfc8b7; }
+      .bar.hot .fill { background: var(--accent); }
+      .bar b { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .bar.hot b { color: var(--accent); }
+      .foot { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+      .foot .src { font-size: 13px; color: var(--muted); }
+      .actions { display: flex; gap: 10px; position: relative; }
+      .btn { padding: 9px 16px; border-radius: 10px; border: 1px solid #d9d3c4; font-weight: 600; font-size: 14px; background: var(--canvas); }
+      .btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+      .popover { position: absolute; right: 0; bottom: 52px; width: 330px; padding: 16px 18px; border-radius: 14px; background: var(--ink); color: #fff; box-shadow: 0 20px 44px rgba(23, 21, 15, 0.28); }
+      .popover b { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+      .popover b::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: #2fa66a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.4l2.6 2.6L13 6.6' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain; }
+      .popover .link { margin-top: 10px; padding: 9px 12px; border-radius: 9px; background: rgba(255, 255, 255, 0.1); font-size: 14px; color: #dcd8cc; }
+      .popover .to { margin-top: 10px; font-size: 13px; color: #a8a294; }
+      .follow { margin: auto 0 34px; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body data-region="window">
+    <aside>
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#17150f" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#2747f0" /><circle cx="13" cy="13" r="3.4" fill="#f6f3ec" /></svg>
+        Lumen
+      </div>
+      <nav>
+        <a class="on"><i></i>Ask</a>
+        <a><i></i>Boards</a>
+        <a><i></i>Sources</a>
+        <a><i></i>Team</a>
+      </nav>
+      <div class="who"><div class="avatar">DK</div><div><b>Dana Kim</b>Northwind</div></div>
+    </aside>
+
+    <main>
+      <header>
+        <span>Ask</span>
+        <div class="sources" data-region="connected"><span class="chip"><span class="dot"></span>Billing</span><span class="chip"><span class="dot"></span>CRM</span></div>
+      </header>
+
+      <!-- #home and #asked -->
+      <section class="column home" id="view-home">
+        <h1 data-region="greeting">Good morning, Dana.</h1>
+        <p class="lede">Ask anything about your revenue.</p>
+        <div class="ask" id="ask" data-region="ask-bar">
+          <div class="input" id="ask-input" data-region="ask-input">Ask a question…</div>
+          <div class="send" data-region="send"><svg viewBox="0 0 18 18"><path d="M9 14V4m-4.5 4.5L9 4l4.5 4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></div>
+        </div>
+        <div class="suggest"><span class="chip">MRR this month</span><span class="chip">Churn by plan</span><span class="chip">Largest accounts</span></div>
+        <div class="recent">
+          <h2>Recent</h2>
+          <div class="row">Why did trials dip in August?<span>Friday</span></div>
+          <div class="row">Net revenue retention by cohort<span>Thursday</span></div>
+          <div class="row">Which invoices are overdue?<span>Tuesday</span></div>
+        </div>
+      </section>
+
+      <!-- #answer and #share -->
+      <section class="column thread" id="view-answer" hidden>
+        <div class="question" data-region="question">Which plan grew fastest last quarter?</div>
+        <div class="card" data-region="answer">
+          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#17150f" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#2747f0" /><circle cx="13" cy="13" r="3.4" fill="#f6f3ec" /></svg>Lumen</div>
+          <div class="answer-line" data-region="answer-line"><em>Team</em> grew fastest: up 18% over the quarter.</div>
+          <p class="detail">Starter grew 6% and Scale grew 11% in the same period.</p>
+          <div class="chart" data-region="chart">
+            <div class="bar"><span>Starter</span><div class="track"><div class="fill" style="width: 33%"></div></div><b>+6%</b></div>
+            <div class="bar hot" data-region="bar-team"><span>Team</span><div class="track"><div class="fill" style="width: 100%"></div></div><b data-region="team-value">+18%</b></div>
+            <div class="bar"><span>Scale</span><div class="track"><div class="fill" style="width: 61%"></div></div><b>+11%</b></div>
+          </div>
+          <div class="foot" data-region="foot">
+            <span class="src" data-region="sources">From billing · 2,318 invoices · July to September</span>
+            <div class="actions" data-region="actions">
+              <span class="btn">Add to board</span>
+              <span class="btn primary" data-region="share-button">Share</span>
+              <div class="popover" id="popover" data-region="share-popover" hidden>
+                <b>Link copied</b>
+                <div class="link">lumen.example/a/q3-plan-growth</div>
+                <div class="to">Anyone at Northwind can open it</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ask follow"><div class="input">Ask a follow-up…</div><div class="send"><svg viewBox="0 0 18 18"><path d="M9 14V4m-4.5 4.5L9 4l4.5 4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg></div></div>
+      </section>
+    </main>
+
+    <script type="application/json" id="hs-regions"></script>
+    <script>
+      const state = (location.hash || "#home").slice(1);
+      const QUESTION = "Which plan grew fastest last quarter?";
+      if (state === "asked") {
+        document.getElementById("ask").classList.add("filled");
+        document.getElementById("ask-input").textContent = QUESTION;
+      }
+      if (state === "answer" || state === "share") {
+        document.getElementById("view-home").hidden = true;
+        document.getElementById("view-answer").hidden = false;
+      }
+      if (state === "share") document.getElementById("popover").hidden = false;
+
+      // Publish where each named component is, for the film's camera, cursor and highlights.
+      document.fonts.ready.then(() => {
+        const regions = {};
+        for (const el of document.querySelectorAll("[data-region]")) {
+          const r = el.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) regions[el.dataset.region] = [r.x, r.y, r.width, r.height].map((n) => Math.round(n));
+        }
+        document.getElementById("hs-regions").textContent = JSON.stringify(regions);
+      });
+    </script>
+  </body>
+</html>

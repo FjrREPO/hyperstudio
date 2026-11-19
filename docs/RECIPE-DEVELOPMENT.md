@@ -1,130 +1,137 @@
 # Recipe development
 
-A recipe is one complete shot: composition, timing, motion, camera, lighting and typography are already
-decided, and a handful of variables adapt it. It is a HyperFrames registry block, so everything in the
-HyperFrames `hyperframes` skill (the contract, `references/format.md`, `references/runtimes.md`) applies.
+A recipe is one shot: what the viewer sees, how it moves, and the few things that may change. It is a
+HyperFrames registry block, so everything in the `hyperframes` skill applies (the contract,
+`references/format.md`, `references/runtimes.md`).
 
 Adding a recipe never changes the compiler: drop a folder into `packages/recipes/blocks/`.
 
 ```
 packages/recipes/blocks/<name>/
-  registry-item.json    name, description, duration, variables, hyperstudio constraints
+  registry-item.json    name, description, length range, variables
   <name>.html           the scene, inside <template>
 ```
 
+## Before writing one
+
+- A recipe is a **shot**, not a slide. It shows one thing for one to four seconds and cuts. If it builds five
+  things and then sits, it is a slide; split it.
+- It sits on the film's **stage**. The scene is transparent; the compiler draws the background and light once
+  behind every scene. A recipe does not bring its own background, blobs, grids or glow.
+- **One thing leads.** One camera move, or one line arriving. Everything else is still.
+- Type comes from the **scale**, in `u` (1% of the canvas's short side): label 3.3, body 3.5 to 3.9, title 6.2,
+  display 9.6 to 10.8. Never size type to fill the canvas.
+- **One accent**, used once per shot.
+- If the shot shows a product, it shows the **real screen**. Draw nothing that stands in for one.
+
 ## `registry-item.json`
 
-Upstream's format, plus one `hyperstudio` key:
+Upstream's format, plus one `hyperstudio` key and a `role` on each variable.
 
 ```json
 {
-  "name": "luxury-product-reveal",
+  "name": "product-shot",
   "type": "hyperframes:block",
-  "title": "…",
-  "description": "What the shot is and when to choose it. Say plainly if the camera is simulated.",
-  "duration": 6,
-  "hyperstudio": { "minDuration": 4, "maxDuration": 12, "required": ["product", "headline"] },
+  "title": "Product Shot",
+  "description": "What the shot is and when to use it.",
+  "duration": 2,
+  "hyperstudio": { "minDuration": 0.8, "maxDuration": 4, "required": [], "screen": true },
   "files": [
-    { "path": "<name>.html", "target": "compositions/<name>.html", "type": "hyperframes:composition" }
+    {
+      "path": "product-shot.html",
+      "target": "compositions/product-shot.html",
+      "type": "hyperframes:composition"
+    }
   ],
   "variables": [
-    {
-      "id": "camera",
-      "type": "enum",
-      "label": "Camera move",
-      "default": "push-in",
-      "options": [{ "value": "push-in", "label": "Slow push in" }]
-    }
+    { "id": "to", "type": "string", "role": "region", "label": "End framing", "default": "" },
+    { "id": "accent", "type": "color", "role": "brand", "label": "Accent colour", "default": "#2747f0" }
   ]
 }
 ```
 
-- `name` must equal the folder name.
-- Variable types: `string`, `number` (`min`, `max`), `color`, `boolean`, `enum` (`options`), `font`, `image`.
-- **Every variable needs a `default`**, including images (use `""`). HyperFrames rejects a declaration without one. Mark truly mandatory values in `hyperstudio.required` instead.
-- `description` and each variable's `label`/`description` are what an agent reads to choose and configure the recipe. Write them for that reader.
-- Prefer an `enum` over a free string for anything with a fixed set of good answers (fonts, layouts, looks).
-- Use the shared ids `accent`, `background`, `ink`, `headingFont`, `bodyFont` when they apply, so a project's `style` reaches your recipe.
+| `hyperstudio`                | Meaning                                                                                                                                                           |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minDuration`, `maxDuration` | The lengths the shot is built for. Keep the maximum short                                                                                                         |
+| `required`                   | Variable ids a scene must set                                                                                                                                     |
+| `screen`                     | The recipe shows a screen. The scene names one; the compiler fills `screen` (image) and `screenMeta` (JSON: `width`, `height`, `regions`). Declare both variables |
+
+| `role`        | What the compiler does with it                                                                                                                  |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `brand`       | Settable only in the film's `style`. Use the shared ids: `background`, `ink`, `accent`, `displayFont`, `textFont`, with the shared option lists |
+| `region`      | A string that must name a region of the scene's screen (or be empty)                                                                            |
+| `layout`      | With `region`, defines the framing used to reject a repeated shot                                                                               |
+| `statistic`   | A figure. The scene must give `sources`                                                                                                         |
+| anything else | Documentation for whoever chooses the recipe                                                                                                    |
+
+Other rules:
+
+- `name` equals the folder name.
+- **Every variable needs a `default`**, including images (`""`). HyperFrames rejects a declaration without one.
+- Give copy a `maxLength`: the longest text the shot sets well.
+- Prefer an `enum` over a free string wherever there is a fixed set of good answers.
+- The description and labels are what an agent reads to choose and configure the recipe. Write them for that.
 
 ## The scene file
 
 Rules the compiler relies on:
 
-1. The root is `<div id="root" data-composition-id="<name>" data-duration="…" data-width="…" data-height="…">` inside `<template>`.
-2. **Every element id starts with `<name>-`**, and scripts build ids from the name (`var ID = "<name>"`). The compiler renames that token per scene; an id without the prefix collides when the recipe is used twice.
-3. The name must not appear anywhere it should not be renamed.
-4. Read the scene length from the root (`data-duration`) and build the timeline from it. Do not hard-code the native duration.
-5. Read the canvas from `data-width`/`data-height` and size everything from them (the reference recipe sets `--u` to 1% of the short side). Handle portrait.
-6. Read values once with `window.__hyperframes.getVariables()` and merge over your own defaults.
-7. Register the timeline last: `window.__timelines[ID] = tl`.
+1. The root is `<div id="root" data-composition-id="<name>" data-duration="…" data-width="…" data-height="…">`
+   inside `<template>`.
+2. **Every element id starts with `<name>-`**, and scripts build ids from the name (`var ID = "<name>"`). The
+   compiler renames that token per scene; an id without the prefix collides when the recipe is used twice.
+3. The name appears nowhere it should not be renamed.
+4. Read the length from the root's `data-duration` and the canvas from `data-width` and `data-height`.
+   Handle portrait.
+5. Read values once with `window.__hyperframes.getVariables()` and merge over your own defaults.
+6. Register the timeline last: `window.__timelines[ID] = tl`.
 
 Rules from HyperFrames that bite most often:
 
-- Every visible state is a function of timeline time: no clocks, no unseeded `Math.random()`, finite repeats.
+- Every visible state is a function of timeline time: no clocks, no unseeded randomness, finite repeats.
 - `fromTo` only. A later tween on a property an earlier tween owns needs `immediateRender: false`.
 - No CSS `transform` on an element GSAP transforms; wrap it instead.
-- Land end states just before the scene's last frame.
-- Font families must appear literally in the CSS (the reference recipe uses one class per allowed family), or the renderer never loads them.
-- Mark deliberate overflow with `data-layout-allow-overflow`, or `check` reports it.
-- Reading text must be at least 2.6% of the canvas's short side.
+- Font families must appear literally in the CSS (one class per allowed family), or they never load.
+- Mark deliberate overflow with `data-layout-allow-overflow`, and decorative layers that sit over or under
+  text with `data-layout-allow-occlusion`.
+- Reading text is at least 2.6% of the canvas's short side.
+- No `z-index: -1`; layer with sibling order.
 
-Learned while building the four recipes:
+Learned while building the recipes:
 
-- **Measuring text needs the typeface.** If a recipe sizes text from glyph widths, load the face first
-  (`document.fonts.load(...)`) and build and register the timeline in its `then`. Registering late is fine;
-  registering before the tweens exist renders blank.
-- **Counting numbers need a setter, not `onUpdate`.** HyperFrames seeks with events suppressed, so a callback
-  never fires. Tween an object whose property setter writes the text (see `data-storytelling`).
-- **Frame 0 is the thumbnail.** `check` warns when the first frame is only background. A recipe that can open
-  a film should already show something at time 0 (see the `opening` case in `kinetic-typography`).
-- **Decorative layers behind text** can be reported as covering it; mark them `data-layout-allow-occlusion`.
+- **Text that changes over time needs a setter, not `onUpdate`.** HyperFrames seeks with events suppressed.
+  Tween an object whose property setter writes the text (typing in `product-shot`).
+- **Measuring text needs the typeface.** Load it (`document.fonts.load(...)`) and build the timeline in the
+  `then`. Registering late is fine; registering before the tweens exist renders blank.
+- **Frame 0 is the thumbnail.** A recipe that can open a film shows something at time 0.
+- **Overlays on a screenshot live in the screenshot's pixel space**, inside the element the camera moves, so
+  they stay attached to their component.
 - **Portrait safe areas.** Keep text out of the top 12%, the bottom 36% and the right 30% of a 9:16 canvas.
-- **Share variable ids and option lists** (`accent`, `background`, `ink`, `headingFont`, `bodyFont`) so one
-  project `style` can drive a film that mixes recipes.
 
 ## Develop and verify
 
 ```bash
-pnpm hyperstudio recipes --pretty        # your recipe is listed and parses
+pnpm hyperstudio recipes <name>            # parses, and the variable table reads well
+pnpm hyperstudio review <film>/video.json  # check + frames from every shot
 ```
 
-Write a small IR that uses it (see `examples/`), then:
+A recipe is done when a film that uses it twice passes `hyperframes check` with no errors, and you have looked
+at frames of its start, middle and end and they look composed.
 
-```bash
-pnpm hyperstudio compile <ir.json>
-cd <ir-dir>/build
-npx hyperframes check --json             # 0 errors, 0 warnings
-npx hyperframes snapshot                 # look at every state: entrance, hold, exit
-```
+## The recipes
 
-Before calling it done, compile it at least twice in one project with different values, and once in portrait
-(`"aspectRatio": "9:16"`).
+| Recipe                  | Shot                                                                                   | Length     |
+| ----------------------- | -------------------------------------------------------------------------------------- | ---------- |
+| `product-shot`          | A real screen: camera between named regions, cursor, typing, outline, label, isolation | 0.8 to 4 s |
+| `statement`             | One short line with at most one emphasised word                                        | 1 to 4 s   |
+| `brand-close`           | Mark, name, tagline, optional button                                                   | 2 to 5 s   |
+| `luxury-product-reveal` | A physical product emerging from darkness                                              | 4 to 12 s  |
 
-## Reference recipe
-
-`luxury-product-reveal` is the template to copy; `kinetic-typography` shows measured text and
-`data-storytelling` shows counters. The variables of `luxury-product-reveal`:
-
-| Id                            | Type           | Default                 | Notes                                                                |
-| ----------------------------- | -------------- | ----------------------- | -------------------------------------------------------------------- |
-| `product`                     | image          | required                | Transparent cut-out; its alpha shapes the glint                      |
-| `headline`                    | string         | required                | Rises word by word                                                   |
-| `eyebrow`, `subline`          | string         | empty                   | Empty hides the line                                                 |
-| `layout`                      | enum           | `center`                | `center`, `left`, `right` (product position). Portrait always stacks |
-| `camera`                      | enum           | `push-in`               | `push-in`, `pull-out`, `orbit`, `pan`, `static`                      |
-| `intensity`                   | number 0.4–1.6 | 1                       | Camera travel multiplier                                             |
-| `lighting`                    | enum           | `dramatic`              | `dramatic`, `soft`, `rim`                                            |
-| `particles`                   | boolean        | true                    | Seeded dust                                                          |
-| `exit`                        | enum           | `hold`                  | `hold` or `fade`                                                     |
-| `accent`, `background`, `ink` | color          | gold on near-black      |                                                                      |
-| `headingFont`, `bodyFont`     | enum           | Playfair Display, Inter | Bundled HyperFrames fonts only                                       |
-
-Duration 4–12 s. The camera is a 2.5D simulation (scale, translate, perspective rotation of a flat image).
+`pnpm hyperstudio recipes <name>` prints each one's variables.
 
 ## Limits
 
-- In portrait the copy sits in the middle band to stay clear of TikTok, Reels and Shorts interface areas, so the lower third is empty by design. A long headline can still trigger a TikTok right-edge warning.
-
-- The `hyperstudio` key is our extension. It is not part of upstream's registry-item schema.
+- The `hyperstudio` key and `role` values are our additions to upstream's registry-item format.
+- Camera moves and tilts are 2.5D transforms of flat images.
 - Recipes cannot be nested or layered by the compiler.
 - There is no standalone recipe preview; preview through a small IR.

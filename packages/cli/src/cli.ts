@@ -2,62 +2,98 @@
 // ponytail: runs as TypeScript through Node's type stripping, which Node refuses inside node_modules.
 // Fine while this is used from its own checkout; add a build step when it is published as a dependency.
 import { parseArgs } from "node:util";
-import { CompileError, compile, listRecipes } from "@hyperstudio/compiler";
+import pkg from "../package.json" with { type: "json" };
+import { runCompile } from "./commands/compile.ts";
+import { runRecipes } from "./commands/recipes.ts";
+import { runReview } from "./commands/review.ts";
+import { bold, dim, red } from "./output.ts";
 
-const HELP = `hyperstudio - Creative IR compiler for HyperFrames
+const HELP = `${bold("hyperstudio")} ${dim(pkg.version)}  Creative IR compiler for HyperFrames
 
-Usage:
-  hyperstudio compile <input.json> [--output <dir>] [--validate-only] [--pretty]
-  hyperstudio recipes [--pretty]
+${bold("Usage")}
+  hyperstudio compile <ir.json> [--output <dir>] [--validate-only]
+  hyperstudio review  <ir.json> [--output <dir>]
+  hyperstudio recipes [name]
 
-compile   Validate a Creative IR file and write a HyperFrames project.
-            --output <dir>     Project directory (default: build/ beside the input file)
-            --validate-only    Validate and report timing; write nothing
-            --pretty           Indent the JSON result
-recipes   List the available recipes and the variables each one accepts.
+${bold("Commands")}
+  compile   Validate a Creative IR and write a HyperFrames project.
+  review    Compile, run hyperframes check, snapshot every shot and start a REVIEW.md rubric.
+  recipes   List the recipes, or show one recipe's variables.
 
-Output is JSON on stdout. Exit code 1 means the IR was rejected; "errors" says where and why.
-After compile, use the HyperFrames CLI in the output directory:
+${bold("Options")}
+  -o, --output <dir>   Project directory (default: build/ beside the IR file)
+      --validate-only  compile: validate and plan; write nothing
+      --json           Machine-readable output
+      --pretty         Indented JSON (implies --json)
+  -h, --help           Show this help
+  -v, --version        Show the version
+
+${bold("Exit codes")}
+  0  success    1  the IR was rejected or a check failed    2  the command line was wrong
+
+After compile, the output is a normal HyperFrames project:
   npx hyperframes check --json && npx hyperframes snapshot && npx hyperframes render -o out.mp4
 `;
 
-const { values, positionals } = parseArgs({
-  allowPositionals: true,
-  options: {
-    output: { type: "string", short: "o" },
-    "validate-only": { type: "boolean", default: false },
-    pretty: { type: "boolean", default: false },
-    help: { type: "boolean", short: "h", default: false },
-  },
-});
-const print = (v: unknown) => console.log(JSON.stringify(v, null, values.pretty ? 2 : undefined));
-const [command, input] = positionals;
-
-if (values.help || !command) {
-  console.log(HELP);
-  process.exit(command || values.help ? 0 : 1);
-} else if (command === "recipes") {
-  print(
-    listRecipes().map((r) => ({
-      name: r.name,
-      title: r.title,
-      description: r.description,
-      tags: r.tags,
-      nativeDuration: r.duration,
-      ...r.hyperstudio,
-      variables: r.variables,
-    })),
-  );
-} else if (command === "compile" && input) {
+function main(argv: string[]): number {
+  let parsed: ReturnType<typeof parse>;
   try {
-    print(compile(input, { output: values.output, validateOnly: values["validate-only"] }));
-  } catch (e) {
-    if (!(e instanceof CompileError)) throw e;
-    print({ ok: false, errors: e.issues });
-    process.exit(1);
+    parsed = parse(argv);
+  } catch (error) {
+    return usage((error as Error).message);
   }
-} else {
-  console.error(command === "compile" ? "compile needs an input file\n" : `unknown command "${command}"\n`);
-  console.error(HELP);
-  process.exit(1);
+  const { values, positionals } = parsed;
+  const [command, target, ...extra] = positionals;
+  const json = values.json || values.pretty;
+
+  if (values.version) {
+    console.log(pkg.version);
+    return 0;
+  }
+  if (values.help || command === "help") {
+    console.log(HELP);
+    return 0;
+  }
+  if (command === undefined) return usage("no command given");
+  if (extra.length > 0) return usage(`unexpected argument "${extra[0]}"`);
+
+  switch (command) {
+    case "compile":
+      if (!target) return usage("compile needs an IR file");
+      return runCompile(target, {
+        output: values.output,
+        validateOnly: values["validate-only"],
+        json,
+        pretty: values.pretty,
+      });
+    case "review":
+      if (!target) return usage("review needs an IR file");
+      return runReview(target, { output: values.output });
+    case "recipes":
+      return runRecipes(target, { json, pretty: values.pretty });
+    default:
+      return usage(`unknown command "${command}"`);
+  }
 }
+
+function parse(argv: string[]) {
+  return parseArgs({
+    args: argv,
+    allowPositionals: true,
+    options: {
+      output: { type: "string", short: "o" },
+      "validate-only": { type: "boolean", default: false },
+      json: { type: "boolean", default: false },
+      pretty: { type: "boolean", default: false },
+      help: { type: "boolean", short: "h", default: false },
+      version: { type: "boolean", short: "v", default: false },
+    },
+  });
+}
+
+function usage(problem: string): number {
+  console.error(`${red("✗")} ${problem}\n\n${HELP}`);
+  return 2;
+}
+
+process.exitCode = main(process.argv.slice(2));

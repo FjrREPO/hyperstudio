@@ -77,3 +77,43 @@ Unit tests beside the code (schema, validation, timing), integration tests that 
 regression tests that compare the compiled example with committed golden files. The run against the real
 HyperFrames CLI is opt-in (`pnpm test:e2e`) because it needs `npx` and, the first time, the network.
 **Tradeoff:** any recipe edit changes the golden files; `pnpm test:update` accepts an intended change.
+
+## D10. The unit of a film is a shot, and recipes are shots
+
+The first recipes were slides: one composition that built and then held for four or five seconds. Five of
+them made a 23-second film that was rejected as generic. Two reference launch films cut every one to two
+seconds, on the real interface. Recipes are now shots of 0.8 to 4 seconds, and a product film is many of them.
+**Tradeoff:** an IR has more scenes and needs a storyboard before it is written. That is the work the first
+version skipped.
+
+## D11. One stage, drawn by the compiler
+
+Each slide recipe brought its own background, so every cut changed the world. The compiler now draws one
+background and one slow light behind all scenes, and recipes are transparent.
+**Tradeoff:** a recipe cannot have its own background. A scene that needs a different ground is a different film.
+
+## D12. Screens and regions instead of drawn interfaces
+
+A product shot takes a screenshot and named rectangles on it. The camera, cursor, outline and typed text all
+refer to those names, and the compiler checks they exist. Only what must move (typed text, the cursor) is
+drawn over the screenshot.
+**Tradeoff:** an interface change that is not typing or a click needs another screenshot. Recreating whole
+interfaces as animated DOM would remove that limit and is not done.
+
+## D13. Direction is required data; taste is reviewed, not computed
+
+`direction` and each scene's `purpose` are required. The compiler enforces only what is mechanical: one palette
+and type system, no repeated shot, copy length, sourced figures, real regions, listed placeholders. Whether a
+frame is well composed is answered by a person or an agent looking at frames, in `REVIEW.md`.
+**Tradeoff:** the gate can be skipped. `hyperstudio review` makes the right path one command, and the skill
+forbids reporting a film as verified from a passing check.
+
+## D14. The six slide-based examples were removed
+
+They were made from the rejected recipes and would have stood as the quality bar. Two examples remain: the
+15-second benchmark and the watch film. History keeps the rest.
+
+## D15. CLI output is for people by default
+
+`compile` prints a summary; `--json` gives the machine form the earlier version always printed. Usage errors
+exit 2, so a script can tell a bad command from a rejected IR.

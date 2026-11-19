@@ -1,0 +1,247 @@
+{
+  "project": {
+    "title": "Lumen - 15 second product showcase",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 15
+  },
+  "direction": {
+    "concept": "The film is one question being asked and answered inside the product, start to finish.",
+    "audience": "People who run a subscription business and wait on someone else for every revenue number.",
+    "message": "You can ask Lumen a revenue question in plain words and have the answer before the meeting.",
+    "tone": "Calm and exact, like a tool that already works; nothing is sold harder than it is shown.",
+    "palette": "Warm paper stage, near-black ink, and one cobalt accent used only where the eye should land.",
+    "typography": "Inter throughout, the product’s own face; copy is small, sentence case, one line at a time.",
+    "motion": "One camera move per shot on the real interface; cursor and typing are the only other things that move.",
+    "pacing": "Nine shots in fifteen seconds, cut on action; the film slows only for the benefit line and the close."
+  },
+  "brand": {
+    "name": "Lumen",
+    "kind": "example",
+    "url": "lumen.example"
+  },
+  "style": {
+    "background": "#f3efe6",
+    "ink": "#17150f",
+    "accent": "#2747f0",
+    "displayFont": "Inter",
+    "textFont": "Inter",
+    "light": "soft"
+  },
+  "screens": {
+    "home": {
+      "src": "screens/home.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "connected": [1259, 16, 149, 28],
+        "greeting": [456, 210, 760, 49],
+        "ask-bar": [456, 324, 760, 68],
+        "ask-input": [481, 345, 664, 26],
+        "send": [1159, 336, 44, 44]
+      }
+    },
+    "asked": {
+      "src": "screens/asked.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "connected": [1259, 16, 149, 28],
+        "greeting": [456, 210, 760, 49],
+        "ask-bar": [456, 324, 760, 68],
+        "ask-input": [481, 345, 664, 26],
+        "send": [1159, 336, 44, 44]
+      }
+    },
+    "answer": {
+      "src": "screens/answer.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "connected": [1259, 16, 149, 28],
+        "question": [872, 104, 344, 48],
+        "answer": [456, 178, 760, 364],
+        "answer-line": [489, 241, 694, 36],
+        "chart": [489, 331, 694, 106],
+        "bar-team": [489, 371, 694, 26],
+        "team-value": [1127, 375, 56, 19],
+        "foot": [489, 461, 694, 56],
+        "sources": [489, 491, 292, 16],
+        "actions": [978, 480, 205, 37],
+        "share-button": [1110, 480, 73, 37]
+      }
+    },
+    "share": {
+      "src": "screens/share.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "connected": [1259, 16, 149, 28],
+        "question": [872, 104, 344, 48],
+        "answer": [456, 178, 760, 364],
+        "answer-line": [489, 241, 694, 36],
+        "chart": [489, 331, 694, 106],
+        "bar-team": [489, 371, 694, 26],
+        "team-value": [1127, 375, 56, 19],
+        "foot": [489, 461, 694, 56],
+        "sources": [489, 491, 292, 16],
+        "actions": [978, 480, 205, 37],
+        "share-button": [1110, 480, 73, 37],
+        "share-popover": [853, 343, 330, 122]
+      }
+    }
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "recipe": "product-shot",
+      "duration": 2.4,
+      "purpose": "Open inside the product, on the question the whole film is about, as it is typed.",
+      "screen": "home",
+      "text": {
+        "typeText": "Which plan grew fastest last quarter?"
+      },
+      "params": {
+        "isolate": "ask-bar",
+        "radius": 18,
+        "from": "ask-bar",
+        "typeIn": "ask-input",
+        "fill": 0.78
+      }
+    },
+    {
+      "id": "meet",
+      "recipe": "statement",
+      "duration": 1.2,
+      "purpose": "Name the product the viewer has just watched being used.",
+      "text": {
+        "line1": "Meet Lumen.",
+        "emphasis": "Lumen."
+      },
+      "params": {
+        "size": "display"
+      }
+    },
+    {
+      "id": "reveal",
+      "recipe": "product-shot",
+      "duration": 1.7,
+      "purpose": "Show the whole product for the first time, and send the question.",
+      "screen": "asked",
+      "params": {
+        "from": "window",
+        "enter": "rise",
+        "cursor": "send",
+        "clickAt": 0.7
+      }
+    },
+    {
+      "id": "answer",
+      "recipe": "product-shot",
+      "duration": 1.7,
+      "purpose": "The product answers in one sentence: this is the value of the product.",
+      "screen": "answer",
+      "text": {
+        "label": "An answer, not a dashboard",
+        "emphasis": "answer"
+      },
+      "params": {
+        "isolate": "answer",
+        "radius": 20,
+        "from": "answer",
+        "fill": 0.64,
+        "labelAt": "bottom-center"
+      }
+    },
+    {
+      "id": "proof",
+      "recipe": "product-shot",
+      "duration": 1.3,
+      "purpose": "Push in to the row the answer rests on, so the claim is seen in the product itself.",
+      "screen": "answer",
+      "text": {},
+      "params": {
+        "isolate": "answer",
+        "radius": 20,
+        "from": "answer",
+        "to": "bar-team",
+        "highlight": "bar-team",
+        "fill": 0.86,
+        "move": "settle"
+      }
+    },
+    {
+      "id": "share",
+      "recipe": "product-shot",
+      "duration": 1.1,
+      "purpose": "The next step a team takes: pass the answer on.",
+      "screen": "answer",
+      "params": {
+        "isolate": "answer",
+        "radius": 20,
+        "from": "foot",
+        "fill": 0.72,
+        "cursor": "share-button",
+        "clickAt": 0.6
+      }
+    },
+    {
+      "id": "shared",
+      "recipe": "product-shot",
+      "duration": 1.3,
+      "purpose": "The click worked: the answer is now a link the team can open.",
+      "screen": "share",
+      "text": {},
+      "params": {
+        "isolate": "share-popover",
+        "radius": 14,
+        "from": "share-popover",
+        "fill": 0.42
+      }
+    },
+    {
+      "id": "benefit",
+      "recipe": "statement",
+      "duration": 1.7,
+      "purpose": "Say what that sequence means for the viewer’s Monday.",
+      "text": {
+        "line1": "The answer,",
+        "line2": "before the meeting starts.",
+        "emphasis": "before"
+      }
+    },
+    {
+      "id": "close",
+      "recipe": "brand-close",
+      "duration": 2.6,
+      "purpose": "Leave the name, what it does, and where to find it.",
+      "assets": {
+        "mark": {
+          "src": "assets/lumen-mark.svg",
+          "origin": "placeholder"
+        }
+      },
+      "text": {
+        "name": "Lumen",
+        "tagline": "Ask your revenue.",
+        "cta": "lumen.example"
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "sfx",
+      "src": "assets/ui-sfx.m4a",
+      "origin": "placeholder",
+      "volume": 0.9
+    }
+  ]
+}

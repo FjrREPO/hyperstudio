@@ -1,8 +1,8 @@
 # Creative quality: review and proposal
 
-Status: **proposal, nothing implemented.** Written 2026-11-19 after the owner rejected
+Status: **implemented on 2026-11-19** (sections 4 and 5; see [EXAMPLE-WORKFLOW.md](EXAMPLE-WORKFLOW.md) for the benchmark). The three decisions in section 7 were not answered, so the stated defaults were used: an example product built as real HTML and marked as a placeholder, the slide-based recipes and examples removed, and synthesised interface sounds marked as placeholders with no music. `data-point` was not built. Written 2026-11-19 after the owner rejected
 `saas-product-launch.mp4` as generic AI motion graphics. That verdict is correct. This document says why,
-what two reference films do differently, and what to change. No code changes until it is approved.
+what two reference films do differently, and what to change.
 
 ## 1. How this was checked
 

@@ -5,45 +5,112 @@
     "aspectRatio": "16:9",
     "duration": 16.2
   },
+  "direction": {
+    "concept": "One object in the dark, shown three ways: revealed, examined, and left with its name.",
+    "audience": "People who buy a watch as an object to keep, and who distrust anything that shouts.",
+    "message": "The Noctis One is a quiet, precise watch made for the night.",
+    "tone": "Slow, dark and certain; the film never raises its voice.",
+    "palette": "Near-black ground, warm off-white ink, and one gold accent taken from the watch’s own indices.",
+    "typography": "Playfair Display for the lines, small and still; Inter only for the tracked label above them.",
+    "motion": "One slow camera move per scene on the watch; the copy rises once and then holds.",
+    "pacing": "Three long scenes of five to six seconds; this is a slow film on purpose, cut only where the idea changes."
+  },
+  "brand": {
+    "name": "Noctis",
+    "kind": "example"
+  },
   "style": {
     "accent": "#c9a35c",
     "background": "#06070b",
     "ink": "#f4efe6",
-    "headingFont": "Playfair Display",
-    "bodyFont": "Inter"
+    "displayFont": "Playfair Display",
+    "textFont": "Inter"
   },
   "scenes": [
     {
       "id": "reveal",
       "recipe": "luxury-product-reveal",
       "duration": 6,
-      "assets": { "product": "assets/noctis-one.svg" },
-      "text": { "eyebrow": "Introducing", "headline": "Time, distilled." },
-      "params": { "layout": "center", "camera": "push-in", "lighting": "dramatic" },
-      "transition": { "type": "fade", "duration": 0.8 }
+      "purpose": "Reveal the watch from darkness so the object is the first thing understood.",
+      "assets": {
+        "product": {
+          "src": "assets/noctis-one.svg",
+          "origin": "placeholder"
+        }
+      },
+      "text": {
+        "eyebrow": "Introducing",
+        "headline": "Time, distilled."
+      },
+      "params": {
+        "layout": "center",
+        "camera": "push-in",
+        "lighting": "dramatic"
+      }
     },
     {
       "id": "calibre",
       "recipe": "luxury-product-reveal",
       "duration": 5,
-      "assets": { "product": "assets/noctis-one.svg" },
+      "purpose": "Turn the watch and say the one fact that justifies it: the movement.",
+      "assets": {
+        "product": {
+          "src": "assets/noctis-one.svg",
+          "origin": "placeholder"
+        }
+      },
       "text": {
         "eyebrow": "Calibre N-01",
         "headline": "Seventy hours of quiet precision.",
         "subline": "A self-winding movement, finished by hand."
       },
-      "params": { "layout": "left", "camera": "orbit", "lighting": "rim", "intensity": 0.8 },
-      "transition": { "type": "crossfade", "duration": 0.8 }
+      "params": {
+        "layout": "left",
+        "camera": "orbit",
+        "lighting": "rim",
+        "intensity": 0.8
+      },
+      "transition": {
+        "type": "crossfade",
+        "duration": 0.8
+      }
     },
     {
       "id": "closing",
       "recipe": "luxury-product-reveal",
       "duration": 6,
-      "assets": { "product": "assets/noctis-one.svg" },
-      "text": { "eyebrow": "Noctis One", "headline": "Own the night.", "subline": "Available by appointment." },
-      "params": { "layout": "right", "camera": "pull-out", "lighting": "soft", "exit": "fade" },
-      "transition": { "type": "fade", "duration": 0.8 }
+      "purpose": "Close on the name and how to get one, and let the picture go dark.",
+      "assets": {
+        "product": {
+          "src": "assets/noctis-one.svg",
+          "origin": "placeholder"
+        }
+      },
+      "text": {
+        "eyebrow": "Noctis One",
+        "headline": "Own the night.",
+        "subline": "Available by appointment."
+      },
+      "params": {
+        "layout": "right",
+        "camera": "pull-out",
+        "lighting": "soft",
+        "exit": "fade"
+      },
+      "transition": {
+        "type": "fade",
+        "duration": 0.8
+      }
     }
   ],
-  "audio": [{ "id": "bed", "src": "assets/night-bed.m4a", "volume": 0.8, "fadeIn": 1.5, "fadeOut": 2.5 }]
+  "audio": [
+    {
+      "id": "bed",
+      "src": "assets/night-bed.m4a",
+      "volume": 0.8,
+      "fadeIn": 1.5,
+      "fadeOut": 2.5,
+      "origin": "placeholder"
+    }
+  ]
 }

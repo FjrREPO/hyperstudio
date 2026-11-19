@@ -41,6 +41,6 @@ A bug fix comes with a regression test that fails without the fix.
 
 ## Recipes
 
-Follow [docs/RECIPE-DEVELOPMENT.md](docs/RECIPE-DEVELOPMENT.md). A recipe is done when a project that uses it
-twice passes `npx hyperframes check --json` with no errors, in landscape and in portrait, and you have looked
-at snapshots of its entrance, hold and exit.
+Follow [docs/RECIPE-DEVELOPMENT.md](docs/RECIPE-DEVELOPMENT.md). A recipe is done when a film that uses it
+twice passes `pnpm hyperstudio review` with no check errors, and you have looked at its frames and they look
+composed.
