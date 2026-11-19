@@ -51,9 +51,9 @@
       "purpose": "The old way, used for real: an export nobody can read, and a thread where the question was asked three days ago and is asked again.",
       "params": {
         "from": "window",
-        "fill": 0.78,
+        "fill": 0.92,
         "side": "right",
-        "level": "low",
+        "level": "bleed",
         "maxZoom": 1.6
       },
       "beats": [
@@ -109,7 +109,7 @@
           "do": "say",
           "text": "Then\nyou wait.",
           "place": "left",
-          "size": "display",
+          "size": "hero",
           "over": 3.3
         },
         {
@@ -237,7 +237,7 @@
           "at": 7.6,
           "do": "camera",
           "target": "answer",
-          "fill": 0.9,
+          "fill": 0.8,
           "side": "left",
           "over": 1.1
         },
@@ -268,7 +268,7 @@
           "target": "board-new",
           "fill": 0.3,
           "side": "centre",
-          "zoom": 1.9,
+          "zoom": 1.3,
           "over": 1.0
         },
         {
@@ -280,9 +280,8 @@
         {
           "at": 12.5,
           "do": "camera",
-          "target": "follow",
-          "fill": 0.8,
-          "zoom": 1.5,
+          "target": "window",
+          "fill": 0.92,
           "over": 1.0
         },
         {
@@ -344,7 +343,8 @@
           "side": "centre",
           "level": "middle",
           "zoom": 5,
-          "over": 1.2
+          "over": 1.4,
+          "ease": "power4.inOut"
         },
         {
           "at": 19.7,

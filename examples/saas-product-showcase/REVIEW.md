@@ -1,60 +1,53 @@
-# Review: Lumen, the 30-second launch film
+# Review: Lumen, the 30-second launch film (polish pass)
 
 Answered on 2026-11-19 from the rendered file `renders/saas-product-showcase-30s.mp4`: a sheet at one frame a
-second, four full frames, and the motion strips with their numbers. Sound was measured, not heard.
+second, four full frames including frame 0, and the motion strips with their numbers. Sound was measured, not
+heard. The narrative and the art direction are unchanged from the previous cut; this pass is precision.
 
-- 30.2 s, 1920×1080, 30 fps, H.264 with AAC. HyperFrames check: 0 errors, 0 warnings
-- Motion: 32% of frames still; longest freeze 1.6 s at 8.1 s (the question bar alone, before typing starts)
-- Sound: peak -9.7 dB, mean -40.6 dB: interface sounds only, and sparse. No music, no narration
+- 30.2 s, 1920×1080, 30 fps. HyperFrames check: 0 errors, 0 warnings
+- The take's own audit (safe area, type on top of the interface, camera cropping its subject): nothing reported.
+  Before the fixes below it reported "An answer, not a dashboard." on top of the interface from 9.3 s
+- Motion: 42% of frames still; longest freeze 1.7 s at 8.1 s
+- Sound: interface effects only; no music, no narration
 - Placeholders: the brand (Lumen is an example product), both interfaces, the sound effects
 
-The second cut, `video-dark.json` (15.4 s, cinematic), is unchanged from the previous review.
+## Before and after
 
-## What the extra fifteen seconds hold
+| Time      | Before                                                                               | After                                                                                             |
+| --------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| 0.0       | The headline was half risen out of its mask at frame 0: cut letters                  | Whole at frame 0. Lines now fade as they rise, and leave by fading, so no frame shows cut letters |
+| 0.0-3.3   | The export was small beside the headline                                             | A third larger, set low so it runs off the bottom of the frame under the headline                 |
+| 3.3-7.4   | "Then you wait." at headline size crowded the thread                                 | One size down, with clear stage between it and the thread                                         |
+| 15.0-18.6 | "An answer," touched the product's right edge                                        | The product is framed smaller on the left; the line has its own space                             |
+| 18.6-19.9 | A tight close-up of the sidebar                                                      | The sidebar with the answer card beside it: the new board is seen in context                      |
+| 19.9-24.2 | Three large reframings: sidebar, follow-up bar, second answer                        | Two: out to the whole app while the follow-up is typed, then in to the second answer              |
+| 26.9-30.2 | The mark was cut on its left: the slow push moved the page but not the cover over it | The push moves both; the mark is whole. The move to it is slower and eased                        |
 
-Nothing from the 15-second cut was stretched. Added: the old way as a working interface (7.4 s), a product
-reveal through the question bar, the answer being filed to a board with the board appearing in the sidebar,
-and a follow-up question that gets its own answer. Removed: the share popover.
+## What now checks itself
 
-## Timeline
-
-| Time      | Section        | What is on screen                                                                                  | Verdict                                                                    |
-| --------- | -------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 0.0-3.3   | Hook           | "Every number was a ticket." very large; a billing export scrolling, low on the right              | Strong type. The export is small: it reads as "a spreadsheet", not as rows |
-| 3.3-7.4   | Problem        | The #finance thread opens; "Then you wait."; a reply is typed and sent; "Delivered, no reply yet"  | The clearest storytelling in the film: an interaction, not floating cards  |
-| 7.4-10.1  | Reveal         | Cut. "Or just ask." over one lit element, the question bar; the same question is typed             | The reveal works. 1.6 s pass before typing starts                          |
-| 10.1-11.5 | Reveal         | Click: the bar opens into the whole interface as the camera moves to the answer card               | Good                                                                       |
-| 11.5-15.0 | Experience     | Skeleton, the answer's parts, the chart drawn, +18% counted up; the Team row outlined              | Good, and readable                                                         |
-| 15.0-18.6 | Differentiator | The product moves left; "An answer, not a dashboard." low on the right; "Add to board" is clicked  | The line is tied to an action. Its first word touches the card's edge      |
-| 18.6-19.9 | Experience     | The camera goes to the sidebar: "Q3 plan growth" is there, outlined                                | Cause and effect are shown. The frame is mostly sidebar                    |
-| 19.9-24.2 | Experience     | The follow-up bar: "Why did Team grow?" typed and sent; the first answer folds, the second arrives | The part that feels most like using a real application                     |
-| 24.2-26.9 | Differentiator | Pull back: the whole product low on the right; "Ask. Answer. Decide." very large                   | Good composition; the product is small                                     |
-| 26.9-30.2 | Brand          | The interface closes down to its own mark, which floats on the stage; the line; the address        | No chip now. The last two seconds are nearly still                         |
-
-## Against the previous 15-second cut
-
-Better: a problem that is shown, a reveal, two more interactions with visible results, the mark without its
-chip. Worse: the opening product is smaller. The same: no music or voice, an example product, still frames
-around a third.
+Each take steps through its own timeline once and reports, as warnings in `hyperframes check`: a line of the
+film outside the safe area, a line on top of the interface, and a camera move that leaves part of its subject
+outside the frame. Generated scenes are also folded onto fewer lines, so they stay under HyperFrames' size
+check.
 
 ## Rubric
 
-|               | Verdict           | Evidence                                                                                |
-| ------------- | ----------------- | --------------------------------------------------------------------------------------- |
-| Storytelling  | Pass              | Problem, reveal, experience, differentiator, brand, each with something happening in it |
-| Art direction | Pass              | One stage, one serif at two scales, flat camera throughout                              |
-| Typography    | Pass, with a note | Five headlines in five placements; "An answer," touches the card                        |
-| Composition   | Pass, with a note | The opening export and the pull-back product are small in the frame                     |
-| Motion        | Pass, with a note | 32% still frames; the camera holds during typing                                        |
-| Transitions   | Pass              | One cut, on the unanswered message; everything else is in shot                          |
-| Sound         | Revise            | Sparse synthesised effects only                                                         |
-| Assets        | Revise to publish | Example product and interfaces                                                          |
-| Brand         | Pass              | The film ends on the product's own mark                                                 |
+|               | Verdict           | Evidence                                                                              |
+| ------------- | ----------------- | ------------------------------------------------------------------------------------- |
+| Storytelling  | Pass              | Unchanged                                                                             |
+| Art direction | Pass              | Unchanged                                                                             |
+| Typography    | Pass              | No cut letters at any sampled frame; five headlines, none touching the interface      |
+| Composition   | Pass, with a note | The audit is clean. The pull-back product under "Ask. Answer. Decide." is still small |
+| Motion        | Pass, with a note | 42% still frames, higher than before: the slow push no longer moves the type          |
+| Transitions   | Pass              | One cut; the follow-up section has one fewer reframing                                |
+| Brand         | Pass, with a note | The mark is whole and floats on the stage; the last two seconds are close to still    |
+| Sound         | Revise            | Sparse synthesised effects only                                                       |
+| Assets        | Revise to publish | Example product and interfaces                                                        |
 
 ## Remaining weaknesses
 
-1. Sound is the weakest part: no music, no voice, and a mean level of -40 dB.
+1. Sound: no music, no voice.
 2. The product is an example written for the film.
-3. A third of the frames are still; the reference films are in single digits, except one.
-4. Cropping and text size are not checked automatically.
+3. Still frames went up, not down. The film holds still while text is typed and after the mark lands.
+4. The audit measures boxes, not taste: it cannot tell a tight composition from a good one.
 5. Easing and rhythm at full speed were not judged; that needs a person watching the file.
