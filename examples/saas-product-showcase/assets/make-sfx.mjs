@@ -9,26 +9,34 @@ import { join } from "node:path";
 
 // One sound file per cut of the film. Timings follow the beats in video.json and video-dark.json:
 // if a beat moves there, move the matching time here.
+// ticks: [start, how many, seconds apart] for typing; clicks: times; tones: [time, pitch].
 const FILMS = {
   light: {
     file: "ui-sfx.m4a",
-    length: 15.1,
-    typeFrom: 1.4,
-    typeEvery: 0.039,
-    send: 3.1,
-    answer: 4.3,
-    share: 9.7,
-    close: 11.7,
+    length: 30.2,
+    ticks: [
+      [5.1, 30, 0.04],
+      [8.1, 36, 0.042],
+      [20.7, 18, 0.05],
+    ],
+    clicks: [6.6, 10.1, 17.0, 21.9],
+    tones: [
+      [11.5, 520],
+      [17.1, 660],
+      [22.1, 520],
+      [27.1, 440],
+    ],
   },
   dark: {
     file: "ui-sfx-dark.m4a",
     length: 15.4,
-    typeFrom: 1.2,
-    typeEvery: 0.039,
-    send: 3.0,
-    answer: 4.4,
-    share: 9.6,
-    close: 11.2,
+    ticks: [[1.2, 36, 0.039]],
+    clicks: [3.0, 9.6],
+    tones: [
+      [4.4, 520],
+      [9.72, 660],
+      [11.2, 440],
+    ],
   },
 };
 const film = FILMS[process.argv[2] ?? "light"];
@@ -63,12 +71,9 @@ const tone = (at, hz) => {
 };
 
 // Timings follow video.json. If a shot's length changes there, change the matching time here.
-for (let i = 0, t = film.typeFrom; i < 36; i++, t += film.typeEvery) tick(t); // the question is typed
-click(film.send); // send
-tone(film.answer, 520); // the answer arrives
-click(film.share); // share
-tone(film.share + 0.12, 660); // link copied
-tone(film.close, 440); // the brand arrives
+for (const [from, count, every] of film.ticks) for (let i = 0; i < count; i++) tick(from + i * every);
+for (const at of film.clicks) click(at);
+for (const [at, pitch] of film.tones) tone(at, pitch);
 
 const wav = Buffer.alloc(44 + out.length * 2);
 wav.write("RIFF", 0);
