@@ -61,6 +61,24 @@ Made with the same recipe (`product-take`) and compiler. Everything below was de
 | Ending                    | The interface closes like an iris onto its mark | The camera pulls back and leans; the name set in type  |
 | Sound                     | Music bed and interface sounds                  | Interface sounds only                                  |
 
+## Relay (not yet frozen)
+
+- Folder `examples/relay-deploy-film`, file `video.json`. No tag: nobody but its author has watched it
+- 27.4 s, 1920×1080, 30 fps. One take of `product/index.html`, a deploy tool for engineers
+- Direction: dimensional. A black stage, the interface as an object a wide lens circles, a new angle for each
+  stage of the deploy, and no type of the film's own: the log and a voice tell it
+- Measured: `hyperframes check` 0 errors, 1 warning (the first frame is nearly empty); 38% of frames still;
+  mean level -22.6 dB
+- Placeholders: the product and its interface are examples; the interface sounds are synthesised
+
+## Comparing them
+
+`pnpm hyperstudio compare <a>/video.json <b>/video.json` reads two plans and lists eleven decisions (stage, type,
+how the product sits, camera, entrance, structure, ending, sound) and whether the films made the same one.
+Today: Lumen and Marlow share 2 of 11 (a light stage, large type); Lumen and Relay share none; Marlow and
+Relay share 4 (bare product, present from frame 0, one take, the same kinds of sound). It reads plans, not
+pictures: two films can differ on every row and still feel alike, and only a viewer can say so.
+
 ## Since v1
 
 On `main` both films also carry narration generated locally with Kokoro (see
