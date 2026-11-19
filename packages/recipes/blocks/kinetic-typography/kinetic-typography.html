@@ -227,20 +227,27 @@
         tl.fromTo($("glow"), { opacity: 0, scale: 0.7, x: -6 * U }, { opacity: v.backdrop === "grid" ? 0.45 : 0.8, scale: 1.1, x: 6 * U, duration: end, ease: "sine.inOut" }, 0);
         tl.fromTo($("grid"), { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out" }, 0);
 
-        var enter = function (words, at) {
+        // The film's first frame is its thumbnail, so the opening line is already arriving at time 0.
+        var enter = function (words, at, opening) {
           if (v.motion === "slam")
-            tl.fromTo(words, { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.34, ease: "expo.out", stagger: 0.09 }, at);
+            tl.fromTo(
+              words,
+              { opacity: opening ? 0.4 : 0, scale: opening ? 1.3 : 1.7 },
+              { opacity: 1, scale: 1, duration: 0.34, ease: "expo.out", stagger: 0.09 },
+              at,
+            );
           else if (v.motion === "blur")
             tl.fromTo(
               words,
-              { opacity: 0, y: 1.2 * U, filter: "blur(" + 1.4 * U + "px)" },
+              { opacity: opening ? 0.35 : 0, y: 1.2 * U, filter: "blur(" + (opening ? 0.8 : 1.4) * U + "px)" },
               { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.8, ease: "power3.out", stagger: 0.07 },
               at,
             );
-          else tl.fromTo(words, { yPercent: 118 }, { yPercent: 0, duration: 0.85, ease: "expo.out", stagger: 0.06 }, at);
+          else
+            tl.fromTo(words, { yPercent: opening ? 62 : 118 }, { yPercent: 0, duration: 0.85, ease: "expo.out", stagger: 0.06 }, at);
         };
 
-        var first = 0.25;
+        var first = 0;
         var n = lines.length;
         if (sequence) {
           // Each line owns a slot: in, hold, out. The last line stays.
@@ -248,14 +255,14 @@
           lines.forEach(function (l, i) {
             var at = first + i * slot;
             if (i > 0) tl.fromTo(l.el, { opacity: 0 }, { opacity: 1, duration: 0.01 }, at);
-            enter(l.words, at);
+            enter(l.words, at, i === 0);
             if (i < n - 1) tl.fromTo(l.el, { opacity: 1, y: 0 }, { opacity: 0, y: -2 * U, duration: 0.28, ease: "power2.in", immediateRender: false }, at + slot - 0.3);
           });
         } else {
           // Lines land one after another, then hold together.
           var gap = Math.min(0.6, (end - first - 1.4) / Math.max(1, n));
           lines.forEach(function (l, i) {
-            enter(l.words, first + i * Math.max(0.15, gap));
+            enter(l.words, first + i * Math.max(0.15, gap), i === 0);
           });
         }
 
