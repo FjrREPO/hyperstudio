@@ -128,7 +128,7 @@
       // Where in the frame the subject sits: centred, or to one side when type shares the frame.
       var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
       var side = SIDES[v.side] || 0.5;
-      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66 };
+      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66, bleed: 0.78 };
       var level = LEVELS[v.level] || 0.5;
       var frame = function (r, f, cap) {
         var room = side === 0.5 ? 1 : 0.56;
@@ -288,7 +288,8 @@
       tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
 
       // The camera never comes to a dead stop: a slow push runs under every move, for the whole take.
-      if (v.drift !== false && v.drift !== "false") tl.fromTo(stage, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
+      // It is on the rig, so the interface and everything drawn over it (cursor, outline, veil) move as one.
+      if (v.drift !== false && v.drift !== "false") tl.fromTo(rig, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
       // Focus: the mask leaves the plane of focus sharp; a camera beat can fade the whole effect in or out.
       var mask = {
         band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
@@ -324,6 +325,7 @@
         tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
         if (to < D) tl.fromTo(gutter, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, to - 0.1);
       });
+      var placed = [];
       says.forEach(function (b, i) {
         var place = PLACES[b.place] || PLACES.left;
         var small = b.size === "text";
@@ -335,7 +337,7 @@
         // Each line rises out of its own mask, one after the other: type that is set, not faded.
         var lines = String(b.text || "").split("\n").map(function (text) {
           var mask = document.createElement("div");
-          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em";
+          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em;width:fit-content;margin-left:" + (place.textAlign === "left" ? "0" : "auto") + ";margin-right:" + (place.textAlign === "right" ? "0" : "auto");
           var inner = document.createElement("div");
           inner.textContent = text;
           mask.appendChild(inner);
@@ -347,11 +349,48 @@
         var after = says.slice(i + 1).filter(function (n) { return (n.place || "left") === (b.place || "left"); })[0];
         var until = b.over ? b.at + Number(b.over) : after ? after.at : D + 1;
         // A line that opens the film is already half risen at frame 0: that frame is the thumbnail.
-        tl.fromTo(lines, { yPercent: b.at <= 0.05 ? 45 : 108 }, { yPercent: 0, duration: 0.7, ease: "expo.out", stagger: 0.09 }, b.at);
-        if (until < D) tl.fromTo(lines, { yPercent: 0 }, { yPercent: -108, duration: 0.35, ease: "power3.in", stagger: 0.05, immediateRender: false }, Math.max(b.at + 0.4, until - 0.4));
+        // A line that opens the film is whole at frame 0 (that frame is the thumbnail). Others rise out of
+        // their mask while fading in, so no frame shows a line of sharp, half-cut letters; they leave by fading.
+        if (b.at <= 0.05) tl.fromTo(lines, { yPercent: 6, opacity: 1 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, 0);
+        else tl.fromTo(lines, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.75, ease: "expo.out", stagger: 0.1 }, b.at);
+        if (until < D) tl.fromTo(block, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, Math.max(b.at + 0.4, until - 0.3));
+        placed.push({ block: block, lines: lines, text: String(b.text || "").replace(/\n/g, " "), from: b.at + 0.8, to: Math.min(until - 0.3, D), beside: b.place === "left" || b.place === "right" || !b.place });
       });
 
       tl.set({}, {}, D);
+
+      // ── Audit: what a careful eye would catch, reported once each so the review sees it ──
+      // A camera move that leaves part of its subject outside the frame; a line outside the safe area; a line
+      // on top of the interface. The timeline is stepped through once and put back.
+      (function () {
+        var found = {};
+        var note = function (key, text) { if (!found[key]) { found[key] = 1; console.warn("hyperstudio: " + text); } };
+        plan.forEach(function (p) {
+          if (!p.to || p.b.target === "window") return;
+          var l = p.to.x + p.to.scale * p.r[0], t = p.to.y + p.to.scale * (p.r[1] + bar);
+          if (l < 0 || t < 0 || l + p.to.scale * p.r[2] > W || t + p.to.scale * p.r[3] > H) note("crop" + p.b.at, "the camera at " + p.b.at + 's leaves part of "' + p.b.target + '" outside the frame; lower its fill or move it');
+        });
+        var box = function (els) {
+          var u = null;
+          els.forEach(function (el) { var r = el.getBoundingClientRect(); u = u ? { l: Math.min(u.l, r.left), t: Math.min(u.t, r.top), r: Math.max(u.r, r.right), b: Math.max(u.b, r.bottom) } : { l: r.left, t: r.top, r: r.right, b: r.bottom }; });
+          return u;
+        };
+        for (var t = 0.05; t < D; t += 0.1) {
+          tl.seek(t, false);
+          // The frame's own box: its top-left corner, and how much the preview has scaled it (1 when rendering).
+          var view = stage.getBoundingClientRect(), k = view.width / W || 1, m = 0.03;
+          view = { left: view.left, top: view.top, right: view.left + W * k, bottom: view.top + H * k };
+          var solid = box([Number(gsap.getProperty(veil, "opacity")) > 0.5 ? veil : $("frame")]);
+          placed.forEach(function (s) {
+            if (t < s.from || t > s.to) return;
+            var r = box(s.lines);
+            if (r.l - view.left < W * m * k || r.t - view.top < H * m * k || view.right - r.r < W * m * k || view.bottom - r.b < H * m * k) note("safe" + s.text, '"' + s.text + '" runs outside the safe area');
+            var ox = Math.min(r.r, solid.r) - Math.max(r.l, solid.l), oy = Math.min(r.b, solid.b) - Math.max(r.t, solid.t);
+            if (!s.beside && ox > 0 && oy > 0 && ox * oy > 0.02 * (r.r - r.l) * (r.b - r.t)) note("over" + s.text, '"' + s.text + '" sits on top of the interface from ' + t.toFixed(1) + "s; move the line, or the product");
+          });
+        }
+        tl.seek(0, false);
+      })();
       window.__timelines[ID] = tl;
     })();
   </script>
