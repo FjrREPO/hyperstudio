@@ -34,6 +34,7 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - Takes can carry the whole film: `say` sets the film's lines in the frame beside the product, camera beats
   can turn, pull focus and move the product to one side, `count` counts a figure up, `veil` resolves the
   interface into its own mark. Loading and result are one element in the page (`data-leave`, `data-shimmer`).
+- A veil opened on the whole interface can close down onto one part like an iris.
 - A take audits itself: a line outside the safe area, a line on top of the interface, and a camera move that
   crops its subject are reported as warnings in `hyperframes check`. Lines no longer show cut letters while
   entering or leaving; `level: bleed`; generated scenes are folded onto fewer lines.

@@ -1,53 +1,47 @@
-# Review: Lumen, the 30-second launch film (polish pass)
+# Review: Lumen, the 30-second launch film (final polish)
 
 Answered on 2026-11-19 from the rendered file `renders/saas-product-showcase-30s.mp4`: a sheet at one frame a
-second, four full frames including frame 0, and the motion strips with their numbers. Sound was measured, not
-heard. The narrative and the art direction are unchanged from the previous cut; this pass is precision.
+second and four full frames. Sound was measured, not heard. The concept, the six lines and the interactions
+are those of the previous cut; this pass changes framing, timing and the ending.
 
-- 30.2 s, 1920×1080, 30 fps. HyperFrames check: 0 errors, 0 warnings
-- The take's own audit (safe area, type on top of the interface, camera cropping its subject): nothing reported.
-  Before the fixes below it reported "An answer, not a dashboard." on top of the interface from 9.3 s
-- Motion: 42% of frames still; longest freeze 1.7 s at 8.1 s
-- Sound: interface effects only; no music, no narration
+- 29.6 s, 1920×1080, 30 fps. HyperFrames check: 0 errors, 0 warnings; the take's own audit reports nothing
+- Motion: 35% of frames still (was 42%); median change between frames 0.80 (was 0.32); longest freeze 1.7 s,
+  on the closing mark
+- Sound: peak -9.7 dB, mean -40.5 dB: interface effects only, retimed to the new cut. No music, no narration
 - Placeholders: the brand (Lumen is an example product), both interfaces, the sound effects
 
-## Before and after
+## Against the previous cut
 
-| Time      | Before                                                                               | After                                                                                             |
-| --------- | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
-| 0.0       | The headline was half risen out of its mask at frame 0: cut letters                  | Whole at frame 0. Lines now fade as they rise, and leave by fading, so no frame shows cut letters |
-| 0.0-3.3   | The export was small beside the headline                                             | A third larger, set low so it runs off the bottom of the frame under the headline                 |
-| 3.3-7.4   | "Then you wait." at headline size crowded the thread                                 | One size down, with clear stage between it and the thread                                         |
-| 15.0-18.6 | "An answer," touched the product's right edge                                        | The product is framed smaller on the left; the line has its own space                             |
-| 18.6-19.9 | A tight close-up of the sidebar                                                      | The sidebar with the answer card beside it: the new board is seen in context                      |
-| 19.9-24.2 | Three large reframings: sidebar, follow-up bar, second answer                        | Two: out to the whole app while the follow-up is typed, then in to the second answer              |
-| 26.9-30.2 | The mark was cut on its left: the slow push moved the page but not the cover over it | The push moves both; the mark is whole. The move to it is slower and eased                        |
-
-## What now checks itself
-
-Each take steps through its own timeline once and reports, as warnings in `hyperframes check`: a line of the
-film outside the safe area, a line on top of the interface, and a camera move that leaves part of its subject
-outside the frame. Generated scenes are also folded onto fewer lines, so they stay under HyperFrames' size
-check.
+| Time (now) | Before                                                            | After                                                                                           |
+| ---------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| 0.0-3.3    | The export sat small in the lower right, cut by the frame         | It spans the frame under the headline, rows readable, running off the bottom on purpose         |
+| 3.3-7.4    | The camera held on the thread while the reply was typed           | A slow push toward the thread for as long as the typing lasts                                   |
+| 7.4-9.5    | "Or just ask." and the bar sat for 1.6 s before anything happened | The cursor is there at 0.3 s and typing starts at once; the bar is larger; a slow push under it |
+| 9.5-14.4   | The camera held on the answer after it arrived                    | A slow push for the time the answer is read and the row outlined                                |
+| 14.4-18.0  | The product was framed small so the headline had room             | The headline has its own column on the right; the product beside it is a fifth larger           |
+| 18.0-21.3  | The follow-up was typed with the app at 0.92 of the frame         | Unchanged                                                                                       |
+| 23.6-26.1  | "Ask. Answer. Decide." over a small whole-app view                | The headline in a column on the left; beside it the two answers, large enough to read           |
+| 26.1-29.6  | The interface was covered while the camera moved to the mark      | An iris: the opening closes from the whole interface down to the mark as the camera moves in    |
 
 ## Rubric
 
-|               | Verdict           | Evidence                                                                              |
-| ------------- | ----------------- | ------------------------------------------------------------------------------------- |
-| Storytelling  | Pass              | Unchanged                                                                             |
-| Art direction | Pass              | Unchanged                                                                             |
-| Typography    | Pass              | No cut letters at any sampled frame; five headlines, none touching the interface      |
-| Composition   | Pass, with a note | The audit is clean. The pull-back product under "Ask. Answer. Decide." is still small |
-| Motion        | Pass, with a note | 42% still frames, higher than before: the slow push no longer moves the type          |
-| Transitions   | Pass              | One cut; the follow-up section has one fewer reframing                                |
-| Brand         | Pass, with a note | The mark is whole and floats on the stage; the last two seconds are close to still    |
-| Sound         | Revise            | Sparse synthesised effects only                                                       |
-| Assets        | Revise to publish | Example product and interfaces                                                        |
+|               | Verdict           | Evidence                                                                                     |
+| ------------- | ----------------- | -------------------------------------------------------------------------------------------- |
+| Storytelling  | Pass              | Unchanged                                                                                    |
+| Art direction | Pass              | Unchanged                                                                                    |
+| Typography    | Pass              | Six lines, none cut, none on the interface                                                   |
+| Composition   | Pass              | In every frame looked at, the product is large enough to read and the type has its own space |
+| Motion        | Pass, with a note | Fewer dead holds; a third of the frames are still, most of them in the last two seconds      |
+| Transitions   | Pass              | One cut; the ending is one move, not a cover                                                 |
+| Brand         | Pass, with a note | The iris gives the mark an arrival. After it lands, little happens                           |
+| Sound         | Revise            | Sparse synthesised effects only                                                              |
+| Assets        | Revise to publish | Example product and interfaces                                                               |
 
 ## Remaining weaknesses
 
 1. Sound: no music, no voice.
 2. The product is an example written for the film.
-3. Still frames went up, not down. The film holds still while text is typed and after the mark lands.
-4. The audit measures boxes, not taste: it cannot tell a tight composition from a good one.
+3. The last two seconds are close to still.
+4. This is one film of one product. Whether the direction holds for a different product, interface and
+   story has not been tested.
 5. Easing and rhythm at full speed were not judged; that needs a person watching the file.
