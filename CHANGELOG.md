@@ -6,6 +6,11 @@ Notable changes, newest first. Versions follow [Semantic Versioning](https://sem
 
 ### Added
 
+- `@hyperstudio/studio`: the whole engine behind one API (workspace, compile outcomes, review, background render jobs, assets, audio).
+- `@hyperstudio/mcp`: an MCP server on the official SDK with tools, resources, prompts and server instructions; STDIO, and Streamable HTTP with a required token.
+- `@hyperstudio/api`: a versioned REST API generated from a route table, with an OpenAPI document, API key, rate limit and idempotent render starts.
+- `@hyperstudio/sdk`: a TypeScript client with the same methods against the local engine or a remote API.
+- Skill `hyperstudio-review`; project `.mcp.json`; `.env.example`.
 - `@hyperstudio/audio` and `hyperstudio audio`: voiceover from local files or a system draft voice, and an optional ElevenLabs client that reads the plan first (Free plan inside its credits and marked non-commercial, paid plan confirmed, never upgraded, never generated twice); dubbing; `inspect`; `status`.
 - Audio in the IR: `role` and `scene`, so narration follows the shot it belongs to; overlapping voice clips are rejected.
 - `@hyperstudio/assets` and `hyperstudio assets`: search free sources (Openverse, Poly Haven, optional Pixabay) through refkit, a strict licence gate for commercial film use, a 24-hour cache and request log, downloads recorded in `LICENSES.json`, and credits owed reported by `compile`.
