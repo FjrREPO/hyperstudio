@@ -67,7 +67,7 @@ Made with the same recipe (`product-take`) and compiler. Everything below was de
 - 27.4 s, 1920×1080, 30 fps. One take of `product/index.html`, a deploy tool for engineers
 - Direction: dimensional. A black stage, the interface as an object a wide lens circles, a new angle for each
   stage of the deploy, and no type of the film's own: the log and a voice tell it
-- Measured: `hyperframes check` 0 errors, 1 warning (the first frame is nearly empty); 38% of frames still;
+- Measured: `hyperframes check` 0 errors, 1 warning (the first frame is nearly empty); 42% of frames still;
   mean level -22.6 dB
 - Placeholders: the product and its interface are examples; the interface sounds are synthesised
 

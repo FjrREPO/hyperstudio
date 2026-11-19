@@ -44,9 +44,9 @@
       "screen": "app",
       "purpose": "The whole film is one orbit of the product through one deploy: pushed, built, tested, tried on a tenth of traffic, promoted, rolled back, and started again.",
       "params": {
-        "from": "terminal",
-        "fill": 0.8,
-        "tilt": "left",
+        "from": "prompt",
+        "fill": 0.92,
+        "tilt": "up",
         "focus": "centre",
         "lens": "wide",
         "spill": true,
@@ -59,7 +59,7 @@
           "at": 0.2,
           "do": "camera",
           "target": "prompt",
-          "fill": 0.7,
+          "fill": 0.8,
           "tilt": "up",
           "over": 1.6,
           "ease": "power2.inOut"
@@ -137,17 +137,19 @@
           "at": 6.6,
           "do": "camera",
           "target": "traffic",
-          "fill": 0.5,
+          "fill": 0.8,
           "tilt": "left",
-          "over": 1.3
+          "over": 1.3,
+          "zoom": 3.2
         },
         {
           "at": 8.2,
           "do": "camera",
           "target": "latency",
-          "fill": 0.56,
-          "tilt": "up",
-          "over": 1.2
+          "fill": 0.9,
+          "tilt": "none",
+          "over": 1.2,
+          "zoom": 4
         },
         {
           "at": 8.5,
@@ -262,14 +264,25 @@
           "over": 1.1
         },
         {
-          "at": 24.2,
+          "at": 24.0,
           "do": "camera",
-          "target": "window",
-          "fill": 0.9,
-          "tilt": "left",
+          "target": "top",
+          "fill": 0.96,
+          "tilt": "none",
           "focus": "all",
-          "over": 2.6,
-          "ease": "power2.inOut"
+          "over": 1.3
+        },
+        {
+          "at": 25.0,
+          "do": "camera",
+          "target": "brand",
+          "fill": 0.3,
+          "zoom": 6,
+          "tilt": "none",
+          "over": 1.6,
+          "ease": "power2.inOut",
+          "side": "centre",
+          "level": "middle"
         }
       ]
     }
