@@ -4,6 +4,8 @@
  * Projects, compile, review, renders, assets and audio. The CLI, MCP server, REST API and SDK are thin
  * adapters over this, so nothing is implemented twice.
  */
+
+export { type Comparison, compareFilms, describe, readFilm } from "./compare.ts";
 export { createJobs, type Job, type JobStatus, type Quality } from "./jobs.ts";
 export { type Motion, measureMotion } from "./motion.ts";
 export { type Finding, hyperframes, type Review, RUBRIC, reviewFilm } from "./review.ts";
