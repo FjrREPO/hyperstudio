@@ -162,6 +162,9 @@
         tl.fromTo(c.word, { color: v.ink }, { color: "#ffffff", duration: 0.2, ease: "none" }, landed + 0.05);
       });
 
+      // A slow push for the whole shot, so type that has landed is never a frozen frame.
+      tl.fromTo(stage, { scale: 1 }, { scale: 1.03, duration: D, ease: "none" }, 0);
+
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
     })();

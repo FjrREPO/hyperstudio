@@ -9,7 +9,7 @@ import { test } from "node:test";
 
 const ROOT = join(import.meta.dirname, "../..");
 const CLI = join(ROOT, "packages/cli/src/cli.ts");
-const EXAMPLE = join(ROOT, "examples/saas-product-showcase/video.json");
+const EXAMPLE = join(ROOT, "tests/fixtures/films/saas-product-showcase/video.json");
 const run = (...args: string[]) => {
   const r = spawnSync(process.execPath, [CLI, ...args], {
     encoding: "utf8",
@@ -86,7 +86,7 @@ test("recipes lists every recipe and shows one in detail", () => {
   const list = JSON.parse(run("recipes", "--json").out);
   assert.deepEqual(
     list.map((r: { name: string }) => r.name),
-    ["brand-close", "luxury-product-reveal", "product-shot", "scatter", "statement"],
+    ["brand-close", "luxury-product-reveal", "product-shot", "product-take", "scatter", "statement"],
   );
   const one = run("recipes", "product-shot");
   assert.equal(one.code, 0, one.err);
@@ -189,7 +189,12 @@ const hasFfprobe = spawnSync("ffprobe", ["-version"]).status === 0;
 
 test("audio: inspect reads a real file", { skip: !hasFfprobe && "ffprobe is not installed" }, () => {
   const info = JSON.parse(
-    run("audio", "inspect", join(ROOT, "examples/saas-product-showcase/assets/ui-sfx.m4a"), "--json").out,
+    run(
+      "audio",
+      "inspect",
+      join(ROOT, "tests/fixtures/films/saas-product-showcase/assets/ui-sfx.m4a"),
+      "--json",
+    ).out,
   );
   assert.equal(Math.round(info.seconds), 17);
   assert.equal(info.codec, "aac");

@@ -56,20 +56,20 @@ test("every recipe is used by at least one example", () => {
 });
 
 test("recompiling removes scenes the IR dropped and keeps hand-written files", () => {
-  const { out } = build("saas-product-showcase");
+  const { out } = build("meeting-notes-launch");
   const stale = join(out, "compositions/old-scene.html");
   const mine = join(out, "compositions/mine.html");
-  writeFileSync(stale, readFileSync(join(out, "compositions/hook.html"), "utf8"));
+  writeFileSync(stale, readFileSync(join(out, "compositions/reveal.html"), "utf8"));
   writeFileSync(mine, "<template><div>hand written</div></template>");
-  compile(join(EXAMPLES, "saas-product-showcase/video.json"), { output: out });
+  compile(join(EXAMPLES, "meeting-notes-launch/video.json"), { output: out });
   assert.equal(existsSync(stale), false, "generated leftovers are removed");
   assert.equal(existsSync(mine), true, "files without the marker are never touched");
 });
 
 // Bugs found while building the examples; each must stay fixed.
 test("regression: no HyperFrames-invalid output", () => {
-  const { out } = build("saas-product-showcase");
-  const scene = readFileSync(join(out, "compositions/hook.html"), "utf8");
+  const { out } = build("meeting-notes-launch");
+  const scene = readFileSync(join(out, "compositions/reveal.html"), "utf8");
   const decls = JSON.parse(
     (/data-composition-variables='([^']*)'/.exec(scene)?.[1] ?? "[]")
       .replaceAll("&amp;", "&")
@@ -78,11 +78,11 @@ test("regression: no HyperFrames-invalid output", () => {
   // check rejected an image variable declared without a default
   for (const v of decls) assert.ok("default" in v, `${v.id} has no default`);
   // an id shared by two scenes makes the second scene animate the first one's elements
-  for (const other of ["reveal", "answer", "product-shot"])
+  for (const other of ["notes", "owners", "product-shot"])
     assert.doesNotMatch(scene, new RegExp(`id="${other}-`), other);
   // the scene root must carry this scene's duration, not the recipe's native one
   assert.match(
-    readFileSync(join(out, "compositions/share.html"), "utf8"),
+    readFileSync(join(out, "compositions/ticked.html"), "utf8"),
     /id="root"[^>]*data-duration="1.2"/,
   );
   // an apostrophe in copy must survive the single-quoted attribute it travels in

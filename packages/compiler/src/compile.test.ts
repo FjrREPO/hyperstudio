@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { CompileError, compile, listRecipes } from "./index.ts";
 
-const EXAMPLE_DIR = join(import.meta.dirname, "../../../examples/saas-product-showcase");
+const EXAMPLE_DIR = join(import.meta.dirname, "../../../tests/fixtures/films/saas-product-showcase");
 const EXAMPLE = join(EXAMPLE_DIR, "video.json");
 const base = JSON.parse(readFileSync(EXAMPLE, "utf8"));
 
@@ -272,7 +272,7 @@ test("audio can follow a scene, and two voices may not overlap", () => {
 });
 
 test("a slow film is allowed but flagged", () => {
-  const watch = join(EXAMPLE_DIR, "../luxury-watch-commercial/video.json");
+  const watch = join(import.meta.dirname, "../../../examples/luxury-watch-commercial/video.json");
   const { warnings } = compile(watch, { validateOnly: true });
   assert.equal(warnings.length, 1);
   assert.match(warnings[0]?.message ?? "", /average shot is 5\.4s/);
@@ -282,7 +282,7 @@ test("every recipe declares defaults HyperFrames accepts", () => {
   const recipes = listRecipes();
   assert.deepEqual(
     recipes.map((r) => r.name),
-    ["brand-close", "luxury-product-reveal", "product-shot", "scatter", "statement"],
+    ["brand-close", "luxury-product-reveal", "product-shot", "product-take", "scatter", "statement"],
   );
   for (const r of recipes)
     for (const v of r.variables) assert.notEqual(v.default, undefined, `${r.name}.${v.id} needs a default`);
