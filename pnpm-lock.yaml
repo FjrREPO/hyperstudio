@@ -188,8 +188,26 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  packages/assets:
+    dependencies:
+      '@refkit/core':
+        specifier: ^0.10.1
+        version: 0.10.1
+      '@refkit/provider-openverse':
+        specifier: ^0.6.1
+        version: 0.6.1
+      '@refkit/provider-pixabay':
+        specifier: ^0.5.1
+        version: 0.5.1
+      '@refkit/provider-polyhaven':
+        specifier: ^0.5.2
+        version: 0.5.2
+
   packages/cli:
     dependencies:
+      '@hyperstudio/assets':
+        specifier: workspace:*
+        version: link:../assets
       '@hyperstudio/compiler':
         specifier: workspace:*
         version: link:../compiler
@@ -280,6 +298,18 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
+
+  '@refkit/core@0.10.1':
+    resolution: {integrity: sha512-vO8P56ABD3Z6AoDId/U92SoNsVNbd3xp4ZtD81//6SiModiBVL7YT2iQ8BRaDvhmIrk5yO4opPNsZo9GgJ5/Zw==}
+
+  '@refkit/provider-openverse@0.6.1':
+    resolution: {integrity: sha512-CMdnPFgGcNcpwZcdxPA3g65q5THDNoh5DXZb86rAOsAuhjPy1dxDgQXGLoN832Q8pLtwyUT3uRqPwpY3wwUlHg==}
+
+  '@refkit/provider-pixabay@0.5.1':
+    resolution: {integrity: sha512-E1kWDP91Cy0NW6p1VFqFikVCnG8/U8JLTHLWJQO2eam7hbZ8GIQ5jFGCyRITCsOJjLxiemOGhCV9oBMkolVUEQ==}
+
+  '@refkit/provider-polyhaven@0.5.2':
+    resolution: {integrity: sha512-81ZGppr7AOXzENHzLKN/2Xv9/21ThRqP790mP951G//LvS4pgXFb2Q3tsrR6/V+nP6cL8Uq0r3uflEvlOKLu1A==}
 
   '@types/node@26.6.6':
     resolution: {integrity: sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==}
@@ -464,6 +494,22 @@ snapshots:
 
   '@biomejs/cli-win32-x64@2.6.8':
     optional: true
+
+  '@refkit/core@0.10.1':
+    dependencies:
+      zod: 4.6.7
+
+  '@refkit/provider-openverse@0.6.1':
+    dependencies:
+      '@refkit/core': 0.10.1
+
+  '@refkit/provider-pixabay@0.5.1':
+    dependencies:
+      '@refkit/core': 0.10.1
+
+  '@refkit/provider-polyhaven@0.5.2':
+    dependencies:
+      '@refkit/core': 0.10.1
 
   '@types/node@26.6.6':
     dependencies:
