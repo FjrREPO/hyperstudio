@@ -403,7 +403,7 @@
       "src": "assets/music.ogg",
       "origin": "supplied",
       "role": "music",
-      "volume": 0.5,
+      "volume": 0.3,
       "fadeIn": 0.3,
       "fadeOut": 1.8
     },
@@ -413,6 +413,69 @@
       "origin": "placeholder",
       "role": "sfx",
       "volume": 0.7
+    },
+    {
+      "id": "vo-ticket",
+      "src": "assets/vo-ticket.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "before",
+      "start": 0.3,
+      "duration": 1.9666666667
+    },
+    {
+      "id": "vo-wait",
+      "src": "assets/vo-wait.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "before",
+      "start": 4.0,
+      "duration": 1.1666666667
+    },
+    {
+      "id": "vo-ask",
+      "src": "assets/vo-ask.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "lumen",
+      "start": 0.1,
+      "duration": 1.2333333333
+    },
+    {
+      "id": "vo-answer",
+      "src": "assets/vo-answer.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "lumen",
+      "start": 4.2,
+      "duration": 3.6
+    },
+    {
+      "id": "vo-claim",
+      "src": "assets/vo-claim.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "lumen",
+      "start": 8.0,
+      "duration": 2.1333333333
+    },
+    {
+      "id": "vo-again",
+      "src": "assets/vo-again.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "lumen",
+      "start": 14.2,
+      "duration": 2.2
+    },
+    {
+      "id": "vo-close",
+      "src": "assets/vo-close.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "lumen",
+      "start": 19.9,
+      "duration": 1.9
     }
   ]
 }

@@ -8,7 +8,8 @@ are those of the previous cut; this pass changes framing, timing and the ending.
 - Motion: 35% of frames still (was 42%); median change between frames 0.80 (was 0.32); longest freeze 1.7 s,
   on the closing mark
 - Sound: a music bed under the interface effects. Peak -6.0 dB, mean -22.5 dB (was -40.5 dB with effects
-  only); the bed fades in over 0.3 s and out over the last 1.8 s. No narration. Nobody has listened to the
+  only); the bed fades in over 0.3 s and out over the last 1.8 s. Narration: seven lines from Kokoro (voice `af_heart`), a local open-weight model, levelled to -16 LUFS;
+  with it the film's mean level is -19.5 dB and its peak -1.0 dB. Nobody has listened to the
   mix: the track was chosen from its title, length and licence
 - Music: "Inspire Action" by Yuri Megis, CC BY 4.0, from Wikimedia Commons; licence confirmed at the source.
   Credit is owed wherever the film is shown
