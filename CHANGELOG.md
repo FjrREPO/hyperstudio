@@ -37,6 +37,7 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - `hyperstudio compare <a.json> <b.json>`: where two films made the same choice, decision by decision.
 - A third film, Relay, told as a deploy journey across three live views (editor, build log, fleet). Not
   a benchmark until it is reviewed for motion and sound. One input can be typed into more than once in a take.
+- `count` continues from `data-from` on the figure, so 10% can become 50% without passing through 0.
 - Director skill: story before technique. Milestones first; each must change what the picture is.
 - A local voice with no key: Kokoro (Apache 2.0) through `hyperstudio audio setup kokoro` and
   `audio tts`; it is the default voice once set up. Both benchmark films are narrated with it.

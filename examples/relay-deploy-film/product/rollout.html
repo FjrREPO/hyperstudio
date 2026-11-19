@@ -45,15 +45,18 @@
       .btn { display: block; padding: 18px; border-radius: 12px; background: var(--go); color: #06281b; font-size: 22px; font-weight: 600; text-align: center; }
       .done { padding: 18px; border-radius: 12px; border: 1px solid var(--go); color: var(--go); font-size: 20px; text-align: center; }
       .status i { display: inline-block; width: 10px; height: 10px; margin-right: 10px; border-radius: 50%; background: var(--hot); }
+      .app[data-state="idle"] .status i { background: var(--faint); }
+      .app[data-state="idle"] .wave, .app[data-state="idle"] .plot path { display: none; }
+      .app[data-state="idle"] .pct { color: var(--faint); }
       .app[data-state="live"] .status i { background: var(--go); box-shadow: 0 0 0 5px rgba(61, 220, 151, 0.2); }
       .app[data-state="live"] .pct { color: var(--go); }
-      .app:not([data-state="canary"]) .s-canary, .app:not([data-state="half"]) .s-half, .app:not([data-state="live"]) .s-live, .app[data-state="live"] .btn, .app:not([data-state="live"]) .done { display: none; }
+      .app:not([data-state="idle"]) .s-idle, .app:not([data-state="canary"]) .s-canary, .app:not([data-state="half"]) .s-half, .app:not([data-state="live"]) .s-live, .app:is([data-state="live"], [data-state="idle"]) .btn, .app:not([data-state="live"]) .done { display: none; }
     </style>
   </head>
   <body>
-    <div class="app" data-state="canary" data-states="canary half live" data-region="window">
+    <div class="app" data-state="idle" data-states="idle canary half live" data-region="window">
       <div class="top"><span class="mark" data-region="brand"><i></i>relay</span><span>api-gateway · <b>a41c9e2</b></span>
-        <div class="right"><span class="chip status" data-region="status"><i></i><span class="s-canary">canary</span><span class="s-half">rolling out</span><span class="s-live">live in 3 regions · 1 m 07 s</span></span></div></div>
+        <div class="right"><span class="chip status" data-region="status"><i></i><span class="s-idle">9f3e1d7 on 30 machines</span><span class="s-canary">canary</span><span class="s-half">rolling out</span><span class="s-live">live in 3 regions · 1 m 07 s</span></span></div></div>
       <div class="roll">
         <div class="fleet" data-region="fleet">
           <h3>Fleet · 30 machines</h3>
@@ -74,7 +77,7 @@
             </div>
             <div class="pods wave" data-region="wave-3">
               <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
-              <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
+              <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal data-region="one"></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
               <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
             </div>
           <div class="legend"><span><i></i>9f3e1d7 previous</span><span><i class="new"></i>a41c9e2 new</span></div>
@@ -82,11 +85,11 @@
         <div class="side">
           <div class="card" data-region="traffic">
             <h3>Traffic on the new release</h3>
-            <div class="pct" data-region="pct"><span class="s-canary">10%</span><span class="s-half">50%</span><span class="s-live">100%</span></div>
+            <div class="pct"><span class="s-idle">0%</span><span class="s-canary" data-region="pct-10">10%</span><span class="s-half" data-region="pct-50" data-from="10">50%</span><span class="s-live" data-region="pct-100" data-from="50">100%</span></div>
           </div>
           <div class="card" data-region="health">
             <h3>Errors and p95 · new vs previous</h3>
-            <svg class="plot" viewBox="0 0 340 170"><line x1="0" y1="60" x2="340" y2="60" /><path d="M4 112 L40 108 L76 114 L112 104 L148 110 L184 102 L220 106 L256 100 L292 104 L336 98" data-draw /></svg>
+            <svg class="plot" viewBox="0 0 340 170"><line x1="0" y1="60" x2="340" y2="60" /><g data-region="health-1"><path d="M4 112 L40 108 L76 114 L112 104" data-draw /></g><g data-region="health-2"><path d="M112 104 L148 110 L184 102 L220 106" data-draw /></g><g data-region="health-3"><path d="M220 106 L256 100 L292 104 L336 98" data-draw /></g></svg>
             <p>within baseline</p>
           </div>
           <div><span class="btn" data-region="promote">Promote to 100%</span><span class="done">previous release kept warm</span></div>
@@ -94,7 +97,7 @@
       </div>
     </div>
     <script>
-      document.querySelector(".app").dataset.state = (location.hash || "#canary").slice(1);
+      document.querySelector(".app").dataset.state = (location.hash || "#idle").slice(1);
     </script>
   </body>
 </html>

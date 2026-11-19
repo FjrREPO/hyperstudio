@@ -179,8 +179,9 @@
         } else if (b.do === "count") { var figure = find(b.target);
           var parsed = figure && /^(\D*)(\d+(?:\.\d+)?)(.*)$/.exec(figure.textContent.trim());
           if (parsed) { var places = (parsed[2].split(".")[1] || "").length;
-            var counter = Object.defineProperty({}, "n", { get: function () { return 0; }, set: function (n) { figure.textContent = parsed[1] + Number(n).toFixed(places) + parsed[3]; }, });
-            tl.fromTo(counter, { n: 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
+            var shown = 0;
+            var counter = Object.defineProperty({}, "n", { get: function () { return shown; }, set: function (n) { shown = Number(n); figure.textContent = parsed[1] + shown.toFixed(places) + parsed[3]; }, });
+            tl.fromTo(counter, { n: Number(figure.getAttribute("data-from")) || 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
           }
         } else if (b.do === "veil") { var gap = b.target === "window" ? 0 : 10;
           var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };

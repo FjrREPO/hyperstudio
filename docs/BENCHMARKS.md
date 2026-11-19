@@ -65,11 +65,11 @@ Made with the same recipe (`product-take`) and compiler. Everything below was de
 
 - Folder `examples/relay-deploy-film`, file `video.json`. No tag. Candidate for developer infrastructure
   films since the user's review of the rebuilt render on 2026-11-19
-- 28.0 s, 1920×1080, 30 fps. Four scenes: an editor (`product/change.html`), a build log
-  (`product/build.html`), the fleet (`product/rollout.html`), and the name
+- 29.1 s, 1920×1080, 30 fps. Five scenes: the fleet at rest, an editor (`product/change.html`), a build log
+  (`product/build.html`), the rollout (`product/rollout.html`), and the name
 - Direction: a deploy as a journey. One changed line travels to thirty machines; each milestone is its own
   picture, and the fleet turning green is the payoff. No type of the film's own until the name
-- Measured: `hyperframes check` 0 errors, 1 warning; 15% of frames still; mean level -22.9 dB
+- Measured: `hyperframes check` 0 errors, 1 warning; 11% of frames still
 - Placeholders: the product and all three views are examples; the interface sounds are synthesised
 - Its first version was one dashboard circled by a camera, and was judged worse than Lumen and Marlow: the
   picture never changed while the story advanced. It was rebuilt, not adjusted
@@ -80,7 +80,7 @@ Three separate judgements, each by a person watching the rendered file:
 
 | Dimension              | What is judged                                        | Lumen | Marlow | Relay               |
 | ---------------------- | ----------------------------------------------------- | ----- | ------ | ------------------- |
-| Visual, art direction  | Composition, identity, type, consistency              | Yes   | Yes    | Frame sequence only |
+| Visual, art direction  | Composition, identity, type, consistency              | Yes   | Yes    | Earlier render only |
 | Motion and editing     | Timing, transitions, choreography, pacing, continuity | Yes   | Yes    | No                  |
 | Audio and sound design | Voice, music, effects, mix, sync                      | No    | No     | No                  |
 
