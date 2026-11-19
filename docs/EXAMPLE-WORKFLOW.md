@@ -29,44 +29,37 @@ Written before any shot (see `direction` in each file):
 | The product | Flat and frontal, in a window               | Leaning back, then turned, in shallow focus   |
 | Type        | Inter, left on the margin                   | Playfair Display, centred                     |
 
-## 3. Shots
+## 3. The 30-second film
 
-The light cut is four shots: a line of type, one 9.2 s take, a line of type, the brand. The take's beats:
+`video.json` is two takes with one cut between them.
 
-| At    | Beat                                                        |
-| ----- | ----------------------------------------------------------- |
-| 0.1 s | Camera pushes in to the ask bar                             |
-| 0.8 s | The question is typed                                       |
-| 2.6 s | Click on send; the interface switches to `thinking`         |
-| 3.6 s | It switches to `answer`; the answer's parts arrive in order |
-| 4.0 s | The chart's lines are drawn                                 |
-| 5.1 s | Camera moves to the Team row; it is outlined                |
-| 7.2 s | Click on Share; the popover opens                           |
-| 8.3 s | Camera pulls back to the whole answer                       |
+| Time     | Take     | What happens                                                                                                                                                                                                         |
+| -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.0-7.4  | `before` | `product/before.html`: an export scrolls, a thread opens, a reply is typed and goes unanswered                                                                                                                       |
+| 7.4-30.2 | `lumen`  | `product/index.html`: the question bar alone, the question typed, the bar opens into the product, the answer arrives, it is filed to a board, a follow-up is asked and answered, the product closes down to its mark |
 
-The dark cut divides the same actions into two takes around one line of type.
+The film's own lines are `say` beats inside the takes, in a different place each time. `video-dark.json` is a
+15-second cinematic cut of the same product page.
 
 ## 4. Compile and review
 
 ```bash
 pnpm hyperstudio review examples/saas-product-showcase/video.json --motion
-pnpm hyperstudio review examples/saas-product-showcase/video-dark.json --output examples/saas-product-showcase/build-dark --motion
 ```
 
-`review` compiles, runs `hyperframes check` (0 errors, 0 warnings for both), takes two frames per shot, and
-with `--motion` renders a draft and measures it: 18% and 21% of frames still, the longest freeze 1.7 s and
-1.6 s, both on the closing mark. The strips in `build/.hyperstudio/` show each take at eight frames a second.
-The answers are in `REVIEW.md`.
+`review` compiles, runs `hyperframes check` (0 errors, 0 warnings), takes two frames per take, and with
+`--motion` renders a draft and measures it: 32% of frames still, the longest freeze 1.6 s. The strips in
+`build/.hyperstudio/` show each take at eight frames a second. The answers are in `REVIEW.md`.
 
 ## 5. Render and verify
 
 ```bash
 cd examples/saas-product-showcase/build
-npx hyperframes render --quality looks -o ../renders/saas-product-showcase.mp4
+npx hyperframes@0.9.69 render --quality looks -o ../renders/saas-product-showcase-30s.mp4
 ```
 
-Result: 14.700 s (light) and 15.600 s (dark), 1920×1080, 30 fps, H.264 with AAC, about 5 and 6 MB; `ffprobe`
-durations equal the IRs'. Frames pulled from the rendered files at two per second were looked at.
+Result: 30.200 s, 1920×1080, 30 fps, H.264 with AAC, about 9.5 MB; `ffprobe` duration equals the IR's. Frames
+pulled from the rendered file at one per second were looked at.
 
 ## What is still not real
 
