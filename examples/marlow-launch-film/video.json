@@ -1,0 +1,316 @@
+{
+  "project": {
+    "title": "Marlow - launch film",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 29.0
+  },
+  "direction": {
+    "concept": "The six minutes after a meeting, in one take: the transcript runs out, nobody has notes, and the product writes them while we watch.",
+    "audience": "Team leads who leave meetings unsure what was decided and end up writing the follow-up themselves.",
+    "message": "Marlow turns a meeting into decisions and owners, and sends them to the people named.",
+    "tone": "Dry and observational, like a documentary with subtitles; the film never raises its voice.",
+    "palette": "The product's own warm white fills the frame; a paper-coloured band at the bottom carries the words, and green appears only where something is decided or done.",
+    "typography": "Outfit, large and plain, one short line at a time in a band along the bottom, like subtitles; nothing is ever set beside or over the product.",
+    "motion": "The product is the whole picture and the camera travels across it: down the transcript, sideways to the notes, down the notes as they are written. It never pushes in for effect and never leaves the page until the end.",
+    "pacing": "Slow at the start, while the meeting runs out; one click; then each thing the product writes gets its own unhurried beat. The film ends when the notes are sent, not on a slogan."
+  },
+  "brand": {
+    "name": "Marlow",
+    "kind": "example",
+    "url": "marlow.example"
+  },
+  "style": {
+    "background": "#f4efe6",
+    "ink": "#1b1814",
+    "accent": "#0e7a53",
+    "displayFont": "Outfit",
+    "textFont": "Inter",
+    "light": "none"
+  },
+  "screens": {
+    "app": {
+      "html": "product/index.html",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder"
+    }
+  },
+  "scenes": [
+    {
+      "id": "film",
+      "recipe": "product-take",
+      "duration": 29.0,
+      "screen": "app",
+      "purpose": "The whole film is one take across the product: the meeting runs out, the notes are asked for and written, an action is ticked off, and the notes are sent.",
+      "params": {
+        "from": "header",
+        "fill": 1,
+        "level": "top",
+        "chrome": "none",
+        "radius": 0,
+        "maxZoom": 1.5
+      },
+      "beats": [
+        {
+          "at": 0.0,
+          "do": "say",
+          "text": "42 minutes.",
+          "place": "band",
+          "size": "hero",
+          "over": 3.6
+        },
+        {
+          "at": 0.2,
+          "do": "scroll",
+          "target": "lines",
+          "by": 330,
+          "over": 3.4,
+          "ease": "power1.inOut"
+        },
+        {
+          "at": 3.7,
+          "do": "say",
+          "text": "Nobody took notes.",
+          "place": "band",
+          "size": "hero",
+          "over": 3.0
+        },
+        {
+          "at": 3.8,
+          "do": "scroll",
+          "target": "lines",
+          "by": 420,
+          "over": 2.6,
+          "ease": "none"
+        },
+        {
+          "at": 6.2,
+          "do": "cursor",
+          "target": "transcript-head",
+          "over": 0.4
+        },
+        {
+          "at": 7.0,
+          "do": "say",
+          "text": "One click.",
+          "place": "band",
+          "size": "hero",
+          "over": 2.2
+        },
+        {
+          "at": 7.9,
+          "do": "cursor",
+          "target": "summarise-button",
+          "over": 1.0
+        },
+        {
+          "at": 8.7,
+          "do": "click",
+          "target": "summarise-button",
+          "state": "writing",
+          "over": 0.4
+        },
+        {
+          "at": 8.8,
+          "do": "camera",
+          "target": "notes-head",
+          "fill": 0.6,
+          "over": 1.2
+        },
+        {
+          "at": 9.3,
+          "do": "say",
+          "text": "Marlow reads the room.",
+          "place": "band",
+          "size": "hero",
+          "over": 2.4
+        },
+        {
+          "at": 10.9,
+          "do": "state",
+          "state": "arriving"
+        },
+        {
+          "at": 10.9,
+          "do": "reveal",
+          "target": "summary",
+          "over": 1.8
+        },
+        {
+          "at": 11.8,
+          "do": "say",
+          "text": "Three decisions.",
+          "place": "band",
+          "size": "hero",
+          "over": 3.9
+        },
+        {
+          "at": 12.0,
+          "do": "camera",
+          "target": "decisions",
+          "fill": 0.56,
+          "level": "high",
+          "over": 1.3
+        },
+        {
+          "at": 13.3,
+          "do": "highlight",
+          "target": "decision-1",
+          "over": 0.7
+        },
+        {
+          "at": 13.3,
+          "do": "camera",
+          "target": "decisions",
+          "fill": 0.6,
+          "over": 2.4,
+          "ease": "none"
+        },
+        {
+          "at": 14.0,
+          "do": "highlight",
+          "target": "decision-2",
+          "over": 0.7
+        },
+        {
+          "at": 14.7,
+          "do": "highlight",
+          "target": "decision-3",
+          "over": 0.8
+        },
+        {
+          "at": 15.8,
+          "do": "say",
+          "text": "Three owners.",
+          "place": "band",
+          "size": "hero",
+          "over": 4.9
+        },
+        {
+          "at": 15.9,
+          "do": "camera",
+          "target": "actions",
+          "fill": 0.62,
+          "level": "high",
+          "over": 1.2
+        },
+        {
+          "at": 17.1,
+          "do": "camera",
+          "target": "actions",
+          "fill": 0.68,
+          "over": 3.4,
+          "ease": "none"
+        },
+        {
+          "at": 17.2,
+          "do": "cursor",
+          "target": "owner-1",
+          "over": 0.6
+        },
+        {
+          "at": 17.8,
+          "do": "cursor",
+          "target": "owner-2",
+          "over": 0.5
+        },
+        {
+          "at": 18.4,
+          "do": "cursor",
+          "target": "owner-3",
+          "over": 0.5
+        },
+        {
+          "at": 19.3,
+          "do": "cursor",
+          "target": "action-1-box",
+          "over": 0.7
+        },
+        {
+          "at": 19.5,
+          "do": "click",
+          "target": "action-1-box",
+          "state": "done",
+          "over": 0.2
+        },
+        {
+          "at": 19.7,
+          "do": "highlight",
+          "target": "action-1",
+          "over": 0.9
+        },
+        {
+          "at": 20.9,
+          "do": "say",
+          "text": "Sent before anyone asks.",
+          "place": "band",
+          "size": "hero",
+          "over": 3.6
+        },
+        {
+          "at": 21.0,
+          "do": "camera",
+          "target": "foot",
+          "fill": 0.62,
+          "level": "high",
+          "over": 1.1
+        },
+        {
+          "at": 21.8,
+          "do": "cursor",
+          "target": "send-button",
+          "over": 0.6
+        },
+        {
+          "at": 22.5,
+          "do": "click",
+          "target": "send-button",
+          "state": "sent",
+          "over": 0.3
+        },
+        {
+          "at": 22.7,
+          "do": "camera",
+          "target": "toast",
+          "fill": 0.3,
+          "level": "high",
+          "over": 1.0
+        },
+        {
+          "at": 24.7,
+          "do": "camera",
+          "target": "window",
+          "fill": 0.66,
+          "level": "high",
+          "tilt": "up",
+          "over": 1.8,
+          "ease": "power4.inOut"
+        },
+        {
+          "at": 25.9,
+          "do": "say",
+          "text": "Marlow",
+          "place": "band",
+          "size": "display"
+        },
+        {
+          "at": 26.4,
+          "do": "say",
+          "text": "Notes that know who does what.  ·  marlow.example",
+          "place": "bottom-right",
+          "size": "text"
+        }
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "id": "sfx",
+      "src": "assets/ui-sfx.m4a",
+      "origin": "placeholder",
+      "role": "sfx",
+      "volume": 0.6
+    }
+  ]
+}
