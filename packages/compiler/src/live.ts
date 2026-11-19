@@ -56,6 +56,7 @@ const NEEDS_TARGET = new Set([
   "reveal",
   "draw",
   "count",
+  "scroll",
   "highlight",
   "veil",
 ]);
