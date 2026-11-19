@@ -7,7 +7,11 @@ are those of the previous cut; this pass changes framing, timing and the ending.
 - 29.6 s, 1920×1080, 30 fps. HyperFrames check: 0 errors, 0 warnings; the take's own audit reports nothing
 - Motion: 35% of frames still (was 42%); median change between frames 0.80 (was 0.32); longest freeze 1.7 s,
   on the closing mark
-- Sound: peak -9.7 dB, mean -40.5 dB: interface effects only, retimed to the new cut. No music, no narration
+- Sound: a music bed under the interface effects. Peak -6.0 dB, mean -22.5 dB (was -40.5 dB with effects
+  only); the bed fades in over 0.3 s and out over the last 1.8 s. No narration. Nobody has listened to the
+  mix: the track was chosen from its title, length and licence
+- Music: "Inspire Action" by Yuri Megis, CC BY 4.0, from Wikimedia Commons; licence confirmed at the source.
+  Credit is owed wherever the film is shown
 - Placeholders: the brand (Lumen is an example product), both interfaces, the sound effects
 
 ## Against the previous cut
@@ -25,21 +29,21 @@ are those of the previous cut; this pass changes framing, timing and the ending.
 
 ## Rubric
 
-|               | Verdict           | Evidence                                                                                     |
-| ------------- | ----------------- | -------------------------------------------------------------------------------------------- |
-| Storytelling  | Pass              | Unchanged                                                                                    |
-| Art direction | Pass              | Unchanged                                                                                    |
-| Typography    | Pass              | Six lines, none cut, none on the interface                                                   |
-| Composition   | Pass              | In every frame looked at, the product is large enough to read and the type has its own space |
-| Motion        | Pass, with a note | Fewer dead holds; a third of the frames are still, most of them in the last two seconds      |
-| Transitions   | Pass              | One cut; the ending is one move, not a cover                                                 |
-| Brand         | Pass, with a note | The iris gives the mark an arrival. After it lands, little happens                           |
-| Sound         | Revise            | Sparse synthesised effects only                                                              |
-| Assets        | Revise to publish | Example product and interfaces                                                               |
+|               | Verdict           | Evidence                                                                                             |
+| ------------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
+| Storytelling  | Pass              | Unchanged                                                                                            |
+| Art direction | Pass              | Unchanged                                                                                            |
+| Typography    | Pass              | Six lines, none cut, none on the interface                                                           |
+| Composition   | Pass              | In every frame looked at, the product is large enough to read and the type has its own space         |
+| Motion        | Pass, with a note | Fewer dead holds; a third of the frames are still, most of them in the last two seconds              |
+| Transitions   | Pass              | One cut; the ending is one move, not a cover                                                         |
+| Brand         | Pass, with a note | The iris gives the mark an arrival. After it lands, little happens                                   |
+| Sound         | Not judged        | A licensed music bed and synthesised effects, mixed by numbers; whether it suits the film needs ears |
+| Assets        | Revise to publish | Example product and interfaces                                                                       |
 
 ## Remaining weaknesses
 
-1. Sound: no music, no voice.
+1. Sound: the music was chosen without being heard, the effects are synthesised, and there is no voice.
 2. The product is an example written for the film.
 3. The last two seconds are close to still.
 4. This is one film of one product. Whether the direction holds for a different product, interface and

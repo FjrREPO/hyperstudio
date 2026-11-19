@@ -399,11 +399,20 @@
   ],
   "audio": [
     {
+      "id": "music",
+      "src": "assets/music.ogg",
+      "origin": "supplied",
+      "role": "music",
+      "volume": 0.5,
+      "fadeIn": 0.3,
+      "fadeOut": 1.8
+    },
+    {
       "id": "sfx",
       "src": "assets/ui-sfx.m4a",
       "origin": "placeholder",
       "role": "sfx",
-      "volume": 0.6
+      "volume": 0.7
     }
   ]
 }
