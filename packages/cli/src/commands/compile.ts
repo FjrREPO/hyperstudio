@@ -61,6 +61,7 @@ export function printSummary(result: CompileResult): void {
     yellow("Warnings"),
     result.warnings.map((w) => `${w.path}: ${w.message}`),
   );
+  list(bold("Credits owed"), result.credits, "Show these in the film or beside it.");
   console.log();
   if (result.output === null) console.log(dim("  Validated. Nothing written."));
   else {

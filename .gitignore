@@ -6,3 +6,4 @@ renders/
 .tmp-*/
 .claude/
 .DS_Store
+.hyperstudio/
