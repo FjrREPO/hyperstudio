@@ -242,6 +242,7 @@
           var gap = b.target === "window" ? 0 : 10;
           var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };
           var time = Number(b.over) || 0.6;
+          var wasHoled = !!holed;
           if (!holed) {
             // Placed on the timeline, not at build time: a later veil must not move an earlier one's opening.
             if (b.at <= 0.05) gsap.set(veil, hole);
@@ -252,7 +253,8 @@
             if (b.target === "window") tl.fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at + time);
             else tl.fromTo(veil, { opacity: 1 }, { opacity: 1, duration: 0.05, immediateRender: false }, b.at);
           }
-          holed = b.target === "window" ? null : hole;
+          // Opened on the whole interface first, a veil can then close down like an iris onto one part.
+          holed = b.target === "window" && wasHoled ? null : hole;
           if (b.target !== "window" && pointer) tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
         } else if (b.do === "say") {
           says.push(b);
@@ -319,7 +321,7 @@
         var mine = says.filter(function (b) { return (b.place || "left") === name; });
         if (!mine.length) return;
         var gutter = $("gutter-" + name);
-        gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 66%, transparent)";
+        gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 78%, transparent)";
         var last = mine[mine.length - 1];
         var to = last.over ? last.at + Number(last.over) : D + 1;
         tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
