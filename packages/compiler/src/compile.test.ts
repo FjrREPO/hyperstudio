@@ -35,16 +35,16 @@ function rejections(mutate: (ir: typeof base) => void): string[] {
 
 test("the showcase compiles with frame-accurate timing", () => {
   const r = compile(EXAMPLE, { validateOnly: true });
-  assert.equal(r.duration, 15);
-  assert.equal(r.frames, 450);
-  assert.equal(r.scenes.length, 9);
+  assert.equal(r.duration, 17);
+  assert.equal(r.frames, 510);
+  assert.equal(r.scenes.length, 10);
   assert.deepEqual(
     r.scenes.slice(0, 4).map((s) => [s.id, s.start]),
     [
-      ["hook", 0],
-      ["meet", 2.4],
-      ["reveal", 3.6],
-      ["answer", 5.3],
+      ["problem", 0],
+      ["hook", 2.6],
+      ["meet", 4.4],
+      ["reveal", 5.6],
     ],
   );
   assert.deepEqual(r.warnings, []);
@@ -63,13 +63,13 @@ test("one recipe used many times gets isolated scenes, and screens reach their s
   const share = readFileSync(join(out, "compositions/share.html"), "utf8");
   assert.match(share, /data-composition-id="share"/);
   assert.match(share, /id="share-world"/);
-  assert.match(share, /data-duration="1.1"/);
+  assert.match(share, /data-duration="1.2"/);
   assert.doesNotMatch(share, /product-shot/);
   const index = readFileSync(join(out, "index.html"), "utf8");
   assert.match(index, /id="share"[^>]*"screen":"assets\/answer.png"/);
   assert.match(index, /id="share"[^>]*share-button/);
   assert.match(index, /id="hs-stage"/);
-  assert.match(readFileSync(join(out, "STORYBOARD.md"), "utf8"), /## Frame 6 — share/);
+  assert.match(readFileSync(join(out, "STORYBOARD.md"), "utf8"), /## Frame 7 — share/);
 });
 
 test("the IR is rejected where it is wrong, with the path to the mistake", () => {
@@ -78,36 +78,36 @@ test("the IR is rejected where it is wrong, with the path to the mistake", () =>
     [],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].params.glow = 2)),
-    ["scenes.0.params.glow"],
+    rejections((ir) => (ir.scenes[1].params.glow = 2)),
+    ["scenes.1.params.glow"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[2].params.enter = "spin")),
-    ["scenes.2.params.enter"],
+    rejections((ir) => (ir.scenes[3].params.enter = "spin")),
+    ["scenes.3.params.enter"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].params.fill = 9)),
-    ["scenes.0.params.fill"],
+    rejections((ir) => (ir.scenes[1].params.fill = 9)),
+    ["scenes.1.params.fill"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[8].assets.mark = "nope.svg")),
-    ["scenes.8.assets.mark"],
+    rejections((ir) => (ir.scenes[9].assets.mark = "nope.svg")),
+    ["scenes.9.assets.mark"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[1].text = {})),
-    ["scenes.1"],
+    rejections((ir) => (ir.scenes[2].text = {})),
+    ["scenes.2"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[1].recipe = "does-not-exist")),
-    ["scenes.1.recipe", "project.duration"],
+    rejections((ir) => (ir.scenes[2].recipe = "does-not-exist")),
+    ["scenes.2.recipe", "project.duration"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[2].id = "hook")),
-    ["scenes.2.id"],
+    rejections((ir) => (ir.scenes[3].id = "hook")),
+    ["scenes.3.id"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].duration = 2.41)),
-    ["scenes.0.duration"],
+    rejections((ir) => (ir.scenes[1].duration = 1.81)),
+    ["scenes.1.duration"],
   );
   assert.deepEqual(
     rejections((ir) => (ir.scenes[0].transition = { type: "crossfade", duration: 0.2 })),
@@ -122,6 +122,10 @@ test("the IR is rejected where it is wrong, with the path to the mistake", () =>
     ["style.light"],
   );
   assert.deepEqual(
+    rejections((ir) => (ir.style.glow = "orange")),
+    ["style.glow"],
+  );
+  assert.deepEqual(
     rejections((ir) => (ir.project.duration = 30)),
     ["project.duration"],
   );
@@ -129,51 +133,51 @@ test("the IR is rejected where it is wrong, with the path to the mistake", () =>
 
 test("art direction: the film's visual system cannot be overridden per scene", () => {
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[1].params.accent = "#ff0000")),
-    ["scenes.1.params.accent"],
+    rejections((ir) => (ir.scenes[2].params.accent = "#ff0000")),
+    ["scenes.2.params.accent"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[1].params.displayFont = "Oswald")),
-    ["scenes.1.params.displayFont"],
+    rejections((ir) => (ir.scenes[2].params.displayFont = "Oswald")),
+    ["scenes.2.params.displayFont"],
   );
 });
 
 test("art direction: a shot that repeats the previous one is rejected", () => {
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[5].params = { ...ir.scenes[4].params })),
-    ["scenes.5"],
+    rejections((ir) => (ir.scenes[6].params = { ...ir.scenes[5].params })),
+    ["scenes.6"],
   );
 });
 
 test("art direction: copy that is too long for its recipe is rejected", () => {
   assert.deepEqual(
     rejections(
-      (ir) => (ir.scenes[1].text.line1 = "A very long line that no one could read in the time it has"),
+      (ir) => (ir.scenes[2].text.line1 = "A very long line that no one could read in the time it has"),
     ),
-    ["scenes.1.text.line1"],
+    ["scenes.2.text.line1"],
   );
 });
 
 test("screens: shots must name a screen and regions that exist", () => {
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].screen = "pricing")),
-    ["scenes.0.screen"],
-  );
-  assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].screen = undefined)),
-    ["scenes.0.screen"],
-  );
-  assert.deepEqual(
-    rejections((ir) => (ir.scenes[1].screen = "home")),
+    rejections((ir) => (ir.scenes[1].screen = "pricing")),
     ["scenes.1.screen"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].params.from = "navbar")),
-    ["scenes.0.params.from"],
+    rejections((ir) => (ir.scenes[1].screen = undefined)),
+    ["scenes.1.screen"],
   );
   assert.deepEqual(
-    rejections((ir) => (ir.scenes[0].params.screenMeta = "{}")),
-    ["scenes.0.params.screenMeta"],
+    rejections((ir) => (ir.scenes[2].screen = "home")),
+    ["scenes.2.screen"],
+  );
+  assert.deepEqual(
+    rejections((ir) => (ir.scenes[1].params.from = "navbar")),
+    ["scenes.1.params.from"],
+  );
+  assert.deepEqual(
+    rejections((ir) => (ir.scenes[1].params.screenMeta = "{}")),
+    ["scenes.1.params.screenMeta"],
   );
   assert.deepEqual(
     rejections((ir) => (ir.screens.home.regions.wide = [0, 0, 5000, 10])),
@@ -251,9 +255,9 @@ test("audio can follow a scene, and two voices may not overlap", () => {
       rmSync(file);
     }
   };
-  // "answer" starts at 5.3 s, so a clip 0.2 s into it starts at 5.5 s.
+  // "answer" starts at 7.4 s, so a clip 0.2 s into it starts at 7.6 s.
   assert.deepEqual(starts([{ id: "vo", role: "voice", scene: "answer", start: 0.2, duration: 1.4 }]), [
-    ["vo", 5.5],
+    ["vo", 7.6],
   ]);
   assert.deepEqual(starts([{ id: "vo", role: "voice", scene: "nowhere", duration: 1 }]), ["audio.0.scene"]);
   assert.deepEqual(
@@ -278,7 +282,7 @@ test("every recipe declares defaults HyperFrames accepts", () => {
   const recipes = listRecipes();
   assert.deepEqual(
     recipes.map((r) => r.name),
-    ["brand-close", "luxury-product-reveal", "product-shot", "statement"],
+    ["brand-close", "luxury-product-reveal", "product-shot", "scatter", "statement"],
   );
   for (const r of recipes)
     for (const v of r.variables) assert.notEqual(v.default, undefined, `${r.name}.${v.id} needs a default`);

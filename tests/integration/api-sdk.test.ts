@@ -50,7 +50,7 @@ test("remote and local give the same plan for the same project", async () => {
   const [a, b] = [await remote.validate("showcase"), await local.validate("showcase")];
   assert.ok(a.ok && b.ok);
   assert.deepEqual(a, b);
-  assert.equal(a.scenes.length, 9);
+  assert.equal(a.scenes.length, 10);
 });
 
 test("a film can be made through the SDK: create, save, validate, compile", async () => {
@@ -113,7 +113,7 @@ test("errors carry a status and a code", async () => {
 test("recipes, schema and the OpenAPI document are served", async () => {
   assert.deepEqual(
     (await remote.recipes.list()).map((r) => r.name),
-    ["brand-close", "luxury-product-reveal", "product-shot", "statement"],
+    ["brand-close", "luxury-product-reveal", "product-shot", "scatter", "statement"],
   );
   assert.equal((await remote.recipes.get("product-shot")).showsScreen, true);
   const spec = await (

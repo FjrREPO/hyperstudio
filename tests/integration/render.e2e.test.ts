@@ -39,7 +39,7 @@ test("an SDK client renders a film through the API and gets the file back", {
     assert.equal(done.state, "done", done.tail);
     assert.ok(existsSync(done.output));
     const file = await studio.renders.inspect("showcase");
-    assert.equal(file.seconds, 15);
+    assert.equal(file.seconds, 17);
     assert.equal(file.matchesPlan, true);
     assert.equal(file.hasVideo, true);
   } finally {

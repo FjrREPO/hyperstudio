@@ -112,7 +112,7 @@
       "type": "enum",
       "role": "layout",
       "label": "Perspective",
-      "description": "Turn the screen in perspective. A 2.5D transform of the flat screenshot.",
+      "description": "Turn the screen in perspective. A 2.5D transform of the flat screenshot: it eases from a slightly stronger angle to this one.",
       "default": "none",
       "options": [
         {
@@ -126,6 +126,40 @@
         {
           "value": "right",
           "label": "Turned to the right"
+        },
+        {
+          "value": "up",
+          "label": "Leaning back"
+        },
+        {
+          "value": "desk",
+          "label": "Lying on a desk, seen from above at an angle"
+        }
+      ]
+    },
+    {
+      "id": "focus",
+      "type": "enum",
+      "role": "layout",
+      "label": "Focus",
+      "description": "Which part of the frame stays sharp; the rest is softly blurred, as with a shallow depth of field. Use it with a tilt.",
+      "default": "all",
+      "options": [
+        {
+          "value": "all",
+          "label": "Everything sharp"
+        },
+        {
+          "value": "band",
+          "label": "A sharp band across the middle"
+        },
+        {
+          "value": "near",
+          "label": "Sharp below, soft at the top (the far edge)"
+        },
+        {
+          "value": "centre",
+          "label": "Sharp in the centre"
         }
       ]
     },

@@ -83,7 +83,7 @@ test("regression: no HyperFrames-invalid output", () => {
   // the scene root must carry this scene's duration, not the recipe's native one
   assert.match(
     readFileSync(join(out, "compositions/share.html"), "utf8"),
-    /id="root"[^>]*data-duration="1.1"/,
+    /id="root"[^>]*data-duration="1.2"/,
   );
   // an apostrophe in copy must survive the single-quoted attribute it travels in
   assert.match(

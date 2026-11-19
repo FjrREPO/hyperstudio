@@ -67,9 +67,15 @@ review step checks the frames against them.
 ## `style`
 
 The film's visual system, set once: a map of variable id to value. It reaches every scene whose recipe
-declares that id. The shared ids are `background`, `ink`, `accent`, `displayFont` and `textFont`. Two keys are
-read by the compiler itself for the stage that sits behind every scene: `background` (hex colour) and `light`
-(`none` or `soft`).
+declares that id. The shared ids are `background`, `ink`, `accent`, `displayFont` and `textFont`. Three keys are
+read by the compiler itself for the stage that sits behind every scene: `background` (hex colour), `light`
+(`none`, `soft` or `aurora`) and `glow` (hex colour, optional).
+
+| `light`  | The stage                                                                                                                                                                                                |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `none`   | The flat background colour                                                                                                                                                                               |
+| `soft`   | One pale light that moves once across the film. For light, calm films                                                                                                                                    |
+| `aurora` | Three large glows that drift once across the film, under a vignette and fine grain. The glows take the film's `accent`, and `glow` as a second hue. For a stage with depth, usually on a dark background |
 
 A scene **cannot** set these variables. A key no recipe in the film declares is an error.
 

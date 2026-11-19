@@ -29,8 +29,8 @@ test("compile writes a complete HyperFrames project", () => {
     assert.ok(existsSync(join(out, f)), f);
 
   const index = readFileSync(join(out, "index.html"), "utf8");
-  assert.match(index, /data-composition-id="main"[^>]*data-duration="15"/);
-  assert.equal(index.match(/data-composition-src="compositions\//g)?.length, 9);
+  assert.match(index, /data-composition-id="main"[^>]*data-duration="17"/);
+  assert.equal(index.match(/data-composition-src="compositions\//g)?.length, 10);
   assert.match(index, /<audio id="sfx" class="clip" src="assets\/ui-sfx.m4a"/);
   assert.match(index, /window.__timelines\["main"\] = tl/);
 });
@@ -38,10 +38,10 @@ test("compile writes a complete HyperFrames project", () => {
 test("the default output is a readable summary", () => {
   const r = run("compile", EXAMPLE, "--validate-only");
   assert.equal(r.code, 0, r.err);
-  assert.match(r.out, /✓ Lumen - 15 second product showcase/);
-  assert.match(r.out, /9 shots \(average 1\.7s\)/);
+  assert.match(r.out, /✓ Lumen - 17 second product showcase/);
+  assert.match(r.out, /10 shots \(average 1\.7s\)/);
   assert.match(r.out, /product-shot\s+hook/);
-  assert.match(r.out, /Placeholders \(7\)/);
+  assert.match(r.out, /Placeholders \(12\)/);
   assert.match(r.out, /Validated\. Nothing written\./);
 });
 
@@ -86,7 +86,7 @@ test("recipes lists every recipe and shows one in detail", () => {
   const list = JSON.parse(run("recipes", "--json").out);
   assert.deepEqual(
     list.map((r: { name: string }) => r.name),
-    ["brand-close", "luxury-product-reveal", "product-shot", "statement"],
+    ["brand-close", "luxury-product-reveal", "product-shot", "scatter", "statement"],
   );
   const one = run("recipes", "product-shot");
   assert.equal(one.code, 0, one.err);
@@ -191,7 +191,7 @@ test("audio: inspect reads a real file", { skip: !hasFfprobe && "ffprobe is not 
   const info = JSON.parse(
     run("audio", "inspect", join(ROOT, "examples/saas-product-showcase/assets/ui-sfx.m4a"), "--json").out,
   );
-  assert.equal(Math.round(info.seconds), 15);
+  assert.equal(Math.round(info.seconds), 17);
   assert.equal(info.codec, "aac");
 });
 

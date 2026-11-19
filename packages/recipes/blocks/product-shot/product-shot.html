@@ -44,8 +44,15 @@
       overflow: hidden;
       background: #fff;
       box-shadow:
-        0 0 0 1px rgba(23, 21, 15, 0.1),
-        0 30px 90px rgba(23, 21, 15, 0.16);
+        0 0 0 1px rgba(128, 128, 128, 0.22),
+        0 14px 34px rgba(0, 0, 0, 0.14),
+        0 50px 130px rgba(0, 0, 0, 0.3);
+    }
+    /* Depth of field: blurs what is behind it, through a mask that leaves the plane of focus sharp. */
+    #product-shot-dof {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
     }
     /* The whole screenshot. When a component is isolated, the world shrinks to it and this slides under. */
     #product-shot-sheet {
@@ -133,6 +140,7 @@
           </div>
         </div>
       </div>
+      <div id="product-shot-dof" data-layout-allow-occlusion data-layout-ignore></div>
       <div id="product-shot-label"></div>
     </div>
   </div>
@@ -163,6 +171,7 @@
           fill: 0.78,
           move: "settle",
           tilt: "none",
+          focus: "all",
           enter: "none",
           cursor: "",
           click: true,
@@ -280,10 +289,22 @@
         { x: b.x, y: b.y, scale: b.scale, duration: end, ease: ease },
         0,
       );
-      if (v.tilt === "left" || v.tilt === "right") {
-        var turn = v.tilt === "left" ? 1 : -1;
-        tl.fromTo($("rig"), { rotationY: 14 * turn, rotationX: 5 }, { rotationY: 9 * turn, rotationX: 3, duration: end, ease: "power1.out" }, 0);
+      // Perspective: the rig eases from a stronger angle to its own, so the turn reads as a camera move.
+      // [rotationX, rotationY, rotationZ] at the start, then at the end.
+      var turn = { left: [6, 22, 0, 3, 14, 0], right: [6, -22, 0, 3, -14, 0], up: [26, 0, 0, 16, 0, 0], desk: [50, 0, -24, 42, 0, -17] }[v.tilt];
+      if (turn) {
+        var from = { rotationX: turn[0], rotationY: turn[1], rotationZ: turn[2], transformOrigin: "50% 50%" };
+        tl.fromTo($("rig"), from, { rotationX: turn[3], rotationY: turn[4], rotationZ: turn[5], duration: end, ease: "power2.out" }, 0);
       }
+      // Focus: which part of the frame stays sharp. Still for the whole shot.
+      var mask = {
+        band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
+        near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
+        centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)",
+      }[v.focus];
+      var dof = $("dof");
+      if (mask) dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
+      else hide(dof);
       if (v.enter === "rise") tl.fromTo($("rig"), { opacity: 0, y: 5 * U }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0);
 
       // Typing: the text is drawn over the input, in the screenshot's own space.
