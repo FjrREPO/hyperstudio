@@ -10,3 +10,4 @@ renders/
 .env
 .env.*
 !.env.example
+apps/landing/
