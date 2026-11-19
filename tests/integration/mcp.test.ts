@@ -28,7 +28,7 @@ const call = async (name: string, args: Record<string, unknown> = {}) => {
 };
 
 before(async () => {
-  cpSync(join(ROOT, "examples/saas-product-showcase"), join(workspace, "showcase"), {
+  cpSync(join(ROOT, "tests/fixtures/films/saas-product-showcase"), join(workspace, "showcase"), {
     recursive: true,
     filter: (source) => !/\/(build|renders|product|\.tmp-[^/]*)(\/|$)/.test(source),
   });

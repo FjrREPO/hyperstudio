@@ -13,7 +13,7 @@ import { HyperStudio, HyperStudioError } from "../../packages/sdk/src/index.ts";
 const ROOT = join(import.meta.dirname, "../..");
 const KEY = "test-key-0123456789abcdef";
 const workspace = mkdtempSync(join(tmpdir(), "hs-api-"));
-cpSync(join(ROOT, "examples/saas-product-showcase"), join(workspace, "showcase"), {
+cpSync(join(ROOT, "tests/fixtures/films/saas-product-showcase"), join(workspace, "showcase"), {
   recursive: true,
   filter: (source) => !/\/(build|renders|product|\.tmp-[^/]*)(\/|$)/.test(source),
 });
@@ -113,7 +113,7 @@ test("errors carry a status and a code", async () => {
 test("recipes, schema and the OpenAPI document are served", async () => {
   assert.deepEqual(
     (await remote.recipes.list()).map((r) => r.name),
-    ["brand-close", "luxury-product-reveal", "product-shot", "scatter", "statement"],
+    ["brand-close", "luxury-product-reveal", "product-shot", "product-take", "scatter", "statement"],
   );
   assert.equal((await remote.recipes.get("product-shot")).showsScreen, true);
   const spec = await (

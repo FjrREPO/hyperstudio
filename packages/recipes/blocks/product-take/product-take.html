@@ -1,0 +1,225 @@
+<template>
+  <!--
+    PRODUCT TAKE
+
+    One continuous take of a live interface. The product's own HTML is mounted here (not a screenshot), and
+    the scene's beats drive it: the cursor travels and clicks, text is typed, the interface changes state,
+    parts of it arrive or are drawn, and the camera follows. The compiler supplies the page (#product-take-ui)
+    and the beats; variables are declared in registry-item.json.
+
+    The page lives in a shadow root, so its styles and the film's never meet. Regions are the page's own
+    data-region elements, measured here in the state they are used in.
+
+    Conventions (docs/RECIPE-DEVELOPMENT.md): the composition id is the recipe name and every element id
+    starts with it; every visible state is a function of timeline time.
+  -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #product-take-stage { --pt-accent: #2747f0; position: absolute; inset: 0; overflow: hidden; perspective: 2600px; }
+    #product-take-rig { position: absolute; inset: 0; }
+    /* The camera: GSAP owns its transform. Everything inside is in the page's own pixels. */
+    #product-take-cam { position: absolute; left: 0; top: 0; }
+    #product-take-frame {
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.22), 0 14px 34px rgba(0, 0, 0, 0.14), 0 50px 130px rgba(0, 0, 0, 0.3);
+    }
+    #product-take-bar { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; background: #f1f1f3; border-bottom: 1px solid #e2e2e6; }
+    #product-take-bar i { width: 12px; height: 12px; border-radius: 50%; background: #d3d4da; }
+    #product-take-over { position: absolute; left: 0; top: 0; pointer-events: none; }
+    #product-take-outline { position: absolute; border: 2.5px solid var(--pt-accent); border-radius: 14px; background: color-mix(in srgb, var(--pt-accent) 6%, transparent); }
+    #product-take-ripple { position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: color-mix(in srgb, var(--pt-accent) 30%, transparent); }
+    #product-take-cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28)); }
+    #product-take-dof { position: absolute; inset: 0; pointer-events: none; }
+  </style>
+
+  <div id="root" data-composition-id="product-take" data-start="0" data-duration="6" data-width="1920" data-height="1080">
+    <div id="product-take-stage">
+      <div id="product-take-rig">
+        <div id="product-take-cam" data-layout-allow-overflow>
+          <div id="product-take-frame" data-layout-allow-overflow>
+            <div id="product-take-bar"><i></i><i></i><i></i></div>
+            <div id="product-take-world" data-layout-ignore></div>
+          </div>
+          <div id="product-take-over" data-layout-allow-overflow>
+            <div id="product-take-outline" data-layout-allow-occlusion></div>
+            <div id="product-take-ripple" data-layout-allow-occlusion></div>
+            <svg id="product-take-cursor" viewBox="0 0 30 30" data-layout-allow-occlusion>
+              <path d="M5 3l18 9.6-7.6 2.2-2.6 7.6z" fill="#17150f" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div id="product-take-dof" data-layout-allow-occlusion data-layout-ignore></div>
+    </div>
+    <script type="application/json" id="product-take-ui">{}</script>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var ID = "product-take";
+      var $ = function (name) { return document.getElementById(ID + "-" + name); };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 6;
+      var U = Math.min(W, H) / 100;
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign(
+        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 2.2, chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, accent: "#2747f0" },
+        given,
+      );
+      var parse = function (text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } };
+      var meta = parse(v.screenMeta, { width: 1440, height: 900 });
+      var beats = parse(v.beats, []).slice().sort(function (a, b) { return a.at - b.at; });
+      var ui = parse($("ui").textContent, {});
+      stage.style.setProperty("--pt-accent", v.accent);
+
+      // ── Mount the page ──
+      var world = $("world");
+      world.style.width = meta.width + "px";
+      world.style.height = meta.height + "px";
+      var root = world.attachShadow({ mode: "open" });
+      root.innerHTML = "<style>" + (ui.css || "") + "</style>" + (ui.html || "");
+      var app = root.querySelector(".app") || world;
+      var bar = v.chrome === "window" ? 38 : 0;
+      if (!bar) $("bar").style.display = "none";
+      $("frame").style.borderRadius = (Number(v.radius) || 0) + "px";
+      var over = $("over");
+      over.style.top = bar + "px";
+
+      // ── States: which one the page is in at any time ──
+      var first = String(v.state || app.getAttribute("data-state") || "");
+      var changes = [{ at: 0, state: first }];
+      beats.forEach(function (b) { if (b.state) changes.push({ at: b.at + (b.do === "click" ? 0.07 : 0), state: b.state }); });
+      var stateAt = function (t) {
+        var s = first;
+        changes.forEach(function (c) { if (c.at <= t + 1e-6) s = c.state; });
+        return s;
+      };
+      // A region's rectangle in the page's pixels, measured in the state it is used in.
+      var rect = function (name, t) {
+        if (!name || name === "window") return [0, 0, meta.width, meta.height];
+        app.setAttribute("data-state", stateAt(t));
+        var el = root.querySelector('[data-region="' + name + '"]');
+        if (!el) return null;
+        var a = app.getBoundingClientRect();
+        var r = el.getBoundingClientRect();
+        var k = a.width / meta.width || 1;
+        return r.width ? [(r.left - a.left) / k, (r.top - a.top) / k, r.width / k, r.height / k] : null;
+      };
+      var find = function (name) { return root.querySelector('[data-region="' + name + '"]'); };
+      var whole = [0, 0, meta.width, meta.height];
+
+      // ── Measure everything before any tween touches a transform ──
+      var fill = Number(v.fill) || 0.86;
+      var frame = function (r, f) {
+        var s = Math.min((W * f) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), Number(v.maxZoom) || 2.2);
+        return { scale: s, x: W / 2 - s * (r[0] + r[2] / 2), y: H / 2 - s * (r[1] + bar + r[3] / 2) };
+      };
+      var plan = beats.map(function (b) {
+        var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
+        return { b: b, r: rect(b.target, b.do === "camera" ? after : b.at) || whole };
+      });
+      var start = frame(rect(v.from, 0) || whole, fill);
+      app.setAttribute("data-state", first);
+
+      // ── Timeline ──
+      var tl = gsap.timeline({ paused: true });
+      var cam = $("cam");
+      var cursor = $("cursor");
+      var ripple = $("ripple");
+      var outline = $("outline");
+      var here = start;
+      var pointer = null;
+      tl.fromTo(cam, { x: start.x, y: start.y, scale: start.scale, transformOrigin: "0 0" }, { x: start.x, y: start.y, scale: start.scale, duration: 0.01 }, 0);
+      gsap.set([ripple, outline], { opacity: 0 });
+      gsap.set(cursor, { opacity: 0 });
+
+      plan.forEach(function (p) {
+        var b = p.b;
+        var r = p.r;
+        var cx = r[0] + r[2] * 0.62;
+        var cy = r[1] + r[3] * 0.62;
+        if (b.do === "camera") {
+          var to = frame(r, Number(b.fill) || fill);
+          tl.fromTo(cam, { x: here.x, y: here.y, scale: here.scale }, { x: to.x, y: to.y, scale: to.scale, duration: Number(b.over) || 0.9, ease: b.ease || "power3.inOut", immediateRender: false }, b.at);
+          here = to;
+        } else if (b.do === "cursor" || b.do === "click") {
+          // The cursor arrives at `at`; it leaves its last place just in time to get there.
+          var travel = Math.min(Number(b.over) || 0.6, b.at);
+          var from = pointer || { x: cx + 260, y: cy + 170 };
+          if (!pointer) tl.fromTo(cursor, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, Math.max(0, b.at - travel));
+          tl.fromTo(cursor, { x: from.x - 5 }, { x: cx - 5, duration: travel, ease: "power2.inOut", immediateRender: !pointer }, b.at - travel);
+          tl.fromTo(cursor, { y: from.y - 3 }, { y: cy - 3, duration: travel, ease: "power3.out", immediateRender: !pointer }, b.at - travel);
+          pointer = { x: cx, y: cy };
+          if (b.do === "click") {
+            tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.07 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%", immediateRender: false }, b.at);
+            tl.fromTo(ripple, { x: cx, y: cy, opacity: 0.9, scale: 0.3 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: "power2.out", immediateRender: false }, b.at);
+          }
+        } else if (b.do === "reveal") {
+          var host = find(b.target);
+          var parts = host ? Array.prototype.slice.call(host.querySelectorAll("[data-reveal]")) : [];
+          if (!parts.length && host) parts = Array.prototype.slice.call(host.children);
+          var each = (Number(b.over) || 0.9) / Math.max(parts.length, 1);
+          tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
+        } else if (b.do === "draw") {
+          var plot = find(b.target);
+          var lines = plot ? Array.prototype.slice.call(plot.querySelectorAll("[data-draw]")) : [];
+          lines.forEach(function (line) {
+            var n = line.getTotalLength();
+            line.style.strokeDasharray = n;
+            tl.fromTo(line, { strokeDashoffset: n }, { strokeDashoffset: 0, duration: Number(b.over) || 0.9, ease: "power2.inOut" }, b.at);
+          });
+          if (plot) tl.fromTo(plot.querySelectorAll("[data-fade]"), { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
+        } else if (b.do === "highlight") {
+          var pad = 8;
+          tl.set(outline, { left: r[0] - pad, top: r[1] - pad, width: r[2] + pad * 2, height: r[3] + pad * 2 }, b.at);
+          tl.fromTo(outline, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out", immediateRender: false }, b.at);
+          if (b.over) tl.fromTo(outline, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "none", immediateRender: false }, b.at + Number(b.over));
+        }
+      });
+
+      // State and typing are set from the clock: HyperFrames seeks with events suppressed, so a property
+      // setter is the one thing that runs at every seek, in any order.
+      var typing = beats.filter(function (b) { return b.do === "type" && b.text; }).map(function (b) {
+        var el = find(b.target);
+        return { el: el, text: String(b.text), at: b.at, end: b.at + (Number(b.over) || String(b.text).length * 0.042), placeholder: el ? el.textContent : "" };
+      });
+      var shown = null;
+      var clock = Object.defineProperty({}, "t", {
+        get: function () { return 0; },
+        set: function (t) {
+          var s = stateAt(t);
+          if (s !== shown) app.setAttribute("data-state", (shown = s));
+          typing.forEach(function (ty) {
+            if (!ty.el) return;
+            var n = Math.round(Math.max(0, Math.min(1, (t - ty.at) / (ty.end - ty.at))) * ty.text.length);
+            ty.el.textContent = t < ty.at ? ty.placeholder : ty.text.slice(0, n) + (n < ty.text.length ? "▏" : "");
+            if (t >= ty.at) ty.el.setAttribute("data-typed", "");
+            else ty.el.removeAttribute("data-typed");
+          });
+        },
+      });
+      tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
+
+      // The camera never comes to a dead stop: a slow push runs under every move, for the whole take.
+      if (v.drift !== false && v.drift !== "false") tl.fromTo($("rig"), { scale: 1 }, { scale: 1.045, duration: D, ease: "none" }, 0);
+      // Perspective and focus, as in product-shot: the turn eases for the whole take.
+      var turn = { left: [5, 18, 0, 3, 11, 0], right: [5, -18, 0, 3, -11, 0], up: [22, 0, 0, 14, 0, 0], desk: [48, 0, -22, 42, 0, -17] }[v.tilt];
+      if (turn) tl.fromTo($("rig"), { rotationX: turn[0], rotationY: turn[1], rotationZ: turn[2], transformOrigin: "50% 50%" }, { rotationX: turn[3], rotationY: turn[4], rotationZ: turn[5], duration: D - 0.04, ease: "power2.out" }, 0);
+      var mask = {
+        band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
+        near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
+        centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)",
+      }[v.focus];
+      if (mask) $("dof").style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
+      else $("dof").style.display = "none";
+
+      tl.set({}, {}, D);
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>

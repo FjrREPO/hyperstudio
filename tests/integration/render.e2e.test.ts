@@ -16,7 +16,7 @@ test("an SDK client renders a film through the API and gets the file back", {
   timeout: 300_000,
 }, async () => {
   const workspace = mkdtempSync(join(tmpdir(), "hs-render-"));
-  cpSync(join(import.meta.dirname, "../../examples/saas-product-showcase"), join(workspace, "showcase"), {
+  cpSync(join(import.meta.dirname, "../fixtures/films/saas-product-showcase"), join(workspace, "showcase"), {
     recursive: true,
     filter: (source) => !/\/(build|renders|product|\.tmp-[^/]*)(\/|$)/.test(source),
   });

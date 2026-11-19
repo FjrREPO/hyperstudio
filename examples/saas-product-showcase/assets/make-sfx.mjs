@@ -2,13 +2,40 @@
 // Synthesises the interface sounds for the benchmark film: key ticks while the question is typed, a click
 // for each cursor click, a soft tone when the answer is shared and when the brand arrives.
 // These are PLACEHOLDER sounds made from sine waves and noise. A published film needs real sound design.
-// Usage: node assets/make-sfx.mjs   (needs ffmpeg) → assets/ui-sfx.m4a
+// Usage: node assets/make-sfx.mjs [light|dark]   (needs ffmpeg) → assets/ui-sfx.m4a or ui-sfx-dark.m4a
 import { execFileSync } from "node:child_process";
 import { rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+// One sound file per cut of the film. Timings follow the beats in video.json and video-dark.json:
+// if a beat moves there, move the matching time here.
+const FILMS = {
+  light: {
+    file: "ui-sfx.m4a",
+    length: 14.7,
+    typeFrom: 2.0,
+    typeEvery: 0.042,
+    send: 3.8,
+    answer: 4.8,
+    share: 8.4,
+    close: 12.2,
+  },
+  dark: {
+    file: "ui-sfx-dark.m4a",
+    length: 15.6,
+    typeFrom: 2.5,
+    typeEvery: 0.039,
+    send: 4.3,
+    answer: 5.4,
+    share: 11.5,
+    close: 13.1,
+  },
+};
+const film = FILMS[process.argv[2] ?? "light"];
+if (!film) throw new Error(`unknown film; use one of: ${Object.keys(FILMS).join(", ")}`);
+
 const RATE = 48000;
-const LENGTH = 17;
+const LENGTH = film.length;
 const out = new Float32Array(RATE * LENGTH);
 let seed = 20261119;
 const random = () => {
@@ -36,13 +63,12 @@ const tone = (at, hz) => {
 };
 
 // Timings follow video.json. If a shot's length changes there, change the matching time here.
-const note = (at) => add(at, 0.12, 0.03, 0.12, sine(520 + random() * 60));
-for (let i = 0; i < 5; i++) note(0.05 + i * 0.13); // problem: each note lands
-for (let i = 0, t = 2.82; i < 36; i++, t += 0.029 + (random() + 1) * 0.002) tick(t); // hook: the question is typed
-click(6.9); // reveal: send
-click(11.19); // share
-tone(11.65, 660); // shared: link copied
-tone(14.5, 440); // close: the brand arrives
+for (let i = 0, t = film.typeFrom; i < 36; i++, t += film.typeEvery) tick(t); // the question is typed
+click(film.send); // send
+tone(film.answer, 520); // the answer arrives
+click(film.share); // share
+tone(film.share + 0.12, 660); // link copied
+tone(film.close, 440); // the brand arrives
 
 const wav = Buffer.alloc(44 + out.length * 2);
 wav.write("RIFF", 0);
@@ -62,19 +88,7 @@ for (const [i, s] of out.entries())
 
 const here = import.meta.dirname;
 const tmp = join(here, "ui-sfx.wav");
+const target = join(here, film.file);
 writeFileSync(tmp, wav);
-execFileSync("ffmpeg", [
-  "-v",
-  "error",
-  "-y",
-  "-i",
-  tmp,
-  "-ac",
-  "2",
-  "-c:a",
-  "aac",
-  "-b:a",
-  "128k",
-  join(here, "ui-sfx.m4a"),
-]);
+execFileSync("ffmpeg", ["-v", "error", "-y", "-i", tmp, "-ac", "2", "-c:a", "aac", "-b:a", "128k", target]);
 rmSync(tmp);

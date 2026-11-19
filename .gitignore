@@ -11,3 +11,4 @@ renders/
 .env.*
 !.env.example
 apps/landing/
+build-*/

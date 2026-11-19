@@ -1,19 +1,19 @@
 {
   "project": {
-    "title": "Lumen - 17 second product showcase",
+    "title": "Lumen - 14.7 second product film",
     "fps": 30,
     "aspectRatio": "16:9",
-    "duration": 17.0
+    "duration": 14.7
   },
   "direction": {
-    "concept": "A revenue question that used to be a ticket is asked and answered inside the product, start to finish.",
+    "concept": "The film is one question asked and answered inside the product, in a single unbroken take.",
     "audience": "People who run a subscription business and wait on someone else for every revenue number.",
     "message": "You can ask Lumen a revenue question in plain words and have the answer before the meeting.",
-    "tone": "Calm and exact, like a tool that already works; nothing is sold harder than it is shown.",
-    "palette": "A near-black stage with one cobalt glow and one warm glow, the product's white interface as the only bright surface, and cobalt as the single accent.",
-    "typography": "Inter throughout, the product’s own face; copy is small, sentence case, one line at a time.",
-    "motion": "One camera move per shot on the real interface, turned in perspective with a shallow focus on wide shots; cursor and typing are the only other things that move.",
-    "pacing": "Ten shots in seventeen seconds, cut on action; the film opens on the clutter, and slows only for the benefit line and the close."
+    "tone": "Plain and exact, like a screen recording made by someone with taste; the product does the talking.",
+    "palette": "A cool grey stage with nothing on it, the product's white interface, ink for type, and cobalt only where the product itself uses it.",
+    "typography": "Inter throughout, set left on the film's margin; copy is small and never centred over the product.",
+    "motion": "The camera follows the cursor through the interface and never cuts while an action is in progress; nothing moves that the user did not cause.",
+    "pacing": "One long take carries the film; type holds are short and the only cuts fall before and after the product."
   },
   "brand": {
     "name": "Lumen",
@@ -21,213 +21,152 @@
     "url": "lumen.example"
   },
   "style": {
-    "background": "#07080d",
-    "ink": "#f2f2ee",
-    "accent": "#4f6bff",
-    "glow": "#ff6a3d",
+    "background": "#e9ebf0",
+    "ink": "#0d0e12",
+    "accent": "#3b5bff",
     "displayFont": "Inter",
     "textFont": "Inter",
-    "light": "aurora"
+    "light": "none"
   },
   "screens": {
-    "home": {
-      "src": "screens/home.png",
+    "app": {
+      "html": "product/index.html",
       "width": 1440,
       "height": 900,
-      "origin": "placeholder",
-      "regions": {
-        "window": [0, 0, 1440, 900],
-        "connected": [1257, 15, 155, 30],
-        "greeting": [454, 178, 780, 54],
-        "ask-bar": [454, 293, 780, 72],
-        "ask-input": [479, 315, 680, 28],
-        "send": [1173, 305, 48, 48]
-      }
-    },
-    "asked": {
-      "src": "screens/asked.png",
-      "width": 1440,
-      "height": 900,
-      "origin": "placeholder",
-      "regions": {
-        "window": [0, 0, 1440, 900],
-        "connected": [1257, 15, 155, 30],
-        "greeting": [454, 178, 780, 54],
-        "ask-bar": [454, 293, 780, 72],
-        "ask-input": [479, 315, 680, 28],
-        "send": [1173, 305, 48, 48]
-      }
-    },
-    "answer": {
-      "src": "screens/answer.png",
-      "width": 1440,
-      "height": 900,
-      "origin": "placeholder",
-      "regions": {
-        "window": [0, 0, 1440, 900],
-        "connected": [1257, 15, 155, 30],
-        "question": [892, 94, 342, 46],
-        "answer": [454, 162, 780, 456],
-        "answer-line": [485, 223, 718, 38],
-        "chart": [485, 311, 718, 208],
-        "plot": [485, 320, 404, 190],
-        "bar-team": [915, 311, 288, 64],
-        "team-value": [1136, 332, 52, 21],
-        "foot": [485, 539, 718, 56],
-        "sources": [485, 567, 316, 16],
-        "actions": [994, 556, 209, 39],
-        "share-button": [1128, 556, 75, 39]
-      }
-    },
-    "share": {
-      "src": "screens/share.png",
-      "width": 1440,
-      "height": 900,
-      "origin": "placeholder",
-      "regions": {
-        "window": [0, 0, 1440, 900],
-        "connected": [1257, 15, 155, 30],
-        "question": [892, 94, 342, 46],
-        "answer": [454, 162, 780, 456],
-        "answer-line": [485, 223, 718, 38],
-        "chart": [485, 311, 718, 208],
-        "plot": [485, 320, 404, 190],
-        "bar-team": [915, 311, 288, 64],
-        "team-value": [1136, 332, 52, 21],
-        "foot": [485, 539, 718, 56],
-        "sources": [485, 567, 316, 16],
-        "actions": [994, 556, 209, 39],
-        "share-button": [1128, 556, 75, 39],
-        "share-popover": [863, 417, 340, 124]
-      }
+      "origin": "placeholder"
     }
   },
   "scenes": [
     {
-      "id": "problem",
-      "recipe": "scatter",
-      "duration": 2.6,
-      "purpose": "Open on what the viewer lives with: a simple revenue question scattered across messages, files and waiting.",
-      "text": {
-        "note1": "Which plan grew fastest last quarter?",
-        "note2": "Asked in #finance, 3 days ago",
-        "note3": "q3_export_final_v7.csv",
-        "note4": "Can you pull this before Monday?",
-        "note5": "Still waiting on the numbers",
-        "line": "Every number is a ticket."
-      }
-    },
-    {
-      "id": "hook",
-      "recipe": "product-shot",
-      "duration": 1.8,
-      "purpose": "The same question, now typed into the product instead of sent to a person.",
-      "screen": "home",
-      "text": {
-        "typeText": "Which plan grew fastest last quarter?"
-      },
-      "params": {
-        "isolate": "ask-bar",
-        "radius": 20,
-        "from": "ask-bar",
-        "typeIn": "ask-input",
-        "fill": 0.74,
-        "tilt": "up"
-      }
-    },
-    {
-      "id": "meet",
+      "id": "open",
       "recipe": "statement",
       "duration": 1.2,
-      "purpose": "Name the product the viewer has just watched being used.",
+      "purpose": "Say what the product is for in three words, before it is seen.",
       "text": {
-        "line1": "Meet Lumen.",
-        "emphasis": "Lumen."
+        "line1": "Ask your revenue."
       },
       "params": {
-        "size": "display"
+        "size": "display",
+        "align": "left"
       }
     },
     {
-      "id": "reveal",
-      "recipe": "product-shot",
-      "duration": 1.8,
-      "purpose": "Show the whole product for the first time, and send the question.",
-      "screen": "asked",
+      "id": "ask",
+      "recipe": "product-take",
+      "duration": 9.2,
+      "screen": "app",
+      "purpose": "One unbroken take: the question is typed and sent, the product reads the billing data, the answer arrives with its chart, and it is shared in a click.",
       "params": {
         "from": "window",
-        "to": "ask-bar",
-        "fill": 0.92,
-        "move": "ease",
-        "tilt": "left",
-        "focus": "centre",
-        "cursor": "send",
-        "clickAt": 0.72
-      }
-    },
-    {
-      "id": "answer",
-      "recipe": "product-shot",
-      "duration": 1.6,
-      "purpose": "The product answers in one sentence with the chart behind it: this is the value of the product.",
-      "screen": "answer",
-      "text": {
-        "label": "An answer, not a dashboard",
-        "emphasis": "answer"
+        "fill": 0.9
       },
-      "params": {
-        "isolate": "answer",
-        "radius": 22,
-        "from": "answer",
-        "fill": 0.7,
-        "labelAt": "bottom-center"
-      }
-    },
-    {
-      "id": "proof",
-      "recipe": "product-shot",
-      "duration": 1.4,
-      "purpose": "Push in to the row the answer rests on, so the claim is seen in the product itself.",
-      "screen": "answer",
-      "params": {
-        "isolate": "answer",
-        "radius": 22,
-        "from": "chart",
-        "to": "bar-team",
-        "highlight": "bar-team",
-        "fill": 0.62,
-        "move": "settle",
-        "tilt": "right"
-      }
-    },
-    {
-      "id": "share",
-      "recipe": "product-shot",
-      "duration": 1.2,
-      "purpose": "The next step a team takes: pass the answer on.",
-      "screen": "answer",
-      "params": {
-        "from": "answer",
-        "to": "actions",
-        "fill": 0.56,
-        "move": "ease",
-        "cursor": "share-button",
-        "clickAt": 0.66
-      }
-    },
-    {
-      "id": "shared",
-      "recipe": "product-shot",
-      "duration": 1.1,
-      "purpose": "The click worked: the answer is now a link the team can open.",
-      "screen": "share",
-      "params": {
-        "isolate": "answer",
-        "radius": 22,
-        "from": "share-popover",
-        "fill": 0.5,
-        "tilt": "up"
-      }
+      "beats": [
+        {
+          "at": 0.1,
+          "do": "camera",
+          "target": "ask-bar",
+          "fill": 0.6,
+          "over": 1.2
+        },
+        {
+          "at": 0.6,
+          "do": "cursor",
+          "target": "ask-input",
+          "over": 0.5
+        },
+        {
+          "at": 0.8,
+          "do": "type",
+          "target": "ask-input",
+          "text": "Which plan grew fastest last quarter?",
+          "over": 1.5
+        },
+        {
+          "at": 2.6,
+          "do": "click",
+          "target": "send",
+          "state": "thinking",
+          "over": 0.4
+        },
+        {
+          "at": 2.7,
+          "do": "camera",
+          "target": "thinking",
+          "fill": 0.74,
+          "over": 0.8
+        },
+        {
+          "at": 3.6,
+          "do": "state",
+          "state": "answer"
+        },
+        {
+          "at": 3.6,
+          "do": "reveal",
+          "target": "answer",
+          "over": 1.0
+        },
+        {
+          "at": 3.7,
+          "do": "camera",
+          "target": "answer",
+          "fill": 0.8,
+          "over": 0.9
+        },
+        {
+          "at": 4.0,
+          "do": "draw",
+          "target": "plot",
+          "over": 1.0
+        },
+        {
+          "at": 5.1,
+          "do": "camera",
+          "target": "bar-team",
+          "fill": 0.46,
+          "over": 0.9
+        },
+        {
+          "at": 5.3,
+          "do": "cursor",
+          "target": "bar-team",
+          "over": 0.6
+        },
+        {
+          "at": 5.4,
+          "do": "highlight",
+          "target": "bar-team",
+          "over": 1.0
+        },
+        {
+          "at": 6.4,
+          "do": "camera",
+          "target": "foot",
+          "fill": 0.7,
+          "over": 0.8
+        },
+        {
+          "at": 7.2,
+          "do": "click",
+          "target": "share-button",
+          "state": "share",
+          "over": 0.7
+        },
+        {
+          "at": 7.3,
+          "do": "camera",
+          "target": "share-popover",
+          "fill": 0.42,
+          "over": 0.7
+        },
+        {
+          "at": 8.3,
+          "do": "camera",
+          "target": "answer",
+          "fill": 0.78,
+          "over": 0.9
+        }
+      ]
     },
     {
       "id": "benefit",
@@ -238,6 +177,9 @@
         "line1": "The answer,",
         "line2": "before the meeting starts.",
         "emphasis": "before"
+      },
+      "params": {
+        "align": "left"
       }
     },
     {
@@ -247,7 +189,7 @@
       "purpose": "Leave the name, what it does, and where to find it.",
       "assets": {
         "mark": {
-          "src": "assets/lumen-mark.svg",
+          "src": "assets/lumen-mark-dark.svg",
           "origin": "placeholder"
         }
       },
@@ -264,52 +206,7 @@
       "src": "assets/ui-sfx.m4a",
       "origin": "placeholder",
       "role": "sfx",
-      "volume": 0.45
-    },
-    {
-      "id": "vo-problem",
-      "src": "assets/vo-problem.m4a",
-      "origin": "placeholder",
-      "role": "voice",
-      "scene": "problem",
-      "start": 0.3,
-      "duration": 2.0
-    },
-    {
-      "id": "vo-hook",
-      "src": "assets/vo-hook.m4a",
-      "origin": "placeholder",
-      "role": "voice",
-      "scene": "hook",
-      "start": 0.2,
-      "duration": 1.4
-    },
-    {
-      "id": "vo-answer",
-      "src": "assets/vo-answer.m4a",
-      "origin": "placeholder",
-      "role": "voice",
-      "scene": "answer",
-      "start": 0.1,
-      "duration": 2.9
-    },
-    {
-      "id": "vo-share",
-      "src": "assets/vo-share.m4a",
-      "origin": "placeholder",
-      "role": "voice",
-      "scene": "share",
-      "start": 0.1,
-      "duration": 0.9
-    },
-    {
-      "id": "vo-benefit",
-      "src": "assets/vo-benefit.m4a",
-      "origin": "placeholder",
-      "role": "voice",
-      "scene": "benefit",
-      "start": 0.1,
-      "duration": 2.0
+      "volume": 0.6
     }
   ]
 }

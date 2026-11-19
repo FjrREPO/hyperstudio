@@ -141,6 +141,9 @@
       tl.fromTo(tagline, { opacity: 0, y: 1.2 * U }, { opacity: 0.66, y: 0, duration: 0.6, ease: "power3.out" }, 0.4);
       tl.fromTo(cta, { opacity: 0, y: 1.2 * U }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.5);
 
+      // A slow push for the whole shot, so type that has landed is never a frozen frame.
+      tl.fromTo(stage, { scale: 1 }, { scale: 1.03, duration: D, ease: "none" }, 0);
+
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
     })();

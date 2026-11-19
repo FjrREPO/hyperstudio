@@ -20,7 +20,8 @@ its shots. It contains no HTML, CSS, GSAP or HyperFrames attributes. The schema 
   "brand": { "name": "…", "kind": "real" },
   "style": { "background": "#f3efe6", "ink": "#17150f", "accent": "#2747f0", "light": "soft" },
   "screens": {
-    "home": { "src": "screens/home.png", "width": 1440, "height": 900, "origin": "captured", "regions": {} }
+    "home": { "src": "screens/home.png", "width": 1440, "height": 900, "origin": "captured", "regions": {} },
+    "app": { "html": "product/index.html", "width": 1440, "height": 900, "origin": "captured" }
   },
   "scenes": [{ "id": "…", "recipe": "…", "duration": 2, "purpose": "…" }],
   "audio": [{ "id": "…", "src": "…" }]
@@ -92,6 +93,28 @@ Screenshots of the product, keyed by a name scenes refer to.
 
 A region must lie inside the screen.
 
+### Live screens
+
+A screen can instead be the product's own page, mounted in the shot and driven, so the interface changes
+state on camera instead of being cut between screenshots. Give `html` in place of `src` and leave `regions`
+out:
+
+```json
+"screens": { "app": { "html": "product/index.html", "width": 1440, "height": 900, "origin": "captured" } }
+```
+
+The page is one self-contained HTML file:
+
+- Everything is inside one element with `class="app"`, sized `width` × `height`.
+- What is shown depends only on that element's `data-state`. List the states in `data-states="home answer"`.
+- Components a shot uses carry `data-region="name"`. They are measured in the state they are used in.
+- Parts that should arrive one by one carry `data-reveal`; chart lines to be drawn carry `data-draw`, and what
+  appears once they are drawn carries `data-fade`.
+- Scripts and comments are dropped. The page's custom properties are renamed on the way in, so a film's
+  colours never repaint the product.
+
+Only recipes that drive an interface (`product-take`) accept a live screen.
+
 ## `scenes[]`
 
 | Field        | Type                                        | Default  | Notes                                                                          |
@@ -119,6 +142,36 @@ A variable may be set in only one of `assets`, `text`, `params`.
 
 `duration` defaults to 0.6 s and must be shorter than both scenes it joins. The first scene cannot crossfade,
 and fading into it is warned about (frame 0 would be empty).
+
+### `beats` (takes of a live interface)
+
+A scene whose recipe drives a live screen lists what happens in it, in order. Times count from the scene's
+start.
+
+```json
+"beats": [
+  { "at": 0.1, "do": "camera", "target": "ask-bar", "fill": 0.6, "over": 1.2 },
+  { "at": 0.8, "do": "type", "target": "ask-input", "text": "Which plan grew fastest?", "over": 1.5 },
+  { "at": 2.6, "do": "click", "target": "send", "state": "thinking" },
+  { "at": 3.6, "do": "state", "state": "answer" },
+  { "at": 3.6, "do": "reveal", "target": "answer", "over": 1.0 },
+  { "at": 4.0, "do": "draw", "target": "plot" }
+]
+```
+
+| `do`        | What happens                                                                | Uses                             |
+| ----------- | --------------------------------------------------------------------------- | -------------------------------- |
+| `camera`    | The camera moves to frame a region, starting at `at`                        | `target`, `fill`, `over`, `ease` |
+| `cursor`    | The pointer arrives at a region at `at`                                     | `target`, `over` (travel time)   |
+| `click`     | As `cursor`, then a click; with `state`, the interface switches as it lands | `target`, `state`, `over`        |
+| `type`      | Text is typed into an input                                                 | `target`, `text`, `over`         |
+| `state`     | The interface switches state                                                | `state`                          |
+| `reveal`    | The region's `data-reveal` parts arrive one by one                          | `target`, `over`                 |
+| `draw`      | The region's `data-draw` lines are drawn                                    | `target`, `over`                 |
+| `highlight` | The region is outlined; with `over`, the outline leaves after that long     | `target`, `over`                 |
+
+The compiler rejects a target or state the page does not have, and warns when nothing starts for more than
+1.5 s: an interface that sits untouched reads as a frozen picture.
 
 ## `audio[]`
 

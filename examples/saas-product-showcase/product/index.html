@@ -6,16 +6,20 @@
     <title>Lumen (example product)</title>
     <!--
       Lumen is an EXAMPLE PRODUCT made for the HyperStudio benchmark film. It is not a real company.
-      This page is the product's interface, built as real HTML so the film can show an actual UI.
-      The state is chosen in the URL hash: #home, #asked, #answer, #share.
-      capture.mjs screenshots each state and reads the [data-region] rectangles from #hs-regions.
+      This page is the product's interface as real HTML. A film mounts it live and drives it: the compiler
+      takes the <style> and the .app element, and a shot sets .app's data-state, types into inputs and
+      moves a cursor over the elements named with data-region.
+
+      States are listed in the .app element's data-states. Open this file with #answer (or any state) to see one.
+      Elements with data-reveal arrive one by one when a shot reveals their region; paths with data-draw
+      are drawn. Everything is styled from data-state alone: no script is needed to show a state.
       The names, figures and sources shown in the UI are invented sample data.
     -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=block" rel="stylesheet" />
     <style>
-      :root {
+      .app {
         --side: #f6f6f7;
         --canvas: #ffffff;
         --ink: #0d0e12;
@@ -28,7 +32,19 @@
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1440px; height: 900px; overflow: hidden; }
-      body { font-family: Inter, sans-serif; color: var(--ink); background: var(--canvas); display: flex; font-size: 15px; -webkit-font-smoothing: antialiased; }
+      .app { width: 1440px; height: 900px; overflow: hidden; font-family: Inter, sans-serif; color: var(--ink); background: var(--canvas); display: flex; font-size: 15px; line-height: normal; text-align: left; -webkit-font-smoothing: antialiased; }
+      /* What each state shows. */
+      .app:not([data-state="home"], [data-state="asked"]) #view-home,
+      .app:is([data-state="home"], [data-state="asked"]) #view-answer,
+      .app:not([data-state="share"]) #popover,
+      .app:not([data-state="thinking"]) #thinking,
+      .app[data-state="thinking"] #card { display: none; }
+      .app[data-state="asked"] #ask .input, #ask .input[data-typed] { color: var(--ink); }
+      .app[data-state="asked"] #ask .send, #ask:has(.input[data-typed]) .send { background: var(--accent); box-shadow: 0 8px 18px rgba(59, 91, 255, 0.35); }
+      .thinking { margin-top: 22px; padding: 28px 30px; border-radius: 22px; background: var(--canvas); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(13, 14, 18, 0.04), 0 22px 50px rgba(13, 14, 18, 0.08); }
+      .thinking .by { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 18px; }
+      .thinking .by .mark { width: 18px; height: 18px; }
+      .thinking i { display: block; height: 16px; margin-top: 12px; border-radius: 8px; background: linear-gradient(90deg, #eef0f5, #f6f7fa); }
       svg { display: block; flex: none; }
 
       /* Sidebar */
@@ -61,9 +77,7 @@
       /* Ask bar */
       .ask { display: flex; align-items: center; gap: 14px; height: 72px; padding: 0 12px 0 24px; border-radius: 20px; background: var(--canvas); border: 1px solid #d5d8e2; box-shadow: 0 0 0 5px rgba(59, 91, 255, 0.07), 0 14px 34px rgba(13, 14, 18, 0.08); }
       .ask .input { flex: 1; height: 28px; line-height: 28px; font-size: 19px; color: var(--faint); white-space: nowrap; overflow: hidden; }
-      .ask.filled .input { color: var(--ink); }
       .send { width: 48px; height: 48px; border-radius: 15px; background: #d5d8e2; display: grid; place-items: center; flex: none; }
-      .ask.filled .send { background: var(--accent); box-shadow: 0 8px 18px rgba(59, 91, 255, 0.35); }
       .send svg { width: 20px; height: 20px; }
 
       /* Home */
@@ -115,7 +129,8 @@
       [hidden] { display: none !important; }
     </style>
   </head>
-  <body data-region="window">
+  <body>
+    <div class="app" data-state="home" data-states="home asked thinking answer share" data-region="window">
     <aside>
       <div class="brand"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
       <div class="space"><i></i>Northwind<span>Workspace</span></div>
@@ -158,39 +173,43 @@
       </section>
 
       <!-- #answer and #share -->
-      <section class="column thread" id="view-answer" hidden>
+      <section class="column thread" id="view-answer">
         <div class="question" data-region="question">Which plan grew fastest last quarter?</div>
-        <div class="card" data-region="answer">
+        <div class="thinking" id="thinking" data-region="thinking">
+          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Reading billing · 2,318 invoices</div>
+          <i style="width: 72%; height: 30px"></i><i style="width: 54%"></i><i style="width: 100%; height: 150px; margin-top: 22px"></i>
+        </div>
+        <div class="card" id="card" data-region="answer">
           <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
-          <div class="answer-line" data-region="answer-line"><em>Team</em> grew fastest: up 18% over the quarter.</div>
-          <p class="detail">Starter grew 6% and Scale grew 11% in the same period.</p>
+          <div class="answer-line" data-region="answer-line" data-reveal><em>Team</em> grew fastest: up 18% over the quarter.</div>
+          <p class="detail" data-reveal>Starter grew 6% and Scale grew 11% in the same period.</p>
           <div class="chart" data-region="chart">
             <!-- Revenue per plan, indexed to 100 at the start of July. Sample data. -->
-            <svg class="plot" data-region="plot" viewBox="0 0 404 190">
+            <svg class="plot" data-region="plot" data-reveal viewBox="0 0 404 190">
               <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b5bff" stop-opacity="0.22" /><stop offset="1" stop-color="#3b5bff" stop-opacity="0" /></linearGradient></defs>
               <g stroke="#eceef3" stroke-width="1"><path d="M28 40H384M28 85H384M28 130H384" /></g>
-              <path d="M28 142 L206 96 L384 38 V150 H28 Z" fill="url(#area)" />
+              <path d="M28 142 L206 96 L384 38 V150 H28 Z" fill="url(#area)" data-fade />
               <g fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M28 142 L206 125 L384 108" stroke="#c9ccd6" />
-                <path d="M28 142 L206 113 L384 79" stroke="#9aa0b4" />
-                <path d="M28 142 L206 96 L384 38" stroke="#3b5bff" stroke-width="3" />
+                <path d="M28 142 L206 125 L384 108" data-draw stroke="#c9ccd6" />
+                <path d="M28 142 L206 113 L384 79" data-draw stroke="#9aa0b4" />
+                <path d="M28 142 L206 96 L384 38" data-draw stroke="#3b5bff" stroke-width="3" />
               </g>
-              <circle cx="384" cy="108" r="4" fill="#c9ccd6" /><circle cx="384" cy="79" r="4" fill="#9aa0b4" />
-              <circle cx="384" cy="38" r="9" fill="#3b5bff" fill-opacity="0.18" /><circle cx="384" cy="38" r="5" fill="#3b5bff" stroke="#fff" stroke-width="2" />
+              <g data-fade><circle cx="384" cy="108" r="4" fill="#c9ccd6" /><circle cx="384" cy="79" r="4" fill="#9aa0b4" />
+              <circle cx="384" cy="38" r="9" fill="#3b5bff" fill-opacity="0.18" /><circle cx="384" cy="38" r="5" fill="#3b5bff" stroke="#fff" stroke-width="2" /></g>
               <text x="28" y="174">Jul</text><text x="206" y="174" text-anchor="middle">Aug</text><text x="384" y="174" text-anchor="end">Sep</text>
             </svg>
             <div class="rows">
-              <div class="plan hot" data-region="bar-team"><i></i><span>Team<small>Mid-size accounts</small></span><b data-region="team-value">+18%</b></div>
-              <div class="plan"><i style="background: #9aa0b4"></i><span>Scale<small>Enterprise accounts</small></span><b>+11%</b></div>
-              <div class="plan"><i></i><span>Starter<small>Self-serve</small></span><b>+6%</b></div>
+              <div class="plan hot" data-region="bar-team" data-reveal><i></i><span>Team<small>Mid-size accounts</small></span><b data-region="team-value">+18%</b></div>
+              <div class="plan" data-reveal><i style="background: #9aa0b4"></i><span>Scale<small>Enterprise accounts</small></span><b>+11%</b></div>
+              <div class="plan" data-reveal><i></i><span>Starter<small>Self-serve</small></span><b>+6%</b></div>
             </div>
           </div>
-          <div class="foot" data-region="foot">
+          <div class="foot" data-region="foot" data-reveal>
             <span class="src" data-region="sources"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.5"/><path d="M4 5v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/></svg>From billing · 2,318 invoices · July to September</span>
             <div class="actions" data-region="actions">
               <span class="btn">Add to board</span>
               <span class="btn primary" data-region="share-button">Share</span>
-              <div class="popover" id="popover" data-region="share-popover" hidden>
+              <div class="popover" id="popover" data-region="share-popover">
                 <b>Link copied</b>
                 <div class="link">lumen.example/a/q3-plan-growth</div>
                 <div class="to">Anyone at Northwind can open it</div>
@@ -202,29 +221,10 @@
       </section>
     </main>
 
-    <script type="application/json" id="hs-regions"></script>
+    </div>
     <script>
-      const state = (location.hash || "#home").slice(1);
-      const QUESTION = "Which plan grew fastest last quarter?";
-      if (state === "asked") {
-        document.getElementById("ask").classList.add("filled");
-        document.getElementById("ask-input").textContent = QUESTION;
-      }
-      if (state === "answer" || state === "share") {
-        document.getElementById("view-home").hidden = true;
-        document.getElementById("view-answer").hidden = false;
-      }
-      if (state === "share") document.getElementById("popover").hidden = false;
-
-      // Publish where each named component is, for the film's camera, cursor and highlights.
-      document.fonts.ready.then(() => {
-        const regions = {};
-        for (const el of document.querySelectorAll("[data-region]")) {
-          const r = el.getBoundingClientRect();
-          if (r.width > 0 && r.height > 0) regions[el.dataset.region] = [r.x, r.y, r.width, r.height].map((n) => Math.round(n));
-        }
-        document.getElementById("hs-regions").textContent = JSON.stringify(regions);
-      });
+      // Only for opening this file on its own: the state comes from the URL hash.
+      document.querySelector(".app").dataset.state = (location.hash || "#home").slice(1);
     </script>
   </body>
 </html>

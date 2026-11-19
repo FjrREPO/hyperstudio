@@ -1,0 +1,276 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "product-take",
+  "type": "hyperframes:block",
+  "title": "Product Take",
+  "description": "One continuous take of a live interface: the product's own HTML, not a screenshot. The scene's beats drive it in order: the cursor travels and clicks, text is typed, the interface changes state, parts of it arrive or are drawn, and the camera follows the action. Use it whenever the product can be shown working; one take replaces several cut-together screenshots.",
+  "tags": ["product", "interface", "demo", "interaction", "camera"],
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "duration": 6,
+  "hyperstudio": {
+    "minDuration": 1.5,
+    "maxDuration": 12,
+    "required": [],
+    "screen": true,
+    "beats": true
+  },
+  "files": [
+    {
+      "path": "product-take.html",
+      "target": "compositions/product-take.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "screen",
+      "type": "image",
+      "role": "content",
+      "label": "Screen",
+      "description": "Supplied by the compiler from the scene's screen.",
+      "default": ""
+    },
+    {
+      "id": "screenMeta",
+      "type": "string",
+      "role": "content",
+      "label": "Screen geometry",
+      "description": "Supplied by the compiler: the screen's size and regions as JSON.",
+      "default": ""
+    },
+    {
+      "id": "beats",
+      "type": "string",
+      "role": "content",
+      "label": "Beats",
+      "description": "Supplied by the compiler from the scene's beats.",
+      "default": "[]"
+    },
+    {
+      "id": "state",
+      "type": "string",
+      "role": "look",
+      "label": "Opening state",
+      "description": "The state the interface is in when the take starts. Empty uses the page's own.",
+      "default": ""
+    },
+    {
+      "id": "from",
+      "type": "string",
+      "role": "region",
+      "label": "Start framing",
+      "description": "The region the camera frames at the start. window is the whole interface.",
+      "default": "window"
+    },
+    {
+      "id": "fill",
+      "type": "number",
+      "role": "layout",
+      "label": "Frame fill",
+      "description": "How much of the frame the framed region may take, by width or height. Lower leaves more space around it.",
+      "default": 0.86,
+      "min": 0.3,
+      "max": 1,
+      "step": 0.02
+    },
+    {
+      "id": "maxZoom",
+      "type": "number",
+      "role": "layout",
+      "label": "Closest zoom",
+      "description": "The camera never magnifies the interface beyond this, so close-ups keep their surroundings and stay readable.",
+      "default": 2.2,
+      "min": 1,
+      "max": 3.2,
+      "step": 0.1
+    },
+    {
+      "id": "chrome",
+      "type": "enum",
+      "role": "look",
+      "label": "Window",
+      "description": "Draw the interface inside an application window, or bare.",
+      "default": "window",
+      "options": [
+        {
+          "value": "window",
+          "label": "Application window"
+        },
+        {
+          "value": "none",
+          "label": "Bare"
+        }
+      ]
+    },
+    {
+      "id": "radius",
+      "type": "number",
+      "role": "look",
+      "label": "Corner radius",
+      "description": "Corner radius of what is shown, in the screenshot's pixels. Match the isolated component's own corners.",
+      "default": 14,
+      "min": 0,
+      "max": 48,
+      "step": 1
+    },
+    {
+      "id": "tilt",
+      "type": "enum",
+      "role": "layout",
+      "label": "Perspective",
+      "description": "Turn the screen in perspective. A 2.5D transform of the flat screenshot: it eases from a slightly stronger angle to this one.",
+      "default": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "Flat"
+        },
+        {
+          "value": "left",
+          "label": "Turned to the left"
+        },
+        {
+          "value": "right",
+          "label": "Turned to the right"
+        },
+        {
+          "value": "up",
+          "label": "Leaning back"
+        },
+        {
+          "value": "desk",
+          "label": "Lying on a desk, seen from above at an angle"
+        }
+      ]
+    },
+    {
+      "id": "focus",
+      "type": "enum",
+      "role": "layout",
+      "label": "Focus",
+      "description": "Which part of the frame stays sharp; the rest is softly blurred, as with a shallow depth of field. Use it with a tilt.",
+      "default": "all",
+      "options": [
+        {
+          "value": "all",
+          "label": "Everything sharp"
+        },
+        {
+          "value": "band",
+          "label": "A sharp band across the middle"
+        },
+        {
+          "value": "near",
+          "label": "Sharp below, soft at the top (the far edge)"
+        },
+        {
+          "value": "centre",
+          "label": "Sharp in the centre"
+        }
+      ]
+    },
+    {
+      "id": "drift",
+      "type": "boolean",
+      "role": "motion",
+      "label": "Slow push",
+      "description": "A slow, constant push-in under every camera move, so the picture never comes to a dead stop while text is typed or read.",
+      "default": true
+    },
+    {
+      "id": "background",
+      "type": "color",
+      "role": "brand",
+      "label": "Stage background",
+      "default": "#f3efe6"
+    },
+    {
+      "id": "ink",
+      "type": "color",
+      "role": "brand",
+      "label": "Text colour",
+      "default": "#17150f"
+    },
+    {
+      "id": "accent",
+      "type": "color",
+      "role": "brand",
+      "label": "Accent colour",
+      "description": "The film's one accent. Used for emphasis only.",
+      "default": "#2747f0"
+    },
+    {
+      "id": "displayFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Display typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "Playfair Display",
+          "label": "Playfair Display"
+        },
+        {
+          "value": "EB Garamond",
+          "label": "EB Garamond"
+        },
+        {
+          "value": "Oswald",
+          "label": "Oswald"
+        },
+        {
+          "value": "Archivo Black",
+          "label": "Archivo Black"
+        }
+      ]
+    },
+    {
+      "id": "textFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Text typeface",
+      "default": "Inter",
+      "options": [
+        {
+          "value": "Inter",
+          "label": "Inter"
+        },
+        {
+          "value": "Outfit",
+          "label": "Outfit"
+        },
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "Poppins",
+          "label": "Poppins"
+        },
+        {
+          "value": "IBM Plex Mono",
+          "label": "IBM Plex Mono"
+        }
+      ]
+    }
+  ]
+}

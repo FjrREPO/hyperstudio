@@ -4,10 +4,10 @@ import { reviewFilm } from "@hyperstudio/studio";
 import { bold, dim, green, red, yellow } from "../output.ts";
 
 /** `hyperstudio review <ir>`: returns the process exit code. The work is done by @hyperstudio/studio. */
-export function runReview(input: string, flags: { output?: string }): number {
+export function runReview(input: string, flags: { output?: string; motion?: boolean }): number {
   let review: ReturnType<typeof reviewFilm>;
   try {
-    review = reviewFilm(input, { output: flags.output });
+    review = reviewFilm(input, { output: flags.output, motion: flags.motion });
   } catch (error) {
     if (error instanceof CompileError) {
       console.log(
@@ -29,6 +29,18 @@ export function runReview(input: string, flags: { output?: string }): number {
     console.log(dim(`    ${f.severity} ${f.code}: ${f.message.slice(0, 150)}`));
   console.log(`${green("✓")} Snapshots: ${review.frames} frames`);
   for (const sheet of review.sheets) console.log(dim(`    ${sheet}`));
+  if (review.motion) {
+    const m = review.motion;
+    const frozen = m.longestStill.seconds >= 1;
+    console.log(
+      `${frozen ? yellow("!") : green("✓")} Motion: ${m.stillPercent}% of frames still, longest freeze ${m.longestStill.seconds}s at ${m.longestStill.at}s, median change ${m.medianChange}`,
+    );
+    console.log(
+      dim(
+        `    one strip per shot in ${relative(process.cwd(), m.strips[0] ?? m.file).replace(/[^/]+$/, "")}`,
+      ),
+    );
+  }
   const file = relative(process.cwd(), review.reviewFile);
   console.log(
     review.createdReviewFile

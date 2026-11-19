@@ -1,0 +1,226 @@
+{
+  "project": {
+    "title": "Lumen - 15.6 second product film (dark)",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 15.6
+  },
+  "direction": {
+    "concept": "The product is the only light on a dark stage; the camera leans in to watch it work, then comes round to face what it found.",
+    "audience": "People who run a subscription business and wait on someone else for every revenue number.",
+    "message": "You can ask Lumen a revenue question in plain words and have the answer before the meeting.",
+    "tone": "Quiet and confident, closer to a product photograph than a screen recording.",
+    "palette": "A black stage with nothing on it; the interface is the only light in the frame, and cobalt appears only inside it.",
+    "typography": "Playfair Display for the film's two lines, centred and large, against the Inter of the interface.",
+    "motion": "The interface is always seen at an angle with a shallow focus; the camera drifts and settles, and the cursor is the only fast thing.",
+    "pacing": "Two takes separated by one line of type; each take holds long enough for its action to finish."
+  },
+  "brand": {
+    "name": "Lumen",
+    "kind": "example",
+    "url": "lumen.example"
+  },
+  "style": {
+    "background": "#08090c",
+    "ink": "#f2f2ee",
+    "accent": "#4f6bff",
+    "displayFont": "Playfair Display",
+    "textFont": "Inter",
+    "light": "none"
+  },
+  "screens": {
+    "app": {
+      "html": "product/index.html",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder"
+    }
+  },
+  "scenes": [
+    {
+      "id": "before",
+      "recipe": "statement",
+      "duration": 2.0,
+      "purpose": "Name the old way in one line, so the product has something to replace.",
+      "text": {
+        "line1": "Every number used to be a ticket.",
+        "emphasis": "ticket."
+      }
+    },
+    {
+      "id": "arrive",
+      "recipe": "product-take",
+      "duration": 4.8,
+      "screen": "app",
+      "purpose": "The product leans back in the dark, mid-use: the question is typed and sent, and the answer starts to arrive.",
+      "params": {
+        "from": "window",
+        "fill": 0.92,
+        "tilt": "up",
+        "focus": "near"
+      },
+      "beats": [
+        {
+          "at": 0.1,
+          "do": "camera",
+          "target": "ask-bar",
+          "fill": 0.62,
+          "over": 1.4
+        },
+        {
+          "at": 0.3,
+          "do": "cursor",
+          "target": "ask-input",
+          "over": 0.3
+        },
+        {
+          "at": 0.5,
+          "do": "type",
+          "target": "ask-input",
+          "text": "Which plan grew fastest last quarter?",
+          "over": 1.4
+        },
+        {
+          "at": 2.3,
+          "do": "click",
+          "target": "send",
+          "state": "thinking",
+          "over": 0.4
+        },
+        {
+          "at": 2.4,
+          "do": "camera",
+          "target": "thinking",
+          "fill": 0.56,
+          "over": 1.0
+        },
+        {
+          "at": 3.4,
+          "do": "state",
+          "state": "answer"
+        },
+        {
+          "at": 3.4,
+          "do": "reveal",
+          "target": "answer",
+          "over": 1.0
+        },
+        {
+          "at": 3.5,
+          "do": "draw",
+          "target": "plot",
+          "over": 1.1
+        }
+      ]
+    },
+    {
+      "id": "claim",
+      "recipe": "statement",
+      "duration": 1.4,
+      "purpose": "Say what just happened, in the brand's own voice.",
+      "text": {
+        "line1": "No ticket. No waiting."
+      },
+      "params": {
+        "size": "display"
+      }
+    },
+    {
+      "id": "proof",
+      "recipe": "product-take",
+      "duration": 4.8,
+      "screen": "app",
+      "purpose": "Come round to face the answer: the row it rests on, then one click to pass it on.",
+      "params": {
+        "state": "answer",
+        "from": "answer",
+        "fill": 0.78,
+        "tilt": "left",
+        "focus": "centre",
+        "chrome": "none",
+        "radius": 22
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "do": "camera",
+          "target": "chart",
+          "fill": 0.7,
+          "over": 1.0
+        },
+        {
+          "at": 1.0,
+          "do": "cursor",
+          "target": "bar-team",
+          "over": 0.6
+        },
+        {
+          "at": 1.2,
+          "do": "highlight",
+          "target": "bar-team",
+          "over": 1.2
+        },
+        {
+          "at": 1.4,
+          "do": "camera",
+          "target": "bar-team",
+          "fill": 0.5,
+          "over": 0.9
+        },
+        {
+          "at": 2.6,
+          "do": "camera",
+          "target": "foot",
+          "fill": 0.7,
+          "over": 0.8
+        },
+        {
+          "at": 3.3,
+          "do": "click",
+          "target": "share-button",
+          "state": "share",
+          "over": 0.6
+        },
+        {
+          "at": 3.4,
+          "do": "camera",
+          "target": "share-popover",
+          "fill": 0.45,
+          "over": 0.7
+        },
+        {
+          "at": 4.2,
+          "do": "cursor",
+          "target": "share-popover",
+          "over": 0.5
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "recipe": "brand-close",
+      "duration": 2.6,
+      "purpose": "Leave the name, what it does, and where to find it.",
+      "assets": {
+        "mark": {
+          "src": "assets/lumen-mark.svg",
+          "origin": "placeholder"
+        }
+      },
+      "text": {
+        "name": "Lumen",
+        "tagline": "Ask your revenue.",
+        "cta": "lumen.example"
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "sfx",
+      "src": "assets/ui-sfx-dark.m4a",
+      "origin": "placeholder",
+      "role": "sfx",
+      "volume": 0.6
+    }
+  ]
+}

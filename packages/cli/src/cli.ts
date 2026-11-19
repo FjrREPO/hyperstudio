@@ -14,7 +14,7 @@ const HELP = `${bold("hyperstudio")} ${dim(pkg.version)}  Creative IR compiler f
 
 ${bold("Usage")}
   hyperstudio compile <ir.json> [--output <dir>] [--validate-only]
-  hyperstudio review  <ir.json> [--output <dir>]
+  hyperstudio review  <ir.json> [--output <dir>] [--motion]
   hyperstudio recipes [name]
   hyperstudio assets  providers | search <query> | download <#> | list [dir] | usage
   hyperstudio audio   providers | tts <text> | voices | dub <file> | inspect <file> | status [job]
@@ -29,6 +29,7 @@ ${bold("Commands")}
 ${bold("Options")}
   -o, --output <dir>   Project directory (default: build/ beside the IR file)
       --validate-only  compile: validate and plan; write nothing
+      --motion         review: also render a draft and measure how much the film moves
       --kind <kind>    assets search: image (default), audio or video
       --source <ids>   assets search: only these sources, comma separated
       --limit <n>      assets search: how many results (default 10)
@@ -112,7 +113,7 @@ async function main(argv: string[]): Promise<number> {
       });
     case "review":
       if (!target) return usage("review needs an IR file");
-      return runReview(target, { output: values.output });
+      return runReview(target, { output: values.output, motion: values.motion });
     case "recipes":
       return runRecipes(target, { json, pretty: values.pretty });
     default:
@@ -127,6 +128,7 @@ function parse(argv: string[]) {
     options: {
       output: { type: "string", short: "o" },
       "validate-only": { type: "boolean", default: false },
+      motion: { type: "boolean", default: false },
       provider: { type: "string" },
       voice: { type: "string" },
       model: { type: "string" },

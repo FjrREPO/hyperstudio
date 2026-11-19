@@ -15,7 +15,7 @@
       inset: 0;
       overflow: hidden;
     }
-    #meet-stage {
+    #open-stage {
       --st-accent: #2747f0;
       --st-ink: #17150f;
       position: absolute;
@@ -62,17 +62,17 @@
     .st-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; }
   </style>
 
-  <div id="root" data-composition-id="meet" data-start="0" data-duration="1.2" data-width="1920" data-height="1080" data-composition-variables='[{"id":"line1","type":"string","role":"content","label":"Line","description":"A short sentence in sentence case.","default":"Ask your revenue.","maxLength":36},{"id":"line2","type":"string","role":"content","label":"Second line","description":"Optional. Appears after the first.","default":"","maxLength":36},{"id":"emphasis","type":"string","role":"content","label":"Emphasised word","description":"One word or short phrase from the lines, set in an accent chip. Empty for none.","default":"","maxLength":20},{"id":"size","type":"enum","role":"layout","label":"Size","default":"title","options":[{"value":"title","label":"Title"},{"value":"display","label":"Display (one very short line)"}]},{"id":"align","type":"enum","role":"layout","label":"Alignment","default":"center","options":[{"value":"center","label":"Centered"},{"value":"left","label":"Left, on the film&#39;s margin"}]},{"id":"reveal","type":"enum","role":"motion","label":"Reveal","default":"words","options":[{"value":"words","label":"Word by word"},{"value":"none","label":"Still"}]},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
-    <div id="meet-stage" class="st-center">
-      <div id="meet-line1" class="st-line"></div>
-      <div id="meet-line2" class="st-line"></div>
+  <div id="root" data-composition-id="open" data-start="0" data-duration="1.2" data-width="1920" data-height="1080" data-composition-variables='[{"id":"line1","type":"string","role":"content","label":"Line","description":"A short sentence in sentence case.","default":"Ask your revenue.","maxLength":36},{"id":"line2","type":"string","role":"content","label":"Second line","description":"Optional. Appears after the first.","default":"","maxLength":36},{"id":"emphasis","type":"string","role":"content","label":"Emphasised word","description":"One word or short phrase from the lines, set in an accent chip. Empty for none.","default":"","maxLength":20},{"id":"size","type":"enum","role":"layout","label":"Size","default":"title","options":[{"value":"title","label":"Title"},{"value":"display","label":"Display (one very short line)"}]},{"id":"align","type":"enum","role":"layout","label":"Alignment","default":"center","options":[{"value":"center","label":"Centered"},{"value":"left","label":"Left, on the film&#39;s margin"}]},{"id":"reveal","type":"enum","role":"motion","label":"Reveal","default":"words","options":[{"value":"words","label":"Word by word"},{"value":"none","label":"Still"}]},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
+    <div id="open-stage" class="st-center">
+      <div id="open-line1" class="st-line"></div>
+      <div id="open-line2" class="st-line"></div>
     </div>
   </div>
 
   <script>
     (function () {
       window.__timelines = window.__timelines || {};
-      var ID = "meet";
+      var ID = "open";
       var $ = function (name) {
         return document.getElementById(ID + "-" + name);
       };
@@ -161,6 +161,9 @@
         tl.fromTo(c.chip, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.45, ease: "expo.out" }, landed);
         tl.fromTo(c.word, { color: v.ink }, { color: "#ffffff", duration: 0.2, ease: "none" }, landed + 0.05);
       });
+
+      // A slow push for the whole shot, so type that has landed is never a frozen frame.
+      tl.fromTo(stage, { scale: 1 }, { scale: 1.03, duration: D, ease: "none" }, 0);
 
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;

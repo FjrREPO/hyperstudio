@@ -175,6 +175,28 @@ Routes are data: path, summary, the one engine call behind each. The server and 
 generated from that list. Webhooks, per-user keys and a persistent idempotency store are not built; they
 belong to a hosted service, and there is none.
 
+## D25. The product is mounted live, not shown as screenshots
+
+Two rounds of films were judged template-like. Measured against five reference films at ten frames a second,
+ours held a frozen picture for 17 to 25% of their length; the references, 1 to 2% in three of four. The cause
+was structural: a screen was a PNG, so the interface could not change inside a shot and every change of state
+became a cut to another picture.
+
+A screen may now be the product's own HTML (`screens.*.html`), mounted in a shadow root so its styles and
+the film's cannot meet, and a scene lists `beats` that drive it: cursor, click, type, state, reveal, draw,
+camera. One take replaces five cut-together screenshots. Screenshot screens and `product-shot` stay, for
+products that can only be captured.
+
+Not chosen: an iframe (HyperFrames cannot seek what is inside one, and the capture path is unknown); a
+recorded screen video (not editable, not deterministic at any frame rate); CSS transitions inside the page
+(they run on the wall clock, not the timeline).
+
+## D26. Motion is reviewed from evidence
+
+`hyperstudio review --motion` renders a draft, reports the share of still frames and the longest freeze, and
+writes one strip per shot at eight frames a second. Two frames a shot could not show a frozen hold, and a row
+marked "not judged" let weak motion through twice.
+
 ## D24. Two skills, not seven
 
 The brief listed seven skills. Making a film is one job with an order to it, and splitting it would let an
