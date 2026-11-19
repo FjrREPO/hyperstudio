@@ -8,7 +8,7 @@ import { rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const RATE = 48000;
-const LENGTH = 15;
+const LENGTH = 17;
 const out = new Float32Array(RATE * LENGTH);
 let seed = 20261119;
 const random = () => {
@@ -36,11 +36,13 @@ const tone = (at, hz) => {
 };
 
 // Timings follow video.json. If a shot's length changes there, change the matching time here.
-for (let i = 0, t = 0.3; i < 36; i++, t += 0.04 + (random() + 1) * 0.0035) tick(t); // hook: the question is typed
-click(4.79); // reveal: send
-click(8.96); // share
-tone(9.5, 660); // shared: link copied
-tone(12.4, 440); // close: the brand arrives
+const note = (at) => add(at, 0.12, 0.03, 0.12, sine(520 + random() * 60));
+for (let i = 0; i < 5; i++) note(0.05 + i * 0.13); // problem: each note lands
+for (let i = 0, t = 2.82; i < 36; i++, t += 0.029 + (random() + 1) * 0.002) tick(t); // hook: the question is typed
+click(6.9); // reveal: send
+click(11.19); // share
+tone(11.65, 660); // shared: link copied
+tone(14.5, 440); // close: the brand arrives
 
 const wav = Buffer.alloc(44 + out.length * 2);
 wav.write("RIFF", 0);
