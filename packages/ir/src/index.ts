@@ -69,14 +69,40 @@ const Brand = z.strictObject({
 const rect = z.tuple([z.number().min(0), z.number().min(0), z.number().positive(), z.number().positive()]);
 
 const Screen = z.strictObject({
-  /** Screenshot file, relative to the IR file. */
-  src: z.string().min(1),
+  /** Screenshot file, relative to the IR file. Give this or `html`. */
+  src: z.string().min(1).optional(),
+  /**
+   * The product's own page, relative to the IR file, to be mounted live and driven by a scene's beats.
+   * Its regions are its `data-region` elements, so `regions` is left out.
+   */
+  html: z.string().min(1).optional(),
   /** Size of the screenshot in CSS pixels (the file may be 2x or 3x that). */
   width: z.number().int().positive(),
   height: z.number().int().positive(),
   origin,
   /** Named components of the screen that shots can frame, point at, highlight or type into. */
   regions: z.record(id, rect).default({}),
+});
+
+/** One thing that happens in a take of a live interface, at a time counted from the take's start. */
+const Beat = z.strictObject({
+  at: z.number().min(0),
+  /**
+   * `camera` frames a region; `cursor` moves the pointer there and `click` also clicks; `type` types `text`
+   * into an input; `state` switches the interface's state; `reveal` brings a region's parts in one by one;
+   * `draw` draws a chart's lines; `highlight` outlines a region.
+   */
+  do: z.enum(["camera", "cursor", "click", "type", "state", "reveal", "draw", "highlight"]),
+  /** A `data-region` of the page; `window` is the whole interface. */
+  target: id.optional(),
+  text: z.string().optional(),
+  /** The state the interface switches to at this beat. Allowed on `click` and `state`. */
+  state: id.optional(),
+  /** How long the beat takes, in seconds. */
+  over: seconds.optional(),
+  /** For `camera`: how much of the frame the region may take. */
+  fill: z.number().min(0.2).max(1).optional(),
+  ease: z.string().optional(),
 });
 
 const Transition = z.strictObject({
@@ -103,6 +129,8 @@ const Scene = z.strictObject({
   text: z.record(z.string(), z.string()).default({}),
   /** Any other recipe variables. Brand variables are not allowed here; they belong in `style`. */
   params: z.record(z.string(), scalar).default({}),
+  /** What happens in a take of a live interface, in order. Only for recipes that drive one. */
+  beats: z.array(Beat).default([]),
   /** Where each figure shown in this scene comes from. Required when the recipe shows a statistic. */
   sources: z.array(z.string().min(3)).default([]),
   /** How this scene is entered. Omitted = cut. */
