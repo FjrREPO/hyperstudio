@@ -1,0 +1,358 @@
+{
+  "project": {
+    "title": "Relay - launch film",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 27.4
+  },
+  "direction": {
+    "concept": "One deploy, watched from inside the machine: a push, a build, a canary, a promotion, and an undo, with no narrator on screen.",
+    "audience": "Engineers who ship several times a day and have been burned by a deploy they could not take back.",
+    "message": "Relay rolls a release out in steps you can watch, and takes it back in one click.",
+    "tone": "Terse and precise, like good tooling; nothing is explained twice and nothing is decorated.",
+    "palette": "The product's own near-black is the whole frame, with its green for what is healthy, amber for what is in flight, and a black void where the camera sees past its edge.",
+    "typography": "None of the film's own: every word on screen is the product's, in its monospace; the story is told by the log and by a voice.",
+    "motion": "The interface is an object the camera circles on a wide lens, a new angle for each stage of the deploy, coming square only when the release is live.",
+    "pacing": "Fast and even while the pipeline runs, one still breath when it is live, then the undo, and a slow pull back on the command that starts it all."
+  },
+  "brand": {
+    "name": "Relay",
+    "kind": "example",
+    "url": "relay.example"
+  },
+  "style": {
+    "background": "#040506",
+    "ink": "#e6edf3",
+    "accent": "#3ddc97",
+    "displayFont": "Inter",
+    "textFont": "IBM Plex Mono",
+    "light": "none"
+  },
+  "screens": {
+    "app": {
+      "html": "product/index.html",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder"
+    }
+  },
+  "scenes": [
+    {
+      "id": "film",
+      "recipe": "product-take",
+      "duration": 27.4,
+      "screen": "app",
+      "purpose": "The whole film is one orbit of the product through one deploy: pushed, built, tested, tried on a tenth of traffic, promoted, rolled back, and started again.",
+      "params": {
+        "from": "terminal",
+        "fill": 0.8,
+        "tilt": "left",
+        "focus": "centre",
+        "lens": "wide",
+        "spill": true,
+        "chrome": "none",
+        "radius": 10,
+        "maxZoom": 2.2
+      },
+      "beats": [
+        {
+          "at": 0.2,
+          "do": "camera",
+          "target": "prompt",
+          "fill": 0.7,
+          "tilt": "up",
+          "over": 1.6,
+          "ease": "power2.inOut"
+        },
+        {
+          "at": 0.3,
+          "do": "type",
+          "target": "prompt-input",
+          "text": "git push origin main",
+          "over": 1.3
+        },
+        {
+          "at": 1.9,
+          "do": "state",
+          "state": "building"
+        },
+        {
+          "at": 1.9,
+          "do": "reveal",
+          "target": "log-build",
+          "over": 1.8
+        },
+        {
+          "at": 2.0,
+          "do": "camera",
+          "target": "terminal",
+          "fill": 0.86,
+          "tilt": "left",
+          "focus": "all",
+          "over": 1.5
+        },
+        {
+          "at": 3.9,
+          "do": "camera",
+          "target": "pipeline",
+          "fill": 0.92,
+          "tilt": "right",
+          "over": 1.3
+        },
+        {
+          "at": 4.2,
+          "do": "draw",
+          "target": "seg-1",
+          "over": 0.9
+        },
+        {
+          "at": 5.1,
+          "do": "state",
+          "state": "testing"
+        },
+        {
+          "at": 5.1,
+          "do": "reveal",
+          "target": "log-test",
+          "over": 1.0
+        },
+        {
+          "at": 5.4,
+          "do": "draw",
+          "target": "seg-2",
+          "over": 0.9
+        },
+        {
+          "at": 6.5,
+          "do": "state",
+          "state": "canary"
+        },
+        {
+          "at": 6.5,
+          "do": "reveal",
+          "target": "log-canary",
+          "over": 1.6
+        },
+        {
+          "at": 6.6,
+          "do": "camera",
+          "target": "traffic",
+          "fill": 0.5,
+          "tilt": "left",
+          "over": 1.3
+        },
+        {
+          "at": 8.2,
+          "do": "camera",
+          "target": "latency",
+          "fill": 0.56,
+          "tilt": "up",
+          "over": 1.2
+        },
+        {
+          "at": 8.5,
+          "do": "draw",
+          "target": "latency",
+          "over": 1.6
+        },
+        {
+          "at": 10.3,
+          "do": "camera",
+          "target": "deploy",
+          "fill": 0.94,
+          "tilt": "right",
+          "over": 1.2
+        },
+        {
+          "at": 11.0,
+          "do": "cursor",
+          "target": "promote",
+          "over": 0.7
+        },
+        {
+          "at": 11.8,
+          "do": "click",
+          "target": "promote",
+          "state": "live",
+          "over": 0.3
+        },
+        {
+          "at": 11.9,
+          "do": "draw",
+          "target": "seg-3",
+          "over": 0.9
+        },
+        {
+          "at": 11.9,
+          "do": "reveal",
+          "target": "log-live",
+          "over": 1.0
+        },
+        {
+          "at": 12.1,
+          "do": "camera",
+          "target": "window",
+          "fill": 0.94,
+          "tilt": "none",
+          "over": 1.6
+        },
+        {
+          "at": 14.4,
+          "do": "camera",
+          "target": "pipeline",
+          "fill": 0.92,
+          "tilt": "left",
+          "over": 1.3
+        },
+        {
+          "at": 16.2,
+          "do": "camera",
+          "target": "deploy",
+          "fill": 0.94,
+          "tilt": "up",
+          "over": 1.2
+        },
+        {
+          "at": 17.0,
+          "do": "cursor",
+          "target": "undo",
+          "over": 0.7
+        },
+        {
+          "at": 17.9,
+          "do": "click",
+          "target": "undo",
+          "state": "rolledback",
+          "over": 0.3
+        },
+        {
+          "at": 18.0,
+          "do": "reveal",
+          "target": "log-back",
+          "over": 0.9
+        },
+        {
+          "at": 18.1,
+          "do": "highlight",
+          "target": "status",
+          "over": 1.6
+        },
+        {
+          "at": 19.6,
+          "do": "camera",
+          "target": "terminal",
+          "fill": 0.8,
+          "tilt": "right",
+          "over": 1.4
+        },
+        {
+          "at": 21.6,
+          "do": "camera",
+          "target": "prompt",
+          "fill": 0.62,
+          "tilt": "up",
+          "focus": "near",
+          "over": 1.3
+        },
+        {
+          "at": 22.6,
+          "do": "type",
+          "target": "prompt-input",
+          "text": "npx relay init",
+          "over": 1.1
+        },
+        {
+          "at": 24.2,
+          "do": "camera",
+          "target": "window",
+          "fill": 0.9,
+          "tilt": "left",
+          "focus": "all",
+          "over": 2.6,
+          "ease": "power2.inOut"
+        }
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "id": "sfx",
+      "src": "assets/ui-sfx.m4a",
+      "origin": "placeholder",
+      "role": "sfx",
+      "volume": 0.6
+    },
+    {
+      "id": "vo-push",
+      "src": "assets/vo-push.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 0.2,
+      "duration": 0.9
+    },
+    {
+      "id": "vo-build",
+      "src": "assets/vo-build.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 2.2,
+      "duration": 1.0
+    },
+    {
+      "id": "vo-test",
+      "src": "assets/vo-test.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 5.2,
+      "duration": 0.7333333333
+    },
+    {
+      "id": "vo-canary",
+      "src": "assets/vo-canary.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 6.7,
+      "duration": 2.4333333333
+    },
+    {
+      "id": "vo-live",
+      "src": "assets/vo-live.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 12.0,
+      "duration": 2.1666666667
+    },
+    {
+      "id": "vo-mind",
+      "src": "assets/vo-mind.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 16.4,
+      "duration": 1.1666666667
+    },
+    {
+      "id": "vo-back",
+      "src": "assets/vo-back.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 18.1,
+      "duration": 1.1666666667
+    },
+    {
+      "id": "vo-close",
+      "src": "assets/vo-close.m4a",
+      "origin": "supplied",
+      "role": "voice",
+      "scene": "film",
+      "start": 24.4,
+      "duration": 2.3333333333
+    }
+  ]
+}

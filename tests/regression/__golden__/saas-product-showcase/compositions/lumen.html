@@ -208,9 +208,13 @@
       var shown = null;
       var clock = Object.defineProperty({}, "t", { get: function () { return 0; }, set: function (t) { var s = stateAt(t);
           if (s !== shown) app.setAttribute("data-state", (shown = s));
-          typing.forEach(function (ty) { if (!ty.el) return;
-            var n = Math.round(Math.max(0, Math.min(1, (t - ty.at) / (ty.end - ty.at))) * ty.text.length);
-            ty.el.textContent = t < ty.at ? ty.placeholder : ty.text.slice(0, n) + (n < ty.text.length ? "▏" : "");
+          var live = {};
+          typing.forEach(function (ty, n) { if (ty.el && t >= ty.at) live[typing.findIndex(function (o) { return o.el === ty.el; })] = n; });
+          typing.forEach(function (ty, n) { if (!ty.el) return;
+            var first = typing.findIndex(function (o) { return o.el === ty.el; });
+            if (live[first] === undefined ? n !== first : live[first] !== n) return;
+            var count = Math.round(Math.max(0, Math.min(1, (t - ty.at) / (ty.end - ty.at))) * ty.text.length);
+            ty.el.textContent = t < ty.at ? typing[first].placeholder : ty.text.slice(0, count) + (count < ty.text.length ? "▏" : "");
             if (t >= ty.at) ty.el.setAttribute("data-typed", "");
             else ty.el.removeAttribute("data-typed");
           });

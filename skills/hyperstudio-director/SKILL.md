@@ -59,6 +59,22 @@ where type and product sit and whether they trade places, how the product first 
 one element that opens), what the camera does (holds flat while the layout moves, or orbits an object), and
 how it ends (on the mark, or on the product). Write those four down before any beat.
 
+### Story and look are two decisions
+
+Write the story from what the product is worth to its user. Then choose the look separately, from the
+product's personality, its audience, its category and the feeling the film is for. A story that worked does
+not choose the look of the next film: a light stage, a large headline beside a window, and a push-in are one
+look, and they are not the default.
+
+Looks that differ in kind, to choose between or combine with a reason: a page where type and product trade
+places (editorial); the product alone, edge to edge, with captions (observational); the interface as an object
+in the dark that a wide lens circles, with no type of the film's own (dimensional); a strict grid with small
+type and nothing turned (Swiss). These are not presets, and a new product may need one that is not here.
+
+When the repository already holds films, run `pnpm -s hyperstudio compare <new>/video.json <other>/video.json`
+against each. Every row marked `same` needs a reason that comes from this product; "it worked last time" is
+not one.
+
 Decide these from the product, not from the last film:
 
 - **The stage.** Usually plain: the product's own surface colour, or black, with nothing on it. `light: soft`

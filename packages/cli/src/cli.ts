@@ -5,6 +5,7 @@ import { parseArgs } from "node:util";
 import pkg from "../package.json" with { type: "json" };
 import { runAssets } from "./commands/assets.ts";
 import { runAudio } from "./commands/audio.ts";
+import { runCompare } from "./commands/compare.ts";
 import { runCompile } from "./commands/compile.ts";
 import { runRecipes } from "./commands/recipes.ts";
 import { runReview } from "./commands/review.ts";
@@ -15,6 +16,7 @@ const HELP = `${bold("hyperstudio")} ${dim(pkg.version)}  Creative IR compiler f
 ${bold("Usage")}
   hyperstudio compile <ir.json> [--output <dir>] [--validate-only]
   hyperstudio review  <ir.json> [--output <dir>] [--motion]
+  hyperstudio compare <a.json> <b.json>
   hyperstudio recipes [name]
   hyperstudio assets  providers | search <query> | download <#> | list [dir] | usage
   hyperstudio audio   providers | tts <text> | voices | dub <file> | inspect <file> | status [job]
@@ -100,6 +102,8 @@ async function main(argv: string[]): Promise<number> {
     return 0;
   }
   if (command === undefined) return usage("no command given");
+  if (command === "compare" && extra.length === 1)
+    return runCompare(target, extra[0], { json, pretty: values.pretty });
   if (extra.length > 0) return usage(`unexpected argument "${extra[0]}"`);
 
   switch (command) {
@@ -114,6 +118,8 @@ async function main(argv: string[]): Promise<number> {
     case "review":
       if (!target) return usage("review needs an IR file");
       return runReview(target, { output: values.output, motion: values.motion });
+    case "compare":
+      return runCompare(target, positionals[2], { json, pretty: values.pretty });
     case "recipes":
       return runRecipes(target, { json, pretty: values.pretty });
     default:
