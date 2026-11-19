@@ -5,6 +5,7 @@
  * adapters over this, so nothing is implemented twice.
  */
 export { createJobs, type Job, type JobStatus, type Quality } from "./jobs.ts";
+export { type Motion, measureMotion } from "./motion.ts";
 export { type Finding, hyperframes, type Review, RUBRIC, reviewFilm } from "./review.ts";
 export { createStudio, type Outcome, type Studio, type StudioOptions } from "./studio.ts";
 export { createWorkspace, IR_FILE, PROJECT_NAME, type Workspace, WorkspaceError } from "./workspace.ts";

@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { type CompileResult, compile } from "@hyperstudio/compiler";
+import { type Motion, measureMotion } from "./motion.ts";
 
 // The review gate: compile, run HyperFrames' own check, take frames from every shot, and leave a rubric to be
 // answered from those frames. The checks are HyperFrames'; the judgement is the reviewer's.
@@ -12,7 +13,10 @@ export const RUBRIC = [
   ["Typography", "Is there a clear order of reading? Is any text too large, too small or crowded?"],
   ["Composition", "Is each frame balanced, with intended space, nothing clipped by accident?"],
   ["Shot variety", "Do neighbouring shots differ in subject or scale?"],
-  ["Motion", "Does one thing lead in each shot? Does anything move without a reason?"],
+  [
+    "Motion",
+    "Does one thing lead in each shot? Does anything move without a reason? Is the picture ever frozen? (review --motion)",
+  ],
   ["Transitions", "Does each cut land on an action or a change of idea?"],
   ["Assets", "Is everything on screen real? List every placeholder."],
   ["Brand", "Would the brand recognise its colours, type and voice?"],
@@ -34,6 +38,8 @@ export interface Review {
   reviewFile: string;
   /** False when REVIEW.md already existed: a review is the reviewer's work and is never overwritten. */
   createdReviewFile: boolean;
+  /** Present when motion was asked for: numbers and strips from a draft render. */
+  motion?: Motion;
 }
 
 /** Run a HyperFrames CLI command in a project. */
@@ -44,7 +50,7 @@ export const hyperframes = (cwd: string, args: string[]) =>
  * Compile a film and gather what a reviewer needs.
  * @throws CompileError when the IR is rejected; Error when HyperFrames does not answer.
  */
-export function reviewFilm(irPath: string, options: { output?: string } = {}): Review {
+export function reviewFilm(irPath: string, options: { output?: string; motion?: boolean } = {}): Review {
   const compiled = compile(irPath, { output: options.output });
   const build = compiled.output as string;
 
@@ -89,6 +95,7 @@ export function reviewFilm(irPath: string, options: { output?: string } = {}): R
     sheets,
     reviewFile,
     createdReviewFile,
+    motion: options.motion ? measureMotion(build, compiled.scenes) : undefined,
   };
 }
 
