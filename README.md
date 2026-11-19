@@ -1,5 +1,8 @@
 # HyperStudio
 
+[![CI](https://github.com/FjrREPO/hyperstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/FjrREPO/hyperstudio/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A creative layer on top of [HyperFrames](https://github.com/heygen-com/hyperframes). You describe a video as a
 small JSON plan; HyperStudio validates it and writes a HyperFrames project; HyperFrames checks, previews and
 renders it.
@@ -74,3 +77,11 @@ Husky runs Biome on staged files and the type check before each commit, and the 
 - Camera moves are 2.5D simulations on flat images.
 - `build/` is regenerated on every compile, so manual or Studio edits there do not survive.
 - The CLI runs as TypeScript through Node's type stripping, so it works from a checkout, not as an installed dependency.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Changes are listed in [CHANGELOG.md](CHANGELOG.md).
+
+## Licence
+
+[MIT](LICENSE). HyperFrames is a separate project under Apache-2.0.

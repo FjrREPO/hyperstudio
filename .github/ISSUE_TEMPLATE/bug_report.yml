@@ -1,0 +1,30 @@
+name: Bug report
+description: The compiler, CLI or a recipe does something wrong
+labels: ["type: bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, what you got.
+    validations:
+      required: true
+  - type: textarea
+    id: ir
+    attributes:
+      label: Creative IR
+      description: The smallest IR that shows the problem.
+      render: json
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The JSON from `hyperstudio compile`, or the finding from `npx hyperframes check --json`.
+      render: json
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Node, HyperFrames (`npx hyperframes --version`) and the HyperStudio commit.
+    validations:
+      required: true

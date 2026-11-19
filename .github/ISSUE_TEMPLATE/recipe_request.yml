@@ -1,0 +1,21 @@
+name: Recipe request
+description: A new cinematic recipe, or a change to one
+labels: ["type: feature", "area: recipes"]
+body:
+  - type: textarea
+    id: shot
+    attributes:
+      label: The shot
+      description: What the viewer sees from first frame to last, and the job the shot does in a film.
+    validations:
+      required: true
+  - type: textarea
+    id: variables
+    attributes:
+      label: What should be adjustable
+      description: Copy, assets, layout, camera, look.
+  - type: textarea
+    id: reference
+    attributes:
+      label: References
+      description: Links to films or frames that show the feel. Describe them; do not ask for a copy of one.
