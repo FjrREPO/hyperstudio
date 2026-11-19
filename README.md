@@ -71,6 +71,8 @@ Exit codes: 0 success, 1 the IR was rejected or a check failed, 2 the command li
 | [`meeting-notes-launch`](examples/meeting-notes-launch)       | 17.7 s, 10 shots   | A second product in a different art direction: warm editorial stage, serif voice, each click followed by its result. Reviewed in [REVIEW.md](examples/meeting-notes-launch/REVIEW.md)                                                                                                                     |
 | [`luxury-watch-commercial`](examples/luxury-watch-commercial) | 16.2 s, 3 scenes   | A slow film for a physical product                                                                                                                                                                                                                                                                        |
 
+The Lumen and Marlow films are frozen as quality baselines: see [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
+
 Music in the Lumen film: "Inspire Action" by Yuri Megis, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), from [Wikimedia Commons](https://commons.wikimedia.org/w/index.php?curid=186556897).
 
 The products are **examples made for these films**, and every compile lists them as placeholders. The
