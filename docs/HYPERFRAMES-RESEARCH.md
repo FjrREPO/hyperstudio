@@ -12,17 +12,17 @@ HTML is the composition format. A render never plays the page: for each frame it
 
 ## 2. Packages (all published at 0.9.69)
 
-| Package | Role |
-| --- | --- |
-| `hyperframes` / `@hyperframes/cli` | CLI: init, capture, lint, check, snapshot, timeline edits, catalog/add, preview, render, cloud/lambda/cloudrun, tts, transcribe, beats, media-treatment |
-| `@hyperframes/sdk` | Headless composition editing: query, typed mutations, `dispatch()` data-shaped ops, `can()`, batch, undo/redo, JSON patches, fs/memory persistence |
-| `@hyperframes/core` | Parse/generate HTML, variables, project compile, static contract check, `FrameAdapter` (experimental v0), storyboard parser (`@hyperframes/core/storyboard`) |
-| `@hyperframes/producer` | Node render API: `createRenderJob()` / `executeRenderJob(job, dir, out, onProgress)`; mp4, webm, mov (ProRes 4444), gif, png-sequence, hls; HDR |
-| `@hyperframes/engine` | Seekable page → frames (Puppeteer + FFmpeg) |
-| `@hyperframes/lint`, `parsers`, `inspector` | Static rules, HTML parsing, inspection |
-| `@hyperframes/shader-transitions` | WebGL shader transitions |
-| `@hyperframes/player`, `studio`, `studio-server`, `share` | Embeddable player, browser editor, sharing |
-| `@hyperframes/aws-lambda`, `gcp-cloud-run` | Distributed rendering |
+| Package                                                   | Role                                                                                                                                                         |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `hyperframes` / `@hyperframes/cli`                        | CLI: init, capture, lint, check, snapshot, timeline edits, catalog/add, preview, render, cloud/lambda/cloudrun, tts, transcribe, beats, media-treatment      |
+| `@hyperframes/sdk`                                        | Headless composition editing: query, typed mutations, `dispatch()` data-shaped ops, `can()`, batch, undo/redo, JSON patches, fs/memory persistence           |
+| `@hyperframes/core`                                       | Parse/generate HTML, variables, project compile, static contract check, `FrameAdapter` (experimental v0), storyboard parser (`@hyperframes/core/storyboard`) |
+| `@hyperframes/producer`                                   | Node render API: `createRenderJob()` / `executeRenderJob(job, dir, out, onProgress)`; mp4, webm, mov (ProRes 4444), gif, png-sequence, hls; HDR              |
+| `@hyperframes/engine`                                     | Seekable page → frames (Puppeteer + FFmpeg)                                                                                                                  |
+| `@hyperframes/lint`, `parsers`, `inspector`               | Static rules, HTML parsing, inspection                                                                                                                       |
+| `@hyperframes/shader-transitions`                         | WebGL shader transitions                                                                                                                                     |
+| `@hyperframes/player`, `studio`, `studio-server`, `share` | Embeddable player, browser editor, sharing                                                                                                                   |
+| `@hyperframes/aws-lambda`, `gcp-cloud-run`                | Distributed rendering                                                                                                                                        |
 
 Requires Node ≥ 22 and FFmpeg. The upstream repo builds with bun 1.4.4; consumers only need npm packages.
 
@@ -59,9 +59,10 @@ Typed error codes (`E_TARGET_NOT_FOUND`, `E_NO_GSAP_TIMELINE`, …).
 
 456 items: 210 blocks (scenes with their own timeline), 238 components (snippets), 8 examples.
 Each item is `registry-item.json` (name, tags, family, typed `variables` with defaults/options/descriptions)
-+ HTML + demo. Installed as editable source with `hyperframes add <name> [--vars '{…}']`; searched with
-`hyperframes catalog --query … --json`. `hyperframes.json#registry` is a URL field, so a project can point
-at another registry — **unverified**: auth/private-registry behaviour.
+
+- HTML + demo. Installed as editable source with `hyperframes add <name> [--vars '{…}']`; searched with
+  `hyperframes catalog --query … --json`. `hyperframes.json#registry` is a URL field, so a project can point
+  at another registry — **unverified**: auth/private-registry behaviour.
 
 Already covered (names from `registry.json`):
 
