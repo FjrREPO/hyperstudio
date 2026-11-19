@@ -28,6 +28,7 @@ The creative quality overhaul. The first recipes produced slideshows; this relea
 - Stage `light: aurora` with an optional `glow` colour: drifting glows, a vignette and grain behind every shot.
 - `product-shot`: perspective `up` and `desk`, stronger `left` and `right`, and `focus` for a shallow depth of field.
 - Recipe `scatter`: the problem before the product, as notes that arrive scattered and are swept away.
+- A second example film, `examples/meeting-notes-launch`: a different product on a warm editorial stage with a serif voice.
 - The benchmark film is re-cut on a dark aurora stage with a problem opening, and its example product has a redesigned interface.
 - `hyperstudio review`: `hyperframes check`, frames from every shot, and a `REVIEW.md` rubric.
 - CLI: readable output by default, `--json`, `recipes <name>`, `--version`, exit code 2 for usage errors.
