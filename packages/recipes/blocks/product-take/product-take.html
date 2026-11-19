@@ -29,10 +29,10 @@
     #product-take-says { position: absolute; inset: 0; pointer-events: none; }
     /* A column of clear stage for the film's lines: the interface is seen beside it, never under it. */
     .pt-gutter { position: absolute; top: 0; bottom: 0; width: 46%; opacity: 0; }
-    .pt-say { position: absolute; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; white-space: pre-line; }
+    .pt-say { position: absolute; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; white-space: nowrap; }
     /* Font names are written out: HyperFrames loads a bundled font only when it finds its name in the styles. */
     .pt-d-inter { font-family: "Inter", sans-serif; } .pt-d-outfit { font-family: "Outfit", sans-serif; } .pt-d-montserrat { font-family: "Montserrat", sans-serif; } .pt-d-poppins { font-family: "Poppins", sans-serif; }
-    .pt-d-playfair-display { font-family: "Playfair Display", serif; } .pt-d-eb-garamond { font-family: "EB Garamond", serif; } .pt-d-oswald { font-family: "Oswald", sans-serif; } .pt-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; }
+    .pt-d-playfair-display { font-family: "Playfair Display", serif; } .pt-d-eb-garamond { font-family: "EB Garamond", serif; } .pt-d-oswald { font-family: "Oswald", sans-serif; } .pt-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; } .pt-d-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
 
   <div id="root" data-composition-id="product-take" data-start="0" data-duration="6" data-width="1920" data-height="1080">
@@ -74,7 +74,7 @@
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
       var v = Object.assign(
-        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter" },
+        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", level: "middle", lens: "long", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" },
         given,
       );
       var parse = function (text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } };
@@ -82,6 +82,8 @@
       var beats = parse(v.beats, []).slice().sort(function (a, b) { return a.at - b.at; });
       var ui = parse($("ui").textContent, {});
       stage.style.setProperty("--pt-accent", v.accent);
+      // A wide lens exaggerates perspective: the interface reads as an object in space, not a flat card.
+      if (v.lens === "wide") stage.style.perspective = "1250px";
 
       // ── Mount the page ──
       var world = $("world");
@@ -126,18 +128,22 @@
       // Where in the frame the subject sits: centred, or to one side when type shares the frame.
       var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
       var side = SIDES[v.side] || 0.5;
-      var frame = function (r, f) {
+      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66 };
+      var level = LEVELS[v.level] || 0.5;
+      var frame = function (r, f, cap) {
         var room = side === 0.5 ? 1 : 0.56;
-        var s = Math.min((W * f * room) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), Number(v.maxZoom) || 1.8);
-        return { scale: s, x: W * side - s * (r[0] + r[2] / 2), y: H / 2 - s * (r[1] + bar + r[3] / 2) };
+        var s = Math.min((W * f * room) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), cap || Number(v.maxZoom) || 1.8);
+        return { scale: s, x: W * side - s * (r[0] + r[2] / 2), y: H * level - s * (r[1] + bar + r[3] / 2) };
       };
       var plan = beats.map(function (b) {
         var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
         if (b.do === "camera" && b.side) side = SIDES[b.side] || side;
+        if (b.do === "camera" && b.level) level = LEVELS[b.level] || level;
         var r = rect(b.target, b.do === "camera" ? after : b.at) || whole;
-        return { b: b, r: r, to: b.do === "camera" ? frame(r, Number(b.fill) || fill) : null };
+        return { b: b, r: r, to: b.do === "camera" ? frame(r, Number(b.fill) || fill, Number(b.zoom) || 0) : null };
       });
       side = SIDES[v.side] || 0.5;
+      level = LEVELS[v.level] || 0.5;
       var start = frame(rect(v.from, 0) || whole, fill);
       app.setAttribute("data-state", first);
 
@@ -153,6 +159,7 @@
       var dof = $("dof");
       var veil = $("veil");
       var says = [];
+      var holed = null;
       var TURNS = { none: [0, 0, 0], left: [3, 12, 0], right: [3, -12, 0], up: [15, 0, 0], desk: [42, 0, -17] };
       var turned = TURNS[v.tilt] || TURNS.none;
       var soft = v.focus && v.focus !== "all" ? 1 : 0;
@@ -225,10 +232,21 @@
             tl.fromTo(counter, { n: 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
           }
         } else if (b.do === "veil") {
-          var gap = 10;
-          gsap.set(veil, { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2, boxShadow: "0 0 0 6000px " + v.background });
-          tl.fromTo(veil, { opacity: 0 }, { opacity: 1, duration: Number(b.over) || 0.6, ease: "power2.inOut" }, b.at);
-          tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
+          // A hole in a cover of the stage's colour. The first veil sets it; later ones move it, so the
+          // interface can be introduced through one element and opened, or closed down to its mark.
+          var gap = b.target === "window" ? 0 : 10;
+          var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };
+          var time = Number(b.over) || 0.6;
+          if (!holed) {
+            gsap.set(veil, Object.assign({ boxShadow: "0 0 0 9000px " + v.background }, hole));
+            tl.fromTo(veil, { opacity: b.at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: time, ease: "power2.inOut" }, b.at);
+          } else {
+            tl.fromTo(veil, Object.assign({}, holed), Object.assign({ duration: time, ease: "power3.inOut", immediateRender: false }, hole), b.at);
+            if (b.target === "window") tl.fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at + time);
+            else tl.fromTo(veil, { opacity: 1 }, { opacity: 1, duration: 0.05, immediateRender: false }, b.at);
+          }
+          holed = b.target === "window" ? null : hole;
+          if (b.target !== "window" && pointer) tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
         } else if (b.do === "say") {
           says.push(b);
         } else if (b.do === "highlight") {
@@ -278,13 +296,15 @@
       if (waiting.length) tl.fromTo(waiting, { filter: "brightness(1)" }, { filter: "brightness(0.955)", duration: 0.45, ease: "sine.inOut", repeat: Math.ceil(D / 0.45), yoyo: true }, 0);
 
       // The film's own lines. Each stays until the next one, or for its own length.
-      var SIZES = { hero: 11.5, title: 6.4, text: 3.6 };
+      var SIZES = { display: 17, hero: 11.5, title: 6.4, text: 3.4 };
+      var M = 7 * U + "px";
+      var edge = function (h, v, align) { var o = { yPercent: 0, textAlign: align }; o[h] = M; o[v] = M; return o; };
+      var mid = function (top, lift) { return { left: 0, right: 0, top: top, yPercent: lift, textAlign: "center" }; };
       var PLACES = {
-        left: { left: 7 * U + "px", top: "50%", yPercent: -50, textAlign: "left" },
-        right: { right: 7 * U + "px", top: "50%", yPercent: -50, textAlign: "right" },
-        under: { left: 0, right: 0, top: "63%", yPercent: 0, textAlign: "center" },
-        foot: { left: 0, right: 0, top: "76%", yPercent: 0, textAlign: "center" },
-        over: { left: 0, right: 0, top: "24%", yPercent: -100, textAlign: "center" },
+        left: { left: M, top: "50%", yPercent: -50, textAlign: "left" }, right: { right: M, top: "50%", yPercent: -50, textAlign: "right" },
+        under: mid("66%", 0), over: mid("22%", -100), foot: mid("80%", 0),
+        "top-left": edge("left", "top", "left"), "top-right": edge("right", "top", "right"),
+        "bottom-left": edge("left", "bottom", "left"), "bottom-right": edge("right", "bottom", "right"),
       };
       // The column behind side-set lines appears with the first of them and leaves with the last.
       ["left", "right"].forEach(function (name) {
@@ -293,28 +313,35 @@
         var gutter = $("gutter-" + name);
         gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 66%, transparent)";
         var last = mine[mine.length - 1];
-        var from = mine[0].at;
         var to = last.over ? last.at + Number(last.over) : D + 1;
-        tl.fromTo(gutter, { opacity: from <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, from);
+        tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
         if (to < D) tl.fromTo(gutter, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, to - 0.1);
       });
       says.forEach(function (b, i) {
         var place = PLACES[b.place] || PLACES.left;
-        var line = document.createElement("div");
-        line.className = "pt-say pt-d-" + String(v.displayFont).toLowerCase().replace(/[^a-z0-9]+/g, "-");
-        line.textContent = String(b.text || "");
-        line.style.color = v.ink;
-        line.style.fontSize = (SIZES[b.size] || SIZES.title) * U + "px";
-        line.style.textAlign = place.textAlign;
-        ["left", "right", "top"].forEach(function (key) { if (place[key] !== undefined) line.style[key] = place[key]; });
-        if (b.size === "text") { line.style.opacity = 0.7; line.style.letterSpacing = "-0.01em"; line.style.lineHeight = 1.3; }
-        $("says").appendChild(line);
-        // A line stays until the next line set in the same place, or for its own length.
+        var small = b.size === "text";
+        var block = document.createElement("div");
+        block.className = "pt-say pt-d-" + String(small ? v.textFont : v.displayFont).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        block.style.cssText += ";color:" + v.ink + ";font-size:" + (SIZES[b.size] || SIZES.title) * U + "px;text-align:" + place.textAlign;
+        ["left", "right", "top", "bottom"].forEach(function (key) { if (place[key] !== undefined) block.style[key] = place[key]; });
+        if (small) block.style.cssText += ";letter-spacing:0.01em;line-height:1.35;font-weight:500";
+        // Each line rises out of its own mask, one after the other: type that is set, not faded.
+        var lines = String(b.text || "").split("\n").map(function (text) {
+          var mask = document.createElement("div");
+          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em";
+          var inner = document.createElement("div");
+          inner.textContent = text;
+          mask.appendChild(inner);
+          block.appendChild(mask);
+          return inner;
+        });
+        $("says").appendChild(block);
+        gsap.set(block, { yPercent: place.yPercent });
         var after = says.slice(i + 1).filter(function (n) { return (n.place || "left") === (b.place || "left"); })[0];
         var until = b.over ? b.at + Number(b.over) : after ? after.at : D + 1;
-        // A line that opens the film is already arriving at frame 0: that frame is the thumbnail.
-        tl.fromTo(line, { opacity: b.at <= 0.05 ? 0.5 : 0, y: 2.4 * U, yPercent: place.yPercent }, { opacity: b.size === "text" ? 0.7 : 1, y: 0, duration: 0.55, ease: "power3.out" }, b.at);
-        if (until < D) tl.fromTo(line, { opacity: b.size === "text" ? 0.7 : 1 }, { opacity: 0, duration: 0.25, ease: "none", immediateRender: false }, Math.max(b.at + 0.3, until - 0.25));
+        // A line that opens the film is already half risen at frame 0: that frame is the thumbnail.
+        tl.fromTo(lines, { yPercent: b.at <= 0.05 ? 45 : 108 }, { yPercent: 0, duration: 0.7, ease: "expo.out", stagger: 0.09 }, b.at);
+        if (until < D) tl.fromTo(lines, { yPercent: 0 }, { yPercent: -108, duration: 0.35, ease: "power3.in", stagger: 0.05, immediateRender: false }, Math.max(b.at + 0.4, until - 0.4));
       });
 
       tl.set({}, {}, D);
