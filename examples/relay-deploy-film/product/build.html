@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Relay: build and test (example product)</title>
+    <!--
+      Relay is an EXAMPLE PRODUCT made for a HyperStudio film. It is not a real company. This page is the deploy's build and test log as a live page.
+      Code, commits, services, log lines and figures are invented sample data.
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; background: #07090c; }
+      .app { --bg: #0a0d11; --panel: #10151b; --line: #1d252f; --ink: #e6edf3; --dim: #7d8a99; --faint: #4a5563; --go: #3ddc97; --warn: #f5b84a; --hot: #5aa9ff; --bad: #ff6b6b;
+        width: 1440px; height: 900px; overflow: hidden; display: grid; grid-template-rows: 64px 1fr; background: var(--bg); color: var(--ink);
+        font: 20px/1.5 "IBM Plex Mono", ui-monospace, monospace; text-align: left; -webkit-font-smoothing: antialiased; }
+      svg { display: block; }
+      .top { display: flex; align-items: center; gap: 20px; padding: 0 28px; border-bottom: 1px solid var(--line); font-size: 16px; color: var(--dim); }
+      .mark { font-weight: 700; font-size: 22px; letter-spacing: -0.02em; color: var(--ink); }
+      .mark i { display: inline-block; width: 12px; height: 12px; margin-right: 10px; border-radius: 3px; background: var(--go); }
+      .top b { color: var(--ink); font-weight: 500; }
+      .top .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+      .chip { padding: 5px 12px; border: 1px solid var(--line); border-radius: 8px; }
+      .prompt { display: flex; gap: 14px; font-size: 26px; white-space: nowrap; }
+      .prompt b { color: var(--go); font-weight: 500; }
+      .ok { color: var(--go); } .dim { color: var(--dim); } .faint { color: var(--faint); }
+      .log { padding: 40px 56px; display: grid; grid-template-rows: auto auto 1fr; gap: 30px; background: #06080b; min-height: 0; }
+      .ln { display: flex; gap: 22px; font-size: 26px; white-space: nowrap; color: var(--dim); }
+      .ln span:first-child { color: var(--faint); }
+      .ln.hot { color: var(--ink); }
+      .bar { margin-top: 18px; height: 14px; }
+      .bar rect, .shard rect { fill: var(--line); }
+      .bar path, .shard path { stroke: var(--go); stroke-width: 14; stroke-linecap: round; fill: none; }
+      .shards { display: grid; gap: 14px; }
+      .shard { display: grid; grid-template-columns: 130px 1fr 60px; align-items: center; gap: 22px; font-size: 22px; color: var(--dim); }
+      .shard svg { height: 14px; width: 100%; }
+      .shard .n { text-align: right; color: var(--ink); }
+      .result { align-self: end; font-size: 64px; font-weight: 600; letter-spacing: -0.03em; color: var(--go); }
+      .result small { font-size: 26px; font-weight: 400; color: var(--dim); margin-left: 22px; letter-spacing: 0; }
+      .app[data-state="building"] .tests, .app:not([data-state="passed"]) .result > *, .app[data-state="building"] .t-test, .app:not([data-state="building"]) .t-build { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="app" data-state="building" data-states="building testing passed" data-region="window">
+      <div class="top"><span class="mark" data-region="brand"><i></i>relay</span><span>api-gateway · <b>a41c9e2</b></span>
+        <div class="right"><span class="chip"><span class="t-build">building</span><span class="t-test">testing</span></span></div></div>
+      <div class="log" data-region="log">
+        <div data-region="build">
+          <div class="ln hot" data-reveal><span>00:00</span>received a41c9e2 on main</div>
+          <div class="ln" data-reveal><span>00:01</span>resolving 214 packages from cache</div>
+          <div class="ln" data-reveal><span>00:09</span>compiling 38 modules</div>
+          <div class="ln ok" data-reveal><span>00:17</span>build ok · image sha256:7be2…41c9</div>
+          <svg class="bar" data-region="build-bar" viewBox="0 0 1300 14" preserveAspectRatio="none"><rect width="1300" height="14" rx="7" /><path d="M7 7H1293" data-draw /></svg>
+        </div>
+        <div class="tests" data-region="tests">
+          <div class="ln hot" style="margin-bottom: 20px"><span>00:18</span>running 412 tests in 6 shards</div>
+          <div class="shards" data-region="shards">
+            <div class="shard"><span>shard 1</span><svg viewBox="0 0 600 14" preserveAspectRatio="none"><rect width="600" height="14" rx="7" /><path d="M7 7H593" data-draw /></svg><span class="n">72</span></div>
+            <div class="shard"><span>shard 2</span><svg viewBox="0 0 600 14" preserveAspectRatio="none"><rect width="600" height="14" rx="7" /><path d="M7 7H593" data-draw /></svg><span class="n">68</span></div>
+            <div class="shard"><span>shard 3</span><svg viewBox="0 0 600 14" preserveAspectRatio="none"><rect width="600" height="14" rx="7" /><path d="M7 7H593" data-draw /></svg><span class="n">70</span></div>
+            <div class="shard"><span>shard 4</span><svg viewBox="0 0 600 14" preserveAspectRatio="none"><rect width="600" height="14" rx="7" /><path d="M7 7H593" data-draw /></svg><span class="n">66</span></div>
+            <div class="shard"><span>shard 5</span><svg viewBox="0 0 600 14" preserveAspectRatio="none"><rect width="600" height="14" rx="7" /><path d="M7 7H593" data-draw /></svg><span class="n">69</span></div>
+            <div class="shard"><span>shard 6</span><svg viewBox="0 0 600 14" preserveAspectRatio="none"><rect width="600" height="14" rx="7" /><path d="M7 7H593" data-draw /></svg><span class="n">67</span></div>
+          </div>
+        </div>
+        <div class="result" data-region="result"><span data-reveal>412 passed<small>0 failed · 13 s</small></span></div>
+      </div>
+    </div>
+    <script>
+      document.querySelector(".app").dataset.state = (location.hash || "#building").slice(1);
+    </script>
+  </body>
+</html>

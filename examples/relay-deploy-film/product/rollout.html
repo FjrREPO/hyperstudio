@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440" />
+    <title>Relay: the rollout (example product)</title>
+    <!--
+      Relay is an EXAMPLE PRODUCT made for a HyperStudio film. It is not a real company. This page is a release moving across the fleet as a live page.
+      Code, commits, services, log lines and figures are invented sample data.
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1440px; height: 900px; overflow: hidden; background: #07090c; }
+      .app { --bg: #0a0d11; --panel: #10151b; --line: #1d252f; --ink: #e6edf3; --dim: #7d8a99; --faint: #4a5563; --go: #3ddc97; --warn: #f5b84a; --hot: #5aa9ff; --bad: #ff6b6b;
+        width: 1440px; height: 900px; overflow: hidden; display: grid; grid-template-rows: 64px 1fr; background: var(--bg); color: var(--ink);
+        font: 20px/1.5 "IBM Plex Mono", ui-monospace, monospace; text-align: left; -webkit-font-smoothing: antialiased; }
+      svg { display: block; }
+      .top { display: flex; align-items: center; gap: 20px; padding: 0 28px; border-bottom: 1px solid var(--line); font-size: 16px; color: var(--dim); }
+      .mark { font-weight: 700; font-size: 22px; letter-spacing: -0.02em; color: var(--ink); }
+      .mark i { display: inline-block; width: 12px; height: 12px; margin-right: 10px; border-radius: 3px; background: var(--go); }
+      .top b { color: var(--ink); font-weight: 500; }
+      .top .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+      .chip { padding: 5px 12px; border: 1px solid var(--line); border-radius: 8px; }
+      .prompt { display: flex; gap: 14px; font-size: 26px; white-space: nowrap; }
+      .prompt b { color: var(--go); font-weight: 500; }
+      .ok { color: var(--go); } .dim { color: var(--dim); } .faint { color: var(--faint); }
+      .roll { display: grid; grid-template-columns: 1fr 400px; gap: 26px; padding: 30px 34px; min-height: 0; }
+      .fleet { position: relative; padding: 30px 34px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
+      h3 { font-size: 15px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-bottom: 22px; }
+      .pods { display: grid; gap: 34px; }
+      .wave { position: absolute; left: 34px; right: 34px; top: 75px; }
+      .lane { display: grid; grid-template-columns: 150px repeat(10, 1fr); gap: 14px; align-items: center; height: 150px; color: var(--dim); font-size: 20px; }
+      .lane i { height: 150px; border-radius: 12px; background: #1a222c; box-shadow: inset 0 0 0 1px var(--line); }
+      .wave .lane i { background: var(--go); box-shadow: 0 0 26px rgba(61, 220, 151, 0.35); }
+      .wave .lane i.x { visibility: hidden; }
+      .legend { position: absolute; left: 34px; bottom: 26px; display: flex; gap: 26px; font-size: 16px; color: var(--dim); }
+      .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; background: #1a222c; box-shadow: inset 0 0 0 1px var(--faint); }
+      .legend i.new { background: var(--go); box-shadow: none; }
+      .side { display: grid; grid-template-rows: auto 1fr auto; gap: 26px; }
+      .card { padding: 26px 28px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; }
+      .pct { font-size: 120px; line-height: 1; font-weight: 600; letter-spacing: -0.05em; }
+      .card p { margin-top: 10px; font-size: 17px; color: var(--dim); }
+      .plot path { fill: none; stroke: var(--hot); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .plot line { stroke: var(--line); stroke-width: 2; stroke-dasharray: 5 7; }
+      .btn { display: block; padding: 18px; border-radius: 12px; background: var(--go); color: #06281b; font-size: 22px; font-weight: 600; text-align: center; }
+      .done { padding: 18px; border-radius: 12px; border: 1px solid var(--go); color: var(--go); font-size: 20px; text-align: center; }
+      .status i { display: inline-block; width: 10px; height: 10px; margin-right: 10px; border-radius: 50%; background: var(--hot); }
+      .app[data-state="live"] .status i { background: var(--go); box-shadow: 0 0 0 5px rgba(61, 220, 151, 0.2); }
+      .app[data-state="live"] .pct { color: var(--go); }
+      .app:not([data-state="canary"]) .s-canary, .app:not([data-state="half"]) .s-half, .app:not([data-state="live"]) .s-live, .app[data-state="live"] .btn, .app:not([data-state="live"]) .done { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="app" data-state="canary" data-states="canary half live" data-region="window">
+      <div class="top"><span class="mark" data-region="brand"><i></i>relay</span><span>api-gateway · <b>a41c9e2</b></span>
+        <div class="right"><span class="chip status" data-region="status"><i></i><span class="s-canary">canary</span><span class="s-half">rolling out</span><span class="s-live">live in 3 regions · 1 m 07 s</span></span></div></div>
+      <div class="roll">
+        <div class="fleet" data-region="fleet">
+          <h3>Fleet · 30 machines</h3>
+          <div class="pods">
+              <div class="lane"><span>eu-west</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="lane"><span>us-east</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="lane"><span>ap-south</span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+            <div class="pods wave" data-region="wave-1">
+              <div class="lane"><span></span><i data-reveal></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i></div>
+              <div class="lane"><span></span><i data-reveal></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i></div>
+              <div class="lane"><span></span><i data-reveal></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i></div>
+            </div>
+            <div class="pods wave" data-region="wave-2">
+              <div class="lane"><span></span><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i></div>
+              <div class="lane"><span></span><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i></div>
+              <div class="lane"><span></span><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i></div>
+            </div>
+            <div class="pods wave" data-region="wave-3">
+              <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
+              <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
+              <div class="lane"><span></span><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i class='x'></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i><i data-reveal></i></div>
+            </div>
+          <div class="legend"><span><i></i>9f3e1d7 previous</span><span><i class="new"></i>a41c9e2 new</span></div>
+        </div>
+        <div class="side">
+          <div class="card" data-region="traffic">
+            <h3>Traffic on the new release</h3>
+            <div class="pct" data-region="pct"><span class="s-canary">10%</span><span class="s-half">50%</span><span class="s-live">100%</span></div>
+          </div>
+          <div class="card" data-region="health">
+            <h3>Errors and p95 · new vs previous</h3>
+            <svg class="plot" viewBox="0 0 340 170"><line x1="0" y1="60" x2="340" y2="60" /><path d="M4 112 L40 108 L76 114 L112 104 L148 110 L184 102 L220 106 L256 100 L292 104 L336 98" data-draw /></svg>
+            <p>within baseline</p>
+          </div>
+          <div><span class="btn" data-region="promote">Promote to 100%</span><span class="done">previous release kept warm</span></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.querySelector(".app").dataset.state = (location.hash || "#canary").slice(1);
+    </script>
+  </body>
+</html>
