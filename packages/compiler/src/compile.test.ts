@@ -271,6 +271,17 @@ test("audio can follow a scene, and two voices may not overlap", () => {
   assert.equal(starts([{ id: "bed" }, { id: "vo", role: "voice", start: 1, duration: 2 }]).length, 2);
 });
 
+test("generated scenes carry no comments or blank lines, and fold what cannot end a statement", () => {
+  const out = mkdtempSync(join(tmpdir(), "hs-lean-"));
+  compile(EXAMPLE, { output: out });
+  const scene = readFileSync(join(out, "compositions/share.html"), "utf8");
+  assert.doesNotMatch(scene, /^\s*\/\/ /m, "whole-line comments are dropped");
+  assert.doesNotMatch(scene, /\n\s*\n/, "blank lines are dropped");
+  assert.match(scene, /hyperstudio:generated/, "the marker is kept");
+  // An object literal that was one key per line in the recipe arrives on one line.
+  assert.match(scene, /var v = Object\.assign\( \{ screen: ""/);
+});
+
 test("a slow film is allowed but flagged", () => {
   const watch = join(import.meta.dirname, "../../../examples/luxury-watch-commercial/video.json");
   const { warnings } = compile(watch, { validateOnly: true });
