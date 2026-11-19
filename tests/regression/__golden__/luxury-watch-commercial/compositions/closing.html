@@ -1,18 +1,5 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
-  <!--
-    LUXURY PRODUCT REVEAL
-
-    One shot: the product comes out of darkness, a light crosses it, the copy rises.
-    Variables are declared in registry-item.json (the compiler writes them onto #root).
-
-    Conventions this file keeps so the HyperStudio compiler can reuse it for any number of scenes:
-      - the composition id is the recipe name, and every element id starts with it;
-      - sizes are in --u (1% of the canvas's short side), so any resolution works;
-      - every visible state is a function of timeline time: seeded dust, finite tweens, fromTo only.
-
-    The camera is a 2.5D simulation: scale, translate and a perspective rotation of a flat image.
-  -->
   <style>
     #root {
       position: absolute;
@@ -27,7 +14,6 @@
       position: absolute;
       inset: 0;
       overflow: hidden;
-      /* Transparent: the film's stage is the background, so every scene shares one ground. */
       color: var(--lpr-ink);
     }
     .lpr-fill {
@@ -35,8 +21,6 @@
       inset: 0;
       pointer-events: none;
     }
-
-    /* ── Layout: product zone and copy zone ── */
     #closing-zone,
     #closing-copy {
       position: absolute;
@@ -53,8 +37,6 @@
     .lpr-right #closing-copy { left: 10%; right: 53%; top: 10%; bottom: 10%; justify-content: center; align-items: flex-start; text-align: left; }
     .lpr-portrait #closing-zone { left: 14%; right: 26%; top: 12%; bottom: 57%; }
     .lpr-portrait #closing-copy { left: 14%; right: 26%; top: 45%; bottom: 36%; justify-content: flex-start; align-items: center; text-align: center; }
-
-    /* ── Light ── */
     #closing-glow {
       position: absolute;
       inset: -35%;
@@ -91,8 +73,6 @@
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.11), transparent);
     }
-
-    /* ── Product ── */
     #closing-rig {
       position: absolute;
       inset: 0;
@@ -137,8 +117,6 @@
       border-radius: 50%;
       background: color-mix(in srgb, var(--lpr-accent) 55%, white);
     }
-
-    /* ── Copy ── */
     #closing-eyebrow {
       font-size: calc(var(--u) * 2.6);
       font-weight: 400;
@@ -198,7 +176,6 @@
     .lpr-b-poppins { font-family: "Poppins", sans-serif; }
     .lpr-b-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
-
   <div
     id="root"
     data-composition-id="closing"
@@ -210,7 +187,6 @@
     <div id="closing-stage" class="lpr-center">
       <div id="closing-spot" class="lpr-fill" data-layout-allow-occlusion></div>
       <div id="closing-beam-wrap" data-layout-allow-overflow><div id="closing-beam" data-layout-allow-overflow></div></div>
-
       <div id="closing-zone">
         <div id="closing-glow" data-layout-allow-overflow></div>
         <div id="closing-halo" data-layout-allow-overflow></div>
@@ -224,10 +200,8 @@
           </div>
         </div>
       </div>
-
       <div id="closing-dust" class="lpr-fill"></div>
       <div id="closing-vignette" class="lpr-fill" data-layout-allow-occlusion></div>
-
       <div id="closing-copy">
         <div id="closing-eyebrow" data-var-text="eyebrow"></div>
         <div id="closing-headline"></div>
@@ -236,7 +210,6 @@
       </div>
     </div>
   </div>
-
   <script>
     (function () {
       window.__timelines = window.__timelines || {};
@@ -250,7 +223,6 @@
       var H = Number(scope.getAttribute("data-height")) || 1080;
       var D = Number(scope.getAttribute("data-duration")) || 6;
       var U = Math.min(W, H) / 100;
-
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
       var v = Object.assign(
         {
@@ -278,15 +250,12 @@
       var portrait = H > W;
       var layout = portrait ? "portrait" : v.layout;
       var k = Number(v.intensity) || 1;
-
-      // ── Static setup (no time involved) ──
       stage.style.setProperty("--u", U + "px");
       stage.style.setProperty("--lpr-accent", v.accent);
       stage.style.setProperty("--lpr-bg", v.background);
       stage.style.setProperty("--lpr-ink", v.ink);
       stage.className = "lpr-" + layout + " lpr-b-" + slug(v.textFont);
       $("headline").className = "lpr-h-" + slug(v.displayFont);
-
       var src = typeof v.product === "string" ? v.product : (v.product && v.product.url) || "";
       if (src) {
         $("img").setAttribute("src", src);
@@ -295,7 +264,6 @@
       } else {
         $("product").style.display = "none";
       }
-
       $("eyebrow").textContent = v.eyebrow;
       $("sub").textContent = v.subline;
       if (!v.eyebrow) $("eyebrow").style.display = "none";
@@ -313,16 +281,12 @@
         headline.appendChild(outer);
         if (i < words.length - 1) headline.appendChild(document.createTextNode(" "));
       });
-
-      // Light per look: [glow, spot, halo, beam, vignette]
       var look = { dramatic: [0.55, 1, 0, 1, 0.86], soft: [0.95, 0.4, 0, 0, 0.5], rim: [0.3, 0.55, 0.9, 1, 0.74] }[v.lighting] || [0.55, 1, 0, 1, 0.86];
       var productX = { center: 50, left: 27, right: 73, portrait: 50 }[layout];
       $("spot").style.background =
         "radial-gradient(ellipse 55% 80% at " + productX + "% -12%, rgba(255,255,255,0.22), transparent 70%)";
       $("vignette").style.background =
         "radial-gradient(ellipse at " + productX + "% 45%, transparent 38%, rgba(0,0,0," + look[4] + ") 100%)";
-
-      // Seeded so the dust is the same on every render and differs between scenes.
       var seed = 2166136261;
       for (var c = 0; c < ID.length; c++) seed = Math.imul(seed ^ ID.charCodeAt(c), 16777619);
       var rand = function () {
@@ -331,31 +295,22 @@
         t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
       };
-
-      // ── Timeline ──
       var tl = gsap.timeline({ paused: true });
       var end = D - 0.05; // land every end state just before the scene's last frame
-
-      // Light comes up first.
       tl.fromTo($("spot"), { opacity: 0 }, { opacity: look[1], duration: 1.4, ease: "power2.out" }, 0);
       tl.fromTo($("glow"), { opacity: 0, scale: 0.8 }, { opacity: look[0], scale: 1, duration: 1.8, ease: "power2.out" }, 0.1);
       tl.fromTo($("halo"), { opacity: 0, scale: 0.82 }, { opacity: look[2], scale: 1.04, duration: end - 0.3, ease: "power2.out" }, 0.3);
       tl.fromTo($("floor"), { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power2.out" }, 0.7);
       tl.fromTo($("vignette"), { opacity: 0.6 }, { opacity: 1, duration: 2, ease: "sine.out" }, 0);
       tl.fromTo($("beam"), { x: -0.45 * W, opacity: look[3] }, { x: 1.25 * W, opacity: look[3], duration: 2.6, ease: "power1.inOut" }, 0.5);
-
-      // Product resolves out of blur.
       tl.fromTo(
         $("product"),
         { opacity: 0, scale: 0.88, y: 4 * U, filter: "blur(" + 2 * U + "px)" },
         { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.6, ease: "expo.out" },
         0.2,
       );
-      // A glint crosses the product's silhouette once it has landed, and again late in a long scene.
       tl.fromTo($("glint-bar"), { xPercent: -120 }, { xPercent: 320, duration: 1.3, ease: "power2.inOut" }, 1.0);
       if (D >= 7) tl.fromTo($("glint-bar"), { xPercent: -120 }, { xPercent: 320, duration: 1.3, ease: "power2.inOut", immediateRender: false }, D - 3);
-
-      // Camera: one continuous move for the whole scene.
       var cam = $("cam");
       var move = {
         "push-in": [{ scale: 1 }, { scale: 1 + 0.12 * k, ease: "power1.out" }],
@@ -364,8 +319,6 @@
         pan: [{ x: -3.5 * U * k }, { x: 3.5 * U * k, ease: "sine.inOut" }],
       }[v.camera];
       if (move) tl.fromTo(cam, move[0], Object.assign({ duration: end }, move[1]), 0);
-
-      // Dust drifts upward.
       if (v.particles !== false && v.particles !== "false") {
         var dust = $("dust");
         for (var i = 0; i < 34; i++) {
@@ -384,8 +337,6 @@
           tl.fromTo(p, { opacity: 0 }, { keyframes: [{ opacity: peak, duration: life * 0.3 }, { opacity: 0, duration: life * 0.7 }], ease: "sine.inOut" }, born);
         }
       }
-
-      // Copy: eyebrow, headline word by word, rule, subline.
       var centered = layout === "center" || layout === "portrait";
       tl.fromTo($("eyebrow"), { opacity: 0, y: 1.4 * U }, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, 1.25);
       tl.fromTo(
@@ -401,12 +352,10 @@
         1.9,
       );
       tl.fromTo($("sub"), { opacity: 0, y: 1.4 * U }, { opacity: 0.82, y: 0, duration: 0.9, ease: "power3.out" }, 2.1);
-
       if (v.exit === "fade") {
         tl.fromTo($("copy"), { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.85);
         tl.fromTo($("zone"), { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "power2.in", immediateRender: false }, D - 0.7);
       }
-
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
     })();

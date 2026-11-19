@@ -1,13 +1,5 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
-  <!--
-    BRAND CLOSE
-
-    The ending: the mark arrives, the name opens out beside it, then the tagline and an optional button.
-    Variables are declared in registry-item.json (the compiler writes them onto #root).
-
-    The scene is transparent: the film's stage shows behind the lockup.
-  -->
   <style>
     #root {
       position: absolute;
@@ -70,7 +62,6 @@
     .bc-t-poppins { font-family: "Poppins", sans-serif; }
     .bc-t-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
-
   <div id="root" data-composition-id="close" data-start="0" data-duration="2.6" data-width="1920" data-height="1080" data-composition-variables='[{"id":"mark","type":"image","role":"content","label":"Brand mark","description":"The logo mark as SVG or transparent PNG, square.","default":""},{"id":"name","type":"string","role":"content","label":"Brand name","default":"","maxLength":18},{"id":"tagline","type":"string","role":"content","label":"Tagline","description":"Empty hides it.","default":"","maxLength":44},{"id":"cta","type":"string","role":"content","label":"Button","description":"Two or three words. Empty hides it.","default":"","maxLength":22},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
     <div id="close-stage">
       <div id="close-lockup">
@@ -81,7 +72,6 @@
       <div id="close-cta" data-var-text="cta"></div>
     </div>
   </div>
-
   <script>
     (function () {
       window.__timelines = window.__timelines || {};
@@ -95,7 +85,6 @@
       var H = Number(scope.getAttribute("data-height")) || 1080;
       var D = Number(scope.getAttribute("data-duration")) || 2.5;
       var U = Math.min(W, H) / 100;
-
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
       var v = Object.assign(
         { mark: "", name: "", tagline: "", cta: "", background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" },
@@ -105,8 +94,6 @@
         return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
       };
       var portrait = H > W;
-
-      // ── Static setup ──
       stage.style.setProperty("--bc-accent", v.accent);
       stage.style.setProperty("--bc-ink", v.ink);
       stage.style.setProperty("--bc-paper", v.background);
@@ -133,17 +120,12 @@
       cta.style.padding = 1.25 * U + "px " + 2.8 * U + "px";
       cta.style.borderRadius = 1.3 * U + "px";
       if (!v.cta) cta.style.display = "none";
-
-      // ── Timeline: mark, then name, then the words under it. Then nothing moves. ──
       var tl = gsap.timeline({ paused: true });
       tl.fromTo(mark, { opacity: 0.3, scale: 0.72, rotation: -40 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(1.5)" }, 0);
       tl.fromTo(name, { xPercent: -102 }, { xPercent: 0, duration: 0.7, ease: "expo.out" }, 0.28);
       tl.fromTo(tagline, { opacity: 0, y: 1.2 * U }, { opacity: 0.66, y: 0, duration: 0.6, ease: "power3.out" }, 0.4);
       tl.fromTo(cta, { opacity: 0, y: 1.2 * U }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.5);
-
-      // A slow push for the whole shot, so type that has landed is never a frozen frame.
       tl.fromTo(stage, { scale: 1 }, { scale: 1.03, duration: D, ease: "none" }, 0);
-
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
     })();

@@ -1,22 +1,5 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
-  <!--
-    PRODUCT SHOT
-
-    One shot of a real product screen. The camera frames one named region of the screenshot and moves to
-    another. On top of the screenshot it can move a cursor and click, type into an input, and outline a
-    component. Variables are declared in registry-item.json (the compiler writes them onto #root).
-
-    The scene is transparent: the film's stage shows behind the screen, so cutting between shots changes the
-    picture and not the place.
-
-    Everything inside #ticked-world is positioned in the screenshot's own pixels, so overlays stay
-    attached to the component they belong to while the camera moves.
-
-    Conventions (docs/RECIPE-DEVELOPMENT.md): the composition id is the recipe name and every element id
-    starts with it; frame-space sizes are in u (1% of the canvas's short side); every visible state is a
-    function of timeline time.
-  -->
   <style>
     #root {
       position: absolute;
@@ -36,7 +19,6 @@
       position: absolute;
       inset: 0;
     }
-    /* The screen, in its own pixel space. GSAP owns its transform. */
     #ticked-world {
       position: absolute;
       left: 0;
@@ -49,13 +31,11 @@
         0 14px 34px rgba(0, 0, 0, 0.14),
         0 50px 130px rgba(0, 0, 0, 0.3);
     }
-    /* Depth of field: blurs what is behind it, through a mask that leaves the plane of focus sharp. */
     #ticked-dof {
       position: absolute;
       inset: 0;
       pointer-events: none;
     }
-    /* The whole screenshot. When a component is isolated, the world shrinks to it and this slides under. */
     #ticked-sheet {
       position: absolute;
     }
@@ -125,7 +105,6 @@
     .ps-t-poppins { font-family: "Poppins", sans-serif; }
     .ps-t-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
-
   <div id="root" data-composition-id="ticked" data-start="0" data-duration="1.2" data-width="1920" data-height="1080" data-composition-variables='[{"id":"screen","type":"image","role":"content","label":"Screen","description":"Supplied by the compiler from the scene&#39;s screen.","default":""},{"id":"screenMeta","type":"string","role":"content","label":"Screen geometry","description":"Supplied by the compiler: the screen&#39;s size and regions as JSON.","default":""},{"id":"isolate","type":"string","role":"region","label":"Isolated component","description":"Show only this component of the screen, floating on the stage, instead of the whole window. The camera, cursor and outline still use region names.","default":""},{"id":"radius","type":"number","role":"look","label":"Corner radius","description":"Corner radius of what is shown, in the screenshot&#39;s pixels. Match the isolated component&#39;s own corners.","default":14,"min":0,"max":48,"step":1},{"id":"from","type":"string","role":"region","label":"Start framing","description":"The region the camera frames at the start. window is the whole screen.","default":"window"},{"id":"to","type":"string","role":"region","label":"End framing","description":"The region the camera frames at the end. Empty holds on the start framing with a slow drift.","default":""},{"id":"fill","type":"number","role":"layout","label":"Frame fill","description":"How much of the frame the framed region may take, by width or height. Lower leaves more space around it.","default":0.78,"min":0.3,"max":1,"step":0.02},{"id":"move","type":"enum","role":"motion","label":"Camera move","default":"settle","options":[{"value":"settle","label":"Fast out, long settle"},{"value":"ease","label":"Ease in and out"},{"value":"drift","label":"Constant slow drift"}]},{"id":"tilt","type":"enum","role":"layout","label":"Perspective","description":"Turn the screen in perspective. A 2.5D transform of the flat screenshot: it eases from a slightly stronger angle to this one.","default":"none","options":[{"value":"none","label":"Flat"},{"value":"left","label":"Turned to the left"},{"value":"right","label":"Turned to the right"},{"value":"up","label":"Leaning back"},{"value":"desk","label":"Lying on a desk, seen from above at an angle"}]},{"id":"focus","type":"enum","role":"layout","label":"Focus","description":"Which part of the frame stays sharp; the rest is softly blurred, as with a shallow depth of field. Use it with a tilt.","default":"all","options":[{"value":"all","label":"Everything sharp"},{"value":"band","label":"A sharp band across the middle"},{"value":"near","label":"Sharp below, soft at the top (the far edge)"},{"value":"centre","label":"Sharp in the centre"}]},{"id":"enter","type":"enum","role":"motion","label":"Entrance","description":"none for a cut. rise brings the screen up into the frame, for the first time the product is seen.","default":"none","options":[{"value":"none","label":"None (cut)"},{"value":"rise","label":"Rise in"}]},{"id":"cursor","type":"string","role":"region","label":"Cursor target","description":"The component the cursor travels to. Empty for no cursor.","default":""},{"id":"click","type":"boolean","role":"motion","label":"Click","description":"Click when the cursor arrives.","default":true},{"id":"clickAt","type":"number","role":"motion","label":"Click moment","description":"When the cursor arrives, as a fraction of the shot.","default":0.62,"min":0.2,"max":0.95,"step":0.01},{"id":"highlight","type":"string","role":"region","label":"Outlined component","description":"A component to outline in the accent colour. Empty for none.","default":""},{"id":"typeIn","type":"string","role":"region","label":"Typed-into component","description":"The input the text is typed into. Use the text area itself, not the whole control.","default":""},{"id":"typeText","type":"string","role":"content","label":"Typed text","description":"What gets typed. It should be what the next screen shows as entered.","default":"","maxLength":64},{"id":"typeColor","type":"color","role":"look","label":"Typed text colour","description":"Match the input&#39;s text colour in the screenshot.","default":"#17150f"},{"id":"typeBackground","type":"color","role":"look","label":"Input background","description":"Match the input&#39;s background in the screenshot; it covers the placeholder.","default":"#ffffff"},{"id":"label","type":"string","role":"content","label":"Label","description":"A few words naming what the shot shows. Empty for none.","default":"","maxLength":40},{"id":"emphasis","type":"string","role":"content","label":"Emphasised word","description":"A word of the label to set in the accent colour.","default":"","maxLength":20},{"id":"labelAt","type":"enum","role":"layout","label":"Label position","default":"bottom-left","options":[{"value":"bottom-left","label":"Bottom left"},{"value":"bottom-center","label":"Bottom center"},{"value":"top-left","label":"Top left"},{"value":"top-center","label":"Top center"}]},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
     <div id="ticked-stage">
       <div id="ticked-rig">
@@ -145,7 +124,6 @@
       <div id="ticked-label"></div>
     </div>
   </div>
-
   <script>
     (function () {
       window.__timelines = window.__timelines || {};
@@ -159,7 +137,6 @@
       var H = Number(scope.getAttribute("data-height")) || 1080;
       var D = Number(scope.getAttribute("data-duration")) || 2;
       var U = Math.min(W, H) / 100;
-
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
       var v = Object.assign(
         {
@@ -199,7 +176,6 @@
       try {
         meta = JSON.parse(v.screenMeta);
       } catch (e) {
-        /* standalone preview: fall back to the whole screen */
       }
       var whole = [0, 0, meta.width, meta.height];
       var onScreen = function (name) {
@@ -208,19 +184,14 @@
       var hide = function (el) {
         el.style.display = "none";
       };
-
-      // ── Static setup ──
       stage.style.setProperty("--ps-accent", v.accent);
       stage.style.setProperty("--ps-ink", v.ink);
       stage.style.setProperty("--ps-paper", v.background);
-      // Isolate: show one component of the screen on its own, floating on the stage.
       var only = onScreen(v.isolate) || whole;
-      // One pixel inside the component, so nothing behind its rounded corners shows.
       if (onScreen(v.isolate)) only = [only[0] + 1, only[1] + 1, only[2] - 2, only[3] - 2];
       var ox = only[0];
       var oy = only[1];
       whole = [0, 0, only[2], only[3]];
-      // Regions as the camera sees them: relative to what is shown.
       var rect = function (name) {
         var r = onScreen(name);
         return r ? [r[0] - ox, r[1] - oy, r[2], r[3]] : null;
@@ -236,8 +207,6 @@
       sheet.style.height = meta.height + "px";
       var src = typeof v.screen === "string" ? v.screen : (v.screen && v.screen.url) || "";
       if (src) $("img").setAttribute("src", src);
-
-      // Label: a small dark tag in frame space, with at most one accented word.
       var label = $("label");
       var labelText = String(v.label).trim();
       var top = String(v.labelAt).indexOf("top") === 0;
@@ -262,8 +231,6 @@
       } else {
         hide(label);
       }
-
-      // Camera: where the world must sit so that a region fills the frame.
       var fill = Number(v.fill) || 0.78;
       var shift = labelText ? (top ? 3.2 : -3.2) * U : 0; // leave the label's side of the frame clear
       var frame = function (r) {
@@ -272,32 +239,25 @@
       };
       var a = frame(rect(v.from) || whole);
       var toRect = rect(v.to);
-      // With nowhere to go, hold the framing and drift in a touch so the shot is never frozen.
       var b = toRect ? frame(toRect) : frame((function (r) {
             var k = 0.035;
             return [r[0] + r[2] * k, r[1] + r[3] * k, r[2] * (1 - 2 * k), r[3] * (1 - 2 * k)];
           })(rect(v.from) || whole));
-
-      // ── Timeline ──
       var tl = gsap.timeline({ paused: true });
       var end = D - 0.04;
       var ease = { settle: "expo.out", ease: "power2.inOut", drift: "none" }[v.move] || "expo.out";
       if (!toRect) ease = "none";
-
       tl.fromTo(
         world,
         { x: a.x, y: a.y, scale: a.scale, transformOrigin: "0 0" },
         { x: b.x, y: b.y, scale: b.scale, duration: end, ease: ease },
         0,
       );
-      // Perspective: the rig eases from a stronger angle to its own, so the turn reads as a camera move.
-      // [rotationX, rotationY, rotationZ] at the start, then at the end.
       var turn = { left: [6, 22, 0, 3, 14, 0], right: [6, -22, 0, 3, -14, 0], up: [26, 0, 0, 16, 0, 0], desk: [50, 0, -24, 42, 0, -17] }[v.tilt];
       if (turn) {
         var from = { rotationX: turn[0], rotationY: turn[1], rotationZ: turn[2], transformOrigin: "50% 50%" };
         tl.fromTo($("rig"), from, { rotationX: turn[3], rotationY: turn[4], rotationZ: turn[5], duration: end, ease: "power2.out" }, 0);
       }
-      // Focus: which part of the frame stays sharp. Still for the whole shot.
       var mask = {
         band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
         near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
@@ -307,8 +267,6 @@
       if (mask) dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
       else hide(dof);
       if (v.enter === "rise") tl.fromTo($("rig"), { opacity: 0, y: 5 * U }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0);
-
-      // Typing: the text is drawn over the input, in the screenshot's own space.
       var typeRect = rect(v.typeIn);
       var text = String(v.typeText);
       var typeEnd = 0;
@@ -326,7 +284,6 @@
         var caret = $("caret");
         var typeStart = Math.min(0.3, D * 0.12);
         typeEnd = Math.max(typeStart + 0.4, D * 0.78);
-        // A property setter, because HyperFrames seeks with events suppressed: onUpdate would never fire.
         var clock = Object.defineProperty({}, "t", {
           get: function () {
             return 0;
@@ -342,8 +299,6 @@
       } else {
         hide($("type"));
       }
-
-      // Outline a component.
       var outlineRect = rect(v.highlight);
       if (outlineRect) {
         var pad = 8;
@@ -356,20 +311,15 @@
       } else {
         hide($("outline"));
       }
-
-      // Cursor: travels to a component, and clicks.
       var target = rect(v.cursor);
       if (target) {
-        // Aim below and right of centre so the arrow does not cover the component's own text.
         var cx = target[0] + ox + target[2] * 0.66;
         var cy = target[1] + oy + target[3] * 0.66;
-        // Keep the arrow readable in a wide shot without letting it grow huge in a close one.
         var cursorSize = Math.max(30, Math.min(64, 42 / b.scale));
         $("cursor").style.width = $("cursor").style.height = cursorSize + "px";
         var arrive = Math.max(0.5, D * (Number(v.clickAt) || 0.62));
         var leave = Math.max(typeEnd, arrive - 0.9, 0);
         var cursor = $("cursor");
-        // Start below and to the right of the target, inside the screen. The arrow's tip is its top-left.
         var sx = cx + Math.min(230, 420 / b.scale);
         var sy = cy + Math.min(150, 280 / b.scale);
         tl.fromTo(cursor, { x: sx - 5, y: sy - 3, opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, Math.max(0, leave - 0.05));
@@ -388,9 +338,7 @@
         hide($("cursor"));
         hide($("ripple"));
       }
-
       if (labelText) tl.fromTo(label, { opacity: 0, y: (top ? -1 : 1) * U }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, Math.min(0.2, D * 0.1));
-
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
     })();
