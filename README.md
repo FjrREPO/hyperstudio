@@ -18,7 +18,7 @@ Animation, variable binding, audio mixing, validation, snapshots and rendering s
 
 ## Requirements
 
-Node ≥ 24, pnpm 10, FFmpeg, and Chrome (HyperFrames uses them; `npx hyperframes doctor` checks).
+Node ≥ 24, pnpm 12, FFmpeg, and Chrome (HyperFrames uses them; `npx hyperframes doctor` checks).
 
 ## Quick start
 
