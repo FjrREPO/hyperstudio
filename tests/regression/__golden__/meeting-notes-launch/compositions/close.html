@@ -1,53 +1,14 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
   <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    #close-stage {
-      --bc-accent: #2747f0;
-      --bc-ink: #17150f;
-      --bc-paper: #f3efe6;
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--bc-ink);
-    }
-    #close-lockup {
-      display: flex;
-      align-items: center;
-    }
-    #close-mark {
-      flex: none;
-      display: block;
-    }
-    #close-clip {
-      overflow: hidden;
-      padding: 0.1em 0;
-    }
-    #close-name {
-      font-weight: 600;
-      letter-spacing: -0.035em;
-      line-height: 1.1;
-      white-space: nowrap;
-      padding: 0 0.04em 0 0.28em;
-    }
-    #close-tagline {
-      font-weight: 400;
-      opacity: 0.66;
-      white-space: nowrap;
-    }
-    #close-cta {
-      font-weight: 600;
-      color: var(--bc-paper);
-      background: var(--bc-ink);
-      white-space: nowrap;
-    }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #close-stage { --bc-accent: #2747f0; --bc-ink: #17150f; --bc-paper: #f3efe6; position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--bc-ink); }
+    #close-lockup { display: flex; align-items: center; }
+    #close-mark { flex: none; display: block; }
+    #close-clip { overflow: hidden; padding: 0.1em 0; }
+    #close-name { font-weight: 600; letter-spacing: -0.035em; line-height: 1.1; white-space: nowrap; padding: 0 0.04em 0 0.28em; }
+    #close-tagline { font-weight: 400; opacity: 0.66; white-space: nowrap; }
+    #close-cta { font-weight: 600; color: var(--bc-paper); background: var(--bc-ink); white-space: nowrap; }
     .bc-d-inter { font-family: "Inter", sans-serif; }
     .bc-d-outfit { font-family: "Outfit", sans-serif; }
     .bc-d-montserrat { font-family: "Montserrat", sans-serif; }
@@ -73,11 +34,9 @@
     </div>
   </div>
   <script>
-    (function () {
-      window.__timelines = window.__timelines || {};
+    (function () { window.__timelines = window.__timelines || {};
       var ID = "close";
-      var $ = function (name) {
-        return document.getElementById(ID + "-" + name);
+      var $ = function (name) { return document.getElementById(ID + "-" + name);
       };
       var stage = $("stage");
       var scope = stage.closest("[data-composition-id]");
@@ -86,12 +45,8 @@
       var D = Number(scope.getAttribute("data-duration")) || 2.5;
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
-      var v = Object.assign(
-        { mark: "", name: "", tagline: "", cta: "", background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" },
-        given,
-      );
-      var slug = function (s) {
-        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      var v = Object.assign( { mark: "", name: "", tagline: "", cta: "", background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" }, given, );
+      var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
       };
       var portrait = H > W;
       stage.style.setProperty("--bc-accent", v.accent);

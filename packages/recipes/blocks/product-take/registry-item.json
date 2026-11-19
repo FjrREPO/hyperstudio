@@ -128,6 +128,10 @@
         {
           "value": "low",
           "label": "Low"
+        },
+        {
+          "value": "bleed",
+          "label": "Low enough to run off the bottom of the frame"
         }
       ]
     },

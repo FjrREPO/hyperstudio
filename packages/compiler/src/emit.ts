@@ -140,6 +140,27 @@ ${tweens.map((t) => `      ${t}`).join("\n")}
 `;
 }
 
+/**
+ * Fold a generated scene's styles and script onto fewer lines. Only lines that cannot end a statement are
+ * joined to the next: ones ending in `,` `(` `[` or `{` in a script, and any line inside a style rule. A line
+ * with a trailing `//` comment is left alone. The code is unchanged; HyperFrames' size check counts lines.
+ */
+function compact(html: string): string {
+  const fold = (body: string, open: RegExp) => {
+    const out: string[] = [];
+    for (const line of body.split("\n")) {
+      const last = out[out.length - 1];
+      if (last !== undefined && open.test(last) && !last.includes("//"))
+        out[out.length - 1] = `${last} ${line.trim()}`;
+      else out.push(line);
+    }
+    return out.join("\n");
+  };
+  return html
+    .replace(/(<script>)([\s\S]*?)(<\/script>)/g, (_, a, body, z) => a + fold(body, /[,([{]\s*$/) + z)
+    .replace(/(<style>)([\s\S]*?)(<\/style>)/g, (_, a, body, z) => a + fold(body, /[,;{]\s*$/) + z);
+}
+
 /** Fine static grain, so large soft gradients do not band and the stage reads as a surface. */
 const GRAIN =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
@@ -207,7 +228,7 @@ export function instantiate(scene: PlannedScene, width: number, height: number):
     .replace(/^[ \t]*\/\/.*\n/gm, "")
     .replace(/^[ \t]*\/\*.*\*\/[ \t]*\n/gm, "")
     .replace(/\n[ \t]*\n/g, "\n");
-  return lean.replace(/<template>/, `<template>\n  ${MARKER}`);
+  return compact(lean).replace(/<template>/, `<template>\n  ${MARKER}`);
 }
 
 /** The plan beside the project, in the STORYBOARD.md format HyperFrames reads. */

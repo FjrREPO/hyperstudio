@@ -5,11 +5,7 @@
     #before-stage { --pt-accent: #2747f0; position: absolute; inset: 0; overflow: hidden; perspective: 2600px; }
     #before-rig { position: absolute; inset: 0; }
     #before-cam { position: absolute; left: 0; top: 0; }
-    #before-frame {
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.22), 0 14px 34px rgba(0, 0, 0, 0.14), 0 50px 130px rgba(0, 0, 0, 0.3);
-    }
+    #before-frame { overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.22), 0 14px 34px rgba(0, 0, 0, 0.14), 0 50px 130px rgba(0, 0, 0, 0.3); }
     #before-bar { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; background: #f1f1f3; border-bottom: 1px solid #e2e2e6; }
     #before-bar i { width: 12px; height: 12px; border-radius: 50%; background: #d3d4da; }
     #before-over { position: absolute; left: 0; top: 0; pointer-events: none; }
@@ -24,7 +20,7 @@
     .pt-d-inter { font-family: "Inter", sans-serif; } .pt-d-outfit { font-family: "Outfit", sans-serif; } .pt-d-montserrat { font-family: "Montserrat", sans-serif; } .pt-d-poppins { font-family: "Poppins", sans-serif; }
     .pt-d-playfair-display { font-family: "Playfair Display", serif; } .pt-d-eb-garamond { font-family: "EB Garamond", serif; } .pt-d-oswald { font-family: "Oswald", sans-serif; } .pt-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; } .pt-d-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
   </style>
-  <div id="root" data-composition-id="before" data-start="0" data-duration="7.4" data-width="1920" data-height="1080" data-composition-variables='[{"id":"screen","type":"image","role":"content","label":"Screen","description":"Supplied by the compiler from the scene&#39;s screen.","default":""},{"id":"screenMeta","type":"string","role":"content","label":"Screen geometry","description":"Supplied by the compiler: the screen&#39;s size and regions as JSON.","default":""},{"id":"beats","type":"string","role":"content","label":"Beats","description":"Supplied by the compiler from the scene&#39;s beats.","default":"[]"},{"id":"state","type":"string","role":"look","label":"Opening state","description":"The state the interface is in when the take starts. Empty uses the page&#39;s own.","default":""},{"id":"from","type":"string","role":"region","label":"Start framing","description":"The region the camera frames at the start. window is the whole interface.","default":"window"},{"id":"fill","type":"number","role":"layout","label":"Frame fill","description":"How much of the frame the framed region may take, by width or height. Lower leaves more space around it.","default":0.86,"min":0.3,"max":1,"step":0.02},{"id":"maxZoom","type":"number","role":"layout","label":"Closest zoom","description":"The camera never magnifies the interface beyond this, so close-ups keep their surroundings and stay readable.","default":1.8,"min":1,"max":6,"step":0.1},{"id":"side","type":"enum","role":"layout","label":"Side","description":"Where in the frame the interface sits. Put it to one side when the film&#39;s own lines share the frame; a camera beat can change it.","default":"centre","options":[{"value":"centre","label":"Centred"},{"value":"left","label":"Left, with room on the right"},{"value":"right","label":"Right, with room on the left"}]},{"id":"level","type":"enum","role":"layout","label":"Level","description":"How high in the frame the interface sits. Low lets it bleed off the bottom under a headline; a camera beat can change it.","default":"middle","options":[{"value":"high","label":"High"},{"value":"middle","label":"Middle"},{"value":"low","label":"Low"}]},{"id":"lens","type":"enum","role":"look","label":"Lens","description":"Long keeps perspective gentle. Wide exaggerates it, so a turned interface reads as an object in space.","default":"long","options":[{"value":"long","label":"Long"},{"value":"wide","label":"Wide"}]},{"id":"chrome","type":"enum","role":"look","label":"Window","description":"Draw the interface inside an application window, or bare.","default":"window","options":[{"value":"window","label":"Application window"},{"value":"none","label":"Bare"}]},{"id":"radius","type":"number","role":"look","label":"Corner radius","description":"Corner radius of what is shown, in the screenshot&#39;s pixels. Match the isolated component&#39;s own corners.","default":14,"min":0,"max":48,"step":1},{"id":"tilt","type":"enum","role":"layout","label":"Perspective","description":"The angle the interface is seen from when the take starts. A camera beat can turn it to another angle.","default":"none","options":[{"value":"none","label":"Flat"},{"value":"left","label":"Turned to the left"},{"value":"right","label":"Turned to the right"},{"value":"up","label":"Leaning back"},{"value":"desk","label":"Lying on a desk, seen from above at an angle"}]},{"id":"focus","type":"enum","role":"layout","label":"Focus","description":"Which part of the frame is sharp when the take starts. A camera beat can pull focus.","default":"all","options":[{"value":"all","label":"Everything sharp"},{"value":"band","label":"A sharp band across the middle"},{"value":"near","label":"Sharp below, soft at the top (the far edge)"},{"value":"centre","label":"Sharp in the centre"}]},{"id":"drift","type":"boolean","role":"motion","label":"Slow push","description":"A slow, constant push-in under every camera move, so the picture never comes to a dead stop while text is typed or read.","default":true},{"id":"spill","type":"boolean","role":"look","label":"Light spill","description":"The screen throws a soft light in the film&#39;s accent on the stage around it. For a dark stage, so the interface belongs to it.","default":false},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
+  <div id="root" data-composition-id="before" data-start="0" data-duration="7.4" data-width="1920" data-height="1080" data-composition-variables='[{"id":"screen","type":"image","role":"content","label":"Screen","description":"Supplied by the compiler from the scene&#39;s screen.","default":""},{"id":"screenMeta","type":"string","role":"content","label":"Screen geometry","description":"Supplied by the compiler: the screen&#39;s size and regions as JSON.","default":""},{"id":"beats","type":"string","role":"content","label":"Beats","description":"Supplied by the compiler from the scene&#39;s beats.","default":"[]"},{"id":"state","type":"string","role":"look","label":"Opening state","description":"The state the interface is in when the take starts. Empty uses the page&#39;s own.","default":""},{"id":"from","type":"string","role":"region","label":"Start framing","description":"The region the camera frames at the start. window is the whole interface.","default":"window"},{"id":"fill","type":"number","role":"layout","label":"Frame fill","description":"How much of the frame the framed region may take, by width or height. Lower leaves more space around it.","default":0.86,"min":0.3,"max":1,"step":0.02},{"id":"maxZoom","type":"number","role":"layout","label":"Closest zoom","description":"The camera never magnifies the interface beyond this, so close-ups keep their surroundings and stay readable.","default":1.8,"min":1,"max":6,"step":0.1},{"id":"side","type":"enum","role":"layout","label":"Side","description":"Where in the frame the interface sits. Put it to one side when the film&#39;s own lines share the frame; a camera beat can change it.","default":"centre","options":[{"value":"centre","label":"Centred"},{"value":"left","label":"Left, with room on the right"},{"value":"right","label":"Right, with room on the left"}]},{"id":"level","type":"enum","role":"layout","label":"Level","description":"How high in the frame the interface sits. Low lets it bleed off the bottom under a headline; a camera beat can change it.","default":"middle","options":[{"value":"high","label":"High"},{"value":"middle","label":"Middle"},{"value":"low","label":"Low"},{"value":"bleed","label":"Low enough to run off the bottom of the frame"}]},{"id":"lens","type":"enum","role":"look","label":"Lens","description":"Long keeps perspective gentle. Wide exaggerates it, so a turned interface reads as an object in space.","default":"long","options":[{"value":"long","label":"Long"},{"value":"wide","label":"Wide"}]},{"id":"chrome","type":"enum","role":"look","label":"Window","description":"Draw the interface inside an application window, or bare.","default":"window","options":[{"value":"window","label":"Application window"},{"value":"none","label":"Bare"}]},{"id":"radius","type":"number","role":"look","label":"Corner radius","description":"Corner radius of what is shown, in the screenshot&#39;s pixels. Match the isolated component&#39;s own corners.","default":14,"min":0,"max":48,"step":1},{"id":"tilt","type":"enum","role":"layout","label":"Perspective","description":"The angle the interface is seen from when the take starts. A camera beat can turn it to another angle.","default":"none","options":[{"value":"none","label":"Flat"},{"value":"left","label":"Turned to the left"},{"value":"right","label":"Turned to the right"},{"value":"up","label":"Leaning back"},{"value":"desk","label":"Lying on a desk, seen from above at an angle"}]},{"id":"focus","type":"enum","role":"layout","label":"Focus","description":"Which part of the frame is sharp when the take starts. A camera beat can pull focus.","default":"all","options":[{"value":"all","label":"Everything sharp"},{"value":"band","label":"A sharp band across the middle"},{"value":"near","label":"Sharp below, soft at the top (the far edge)"},{"value":"centre","label":"Sharp in the centre"}]},{"id":"drift","type":"boolean","role":"motion","label":"Slow push","description":"A slow, constant push-in under every camera move, so the picture never comes to a dead stop while text is typed or read.","default":true},{"id":"spill","type":"boolean","role":"look","label":"Light spill","description":"The screen throws a soft light in the film&#39;s accent on the stage around it. For a dark stage, so the interface belongs to it.","default":false},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
     <div id="before-stage">
       <div id="before-rig">
         <div id="before-cam" data-layout-allow-overflow>
@@ -50,8 +46,7 @@
     <script type="application/json" id="before-ui">{"css":"\n      * { margin: 0; padding: 0; box-sizing: border-box; }\n      html, body { width: 1440px; height: 900px; overflow: hidden; }\n      .app { --ui-line: #dcdfe4; --ui-ink: #1c1d21; --ui-muted: #6d7078; width: 1440px; height: 900px; overflow: hidden; display: flex; flex-direction: column; background: #fff; color: var(--ui-ink); font: 14px/1.3 Inter, sans-serif; text-align: left; -webkit-font-smoothing: antialiased; }\n      .top { display: flex; align-items: center; gap: 14px; height: 52px; padding: 0 18px; border-bottom: 1px solid var(--ui-line); font-weight: 600; font-size: 15px; }\n      .top i { width: 22px; height: 22px; border-radius: 5px; background: #1f9d55; }\n      .top span { color: var(--ui-muted); font-weight: 400; font-size: 13px; }\n      .tools { display: flex; gap: 22px; height: 38px; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--ui-line); color: var(--ui-muted); font-size: 13px; }\n      .main { flex: 1; display: flex; min-height: 0; }\n      .grid { flex: 1; overflow: hidden; font-variant-numeric: tabular-nums; }\n      .r { display: grid; grid-template-columns: 130px 1fr 130px 120px 130px 110px; height: 34px; align-items: center; border-bottom: 1px solid #eceef1; }\n      .r span { padding: 0 14px; white-space: nowrap; overflow: hidden; border-right: 1px solid #eceef1; height: 100%; display: flex; align-items: center; }\n      .r span:nth-child(5) { justify-content: flex-end; }\n      .head { background: #f4f5f7; font-weight: 600; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ui-muted); border-bottom: 1px solid var(--ui-line); }\n      .thread { width: 400px; border-left: 1px solid var(--ui-line); background: #fafafb; display: flex; flex-direction: column; padding: 18px; gap: 12px; }\n      .app[data-state=\"sheet\"] .thread { display: none; }\n      .thread h2 { font-size: 13px; font-weight: 600; color: var(--ui-muted); letter-spacing: 0.04em; text-transform: uppercase; }\n      .msg { padding: 12px 14px; border-radius: 12px; background: #fff; border: 1px solid var(--ui-line); font-size: 15px; line-height: 1.4; }\n      .msg b { display: block; font-size: 12px; color: var(--ui-muted); font-weight: 600; margin-bottom: 3px; }\n      .msg.me { background: #1c1d21; color: #fff; border-color: #1c1d21; align-self: flex-end; }\n      .msg.me b { color: #a9acb5; }\n      .app:not([data-state=\"waiting\"]) .late { display: none; }\n      .seen { align-self: flex-end; font-size: 12px; color: var(--ui-muted); }\n      .box { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 12px; border: 1px solid #c9ccd3; background: #fff; }\n      .box .in { flex: 1; height: 24px; line-height: 24px; font-size: 15px; color: #9a9da6; white-space: nowrap; overflow: hidden; }\n      .box .in[data-typed] { color: var(--ui-ink); }\n      .box .go { padding: 7px 14px; border-radius: 9px; background: #1c1d21; color: #fff; font-weight: 600; font-size: 13px; }\n    ","html":"\u003cdiv class=\"app\" data-state=\"sheet\" data-states=\"sheet thread waiting\" data-region=\"window\">\n      \u003cdiv class=\"top\" data-region=\"file\">\u003ci>\u003c/i>q3_export_final_v7.csv \u003cspan>2,318 rows · exported Monday\u003c/span>\u003c/div>\n      \u003cdiv class=\"tools\">\u003cspan>File\u003c/span>\u003cspan>Edit\u003c/span>\u003cspan>Data\u003c/span>\u003cspan>Filter: none\u003c/span>\u003cspan>Pivot table…\u003c/span>\u003c/div>\n      \u003cdiv class=\"main\">\n        \u003cdiv class=\"grid\" data-region=\"grid\">\u003cdiv>\n          \u003cdiv class=\"r head\" data-region=\"columns\">\u003cspan>Invoice\u003c/span>\u003cspan>Account\u003c/span>\u003cspan data-region=\"plan-column\">Plan\u003c/span>\u003cspan>Date\u003c/span>\u003cspan>Amount\u003c/span>\u003cspan>Status\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20418\u003c/span>\u003cspan>Northwind\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 27\u003c/span>\u003cspan>291.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20421\u003c/span>\u003cspan>Harrow\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Jul 02\u003c/span>\u003cspan>40.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20424\u003c/span>\u003cspan>Brightline\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Sep 14\u003c/span>\u003cspan>207.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20427\u003c/span>\u003cspan>Stannard\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Jul 19\u003c/span>\u003cspan>2,191.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20430\u003c/span>\u003cspan>Quillon\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 10\u003c/span>\u003cspan>246.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20433\u003c/span>\u003cspan>Tidewater\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Sep 27\u003c/span>\u003cspan>46.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20436\u003c/span>\u003cspan>Oakfield\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Aug 04\u003c/span>\u003cspan>47.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20439\u003c/span>\u003cspan>Wexcombe\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Jul 16\u003c/span>\u003cspan>1,022.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20442\u003c/span>\u003cspan>Corbel\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Aug 10\u003c/span>\u003cspan>309.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20445\u003c/span>\u003cspan>Tidewater\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Sep 16\u003c/span>\u003cspan>36.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20448\u003c/span>\u003cspan>Brightline\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Jul 17\u003c/span>\u003cspan>2,147.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20451\u003c/span>\u003cspan>Sable\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Jul 22\u003c/span>\u003cspan>39.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20454\u003c/span>\u003cspan>Junction 9\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Sep 12\u003c/span>\u003cspan>1,542.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20457\u003c/span>\u003cspan>Brightline\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 09\u003c/span>\u003cspan>394.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20460\u003c/span>\u003cspan>Tidewater\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Sep 19\u003c/span>\u003cspan>2,397.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20463\u003c/span>\u003cspan>Fennel\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 15\u003c/span>\u003cspan>417.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20466\u003c/span>\u003cspan>Northwind\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Jul 25\u003c/span>\u003cspan>48.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20469\u003c/span>\u003cspan>Linden Works\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Jul 06\u003c/span>\u003cspan>36.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20472\u003c/span>\u003cspan>Sable\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Sep 09\u003c/span>\u003cspan>261.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20475\u003c/span>\u003cspan>Brightline\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 05\u003c/span>\u003cspan>249.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20478\u003c/span>\u003cspan>Stannard\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Jul 09\u003c/span>\u003cspan>1,893.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20481\u003c/span>\u003cspan>Fennel\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Sep 19\u003c/span>\u003cspan>33.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20484\u003c/span>\u003cspan>Northwind\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Aug 28\u003c/span>\u003cspan>45.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20487\u003c/span>\u003cspan>Kestrel Labs\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Aug 21\u003c/span>\u003cspan>292.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20490\u003c/span>\u003cspan>Corbel\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Jul 04\u003c/span>\u003cspan>35.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20493\u003c/span>\u003cspan>Stannard\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Jul 18\u003c/span>\u003cspan>900.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20496\u003c/span>\u003cspan>Oakfield\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Sep 13\u003c/span>\u003cspan>196.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20499\u003c/span>\u003cspan>Fennel\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Aug 04\u003c/span>\u003cspan>2,133.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20502\u003c/span>\u003cspan>Tidewater\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 05\u003c/span>\u003cspan>312.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20505\u003c/span>\u003cspan>Linden Works\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Sep 06\u003c/span>\u003cspan>1,442.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20508\u003c/span>\u003cspan>Pemberton\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Sep 18\u003c/span>\u003cspan>35.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20511\u003c/span>\u003cspan>Marlow Press\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Sep 12\u003c/span>\u003cspan>1,086.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20514\u003c/span>\u003cspan>Harrow\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Aug 21\u003c/span>\u003cspan>326.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20517\u003c/span>\u003cspan>Greywell\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Sep 26\u003c/span>\u003cspan>1,390.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20520\u003c/span>\u003cspan>Alder & Co\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Jul 26\u003c/span>\u003cspan>45.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20523\u003c/span>\u003cspan>Wexcombe\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Aug 15\u003c/span>\u003cspan>239.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20526\u003c/span>\u003cspan>Halcyon\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Aug 07\u003c/span>\u003cspan>246.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20529\u003c/span>\u003cspan>Alder & Co\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Aug 21\u003c/span>\u003cspan>44.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20532\u003c/span>\u003cspan>Kestrel Labs\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Aug 26\u003c/span>\u003cspan>2,252.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20535\u003c/span>\u003cspan>Junction 9\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 26\u003c/span>\u003cspan>301.00\u003c/span>\u003cspan>refunded\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20538\u003c/span>\u003cspan>Vantage Rail\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 05\u003c/span>\u003cspan>380.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20541\u003c/span>\u003cspan>Pemberton\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Sep 27\u003c/span>\u003cspan>47.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20544\u003c/span>\u003cspan>Quillon\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 01\u003c/span>\u003cspan>229.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20547\u003c/span>\u003cspan>Pemberton\u003c/span>\u003cspan>Scale\u003c/span>\u003cspan>Aug 28\u003c/span>\u003cspan>1,978.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20550\u003c/span>\u003cspan>Tidewater\u003c/span>\u003cspan>Starter\u003c/span>\u003cspan>Sep 08\u003c/span>\u003cspan>29.00\u003c/span>\u003cspan>open\u003c/span>\u003c/div>\n\u003cdiv class=\"r\">\u003cspan>INV-20553\u003c/span>\u003cspan>Pemberton\u003c/span>\u003cspan>Team\u003c/span>\u003cspan>Jul 24\u003c/span>\u003cspan>329.00\u003c/span>\u003cspan>paid\u003c/span>\u003c/div>\n        \u003c/div>\u003c/div>\n        \u003caside class=\"thread\" data-region=\"thread\">\n          \u003ch2>#finance\u003c/h2>\n          \u003cdiv class=\"msg me\" data-reveal>\u003cb>Dana · Monday\u003c/b>Can someone pull Q3 growth by plan?\u003c/div>\n          \u003cdiv class=\"msg\" data-reveal>\u003cb>Sam · Monday\u003c/b>On it. I need to clean the export first.\u003c/div>\n          \u003cdiv class=\"msg\" data-reveal>\u003cb>Sam · Tuesday\u003c/b>Refunds are double counted. Looking into it.\u003c/div>\n          \u003cdiv class=\"msg me late\">\u003cb>Dana · today\u003c/b>Any update? The meeting is at ten.\u003c/div>\n          \u003cdiv class=\"seen late\" data-region=\"seen\">Delivered · no reply yet\u003c/div>\n          \u003cdiv class=\"box\" data-region=\"reply\">\u003cdiv class=\"in\" data-region=\"reply-input\">Reply…\u003c/div>\u003cspan class=\"go\" data-region=\"reply-send\">Send\u003c/span>\u003c/div>\n        \u003c/aside>\n      \u003c/div>\n    \u003c/div>"}</script>
   </div>
   <script>
-    (function () {
-      window.__timelines = window.__timelines || {};
+    (function () { window.__timelines = window.__timelines || {};
       var ID = "before";
       var $ = function (name) { return document.getElementById(ID + "-" + name); };
       var stage = $("stage");
@@ -61,10 +56,7 @@
       var D = Number(scope.getAttribute("data-duration")) || 6;
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
-      var v = Object.assign(
-        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", level: "middle", lens: "long", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" },
-        given,
-      );
+      var v = Object.assign( { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", level: "middle", lens: "long", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" }, given, );
       var parse = function (text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } };
       var meta = parse(v.screenMeta, { width: 1440, height: 900 });
       var beats = parse(v.beats, []).slice().sort(function (a, b) { return a.at - b.at; });
@@ -86,13 +78,11 @@
       var first = String(v.state || app.getAttribute("data-state") || "");
       var changes = [{ at: 0, state: first }];
       beats.forEach(function (b) { if (b.state) changes.push({ at: b.at + (b.do === "click" ? 0.07 : 0), state: b.state }); });
-      var stateAt = function (t) {
-        var s = first;
+      var stateAt = function (t) { var s = first;
         changes.forEach(function (c) { if (c.at <= t + 1e-6) s = c.state; });
         return s;
       };
-      var rect = function (name, t) {
-        if (!name || name === "window") return [0, 0, meta.width, meta.height];
+      var rect = function (name, t) { if (!name || name === "window") return [0, 0, meta.width, meta.height];
         app.setAttribute("data-state", stateAt(t));
         var el = root.querySelector('[data-region="' + name + '"]');
         if (!el) return null;
@@ -106,15 +96,13 @@
       var fill = Number(v.fill) || 0.86;
       var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
       var side = SIDES[v.side] || 0.5;
-      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66 };
+      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66, bleed: 0.78 };
       var level = LEVELS[v.level] || 0.5;
-      var frame = function (r, f, cap) {
-        var room = side === 0.5 ? 1 : 0.56;
+      var frame = function (r, f, cap) { var room = side === 0.5 ? 1 : 0.56;
         var s = Math.min((W * f * room) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), cap || Number(v.maxZoom) || 1.8);
         return { scale: s, x: W * side - s * (r[0] + r[2] / 2), y: H * level - s * (r[1] + bar + r[3] / 2) };
       };
-      var plan = beats.map(function (b) {
-        var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
+      var plan = beats.map(function (b) { var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
         if (b.do === "camera" && b.side) side = SIDES[b.side] || side;
         if (b.do === "camera" && b.level) level = LEVELS[b.level] || level;
         var r = rect(b.target, b.do === "camera" ? after : b.at) || whole;
@@ -144,119 +132,89 @@
       tl.fromTo(cam, { x: start.x, y: start.y, scale: start.scale, transformOrigin: "0 0" }, { x: start.x, y: start.y, scale: start.scale, duration: 0.01 }, 0);
       gsap.set([ripple, outline], { opacity: 0 });
       gsap.set(cursor, { opacity: 0 });
-      plan.forEach(function (p) {
-        var b = p.b;
+      plan.forEach(function (p) { var b = p.b;
         var r = p.r;
         var cx = r[0] + r[2] * 0.62;
         var cy = r[1] + r[3] * 0.62;
-        if (b.do === "camera") {
-          var to = p.to;
+        if (b.do === "camera") { var to = p.to;
           var length = Number(b.over) || 0.9;
           tl.fromTo(cam, { x: here.x, y: here.y, scale: here.scale }, { x: to.x, y: to.y, scale: to.scale, duration: length, ease: b.ease || "power3.inOut", immediateRender: false }, b.at);
           here = to;
-          if (b.tilt && TURNS[b.tilt]) {
-            var next = TURNS[b.tilt];
+          if (b.tilt && TURNS[b.tilt]) { var next = TURNS[b.tilt];
             tl.fromTo(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2] }, { rotationX: next[0], rotationY: next[1], rotationZ: next[2], duration: length, ease: "power2.inOut", immediateRender: false }, b.at);
             turned = next;
           }
-          if (b.focus) {
-            var sharp = b.focus === "all" ? 0 : 1;
+          if (b.focus) { var sharp = b.focus === "all" ? 0 : 1;
             tl.fromTo(dof, { opacity: soft }, { opacity: sharp, duration: length, ease: "none", immediateRender: false }, b.at);
             soft = sharp;
           }
-        } else if (b.do === "cursor" || b.do === "click") {
-          var travel = Math.min(Number(b.over) || 0.6, b.at);
+        } else if (b.do === "cursor" || b.do === "click") { var travel = Math.min(Number(b.over) || 0.6, b.at);
           var from = pointer || { x: cx + 260, y: cy + 170 };
           if (!pointer) tl.fromTo(cursor, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, Math.max(0, b.at - travel));
           tl.fromTo(cursor, { x: from.x - 5 }, { x: cx - 5, duration: travel, ease: "power2.inOut", immediateRender: !pointer }, b.at - travel);
           tl.fromTo(cursor, { y: from.y - 3 }, { y: cy - 3, duration: travel, ease: "power3.out", immediateRender: !pointer }, b.at - travel);
           pointer = { x: cx, y: cy };
-          if (b.do === "click") {
-            tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.07 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%", immediateRender: false }, b.at);
+          if (b.do === "click") { tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.07 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%", immediateRender: false }, b.at);
             tl.fromTo(ripple, { x: cx, y: cy, opacity: 0.9, scale: 0.3 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: "power2.out", immediateRender: false }, b.at);
           }
-        } else if (b.do === "reveal") {
-          var host = find(b.target);
+        } else if (b.do === "reveal") { var host = find(b.target);
           var parts = host ? Array.prototype.slice.call(host.querySelectorAll("[data-reveal]")) : [];
           if (!parts.length && host) parts = Array.prototype.slice.call(host.children);
           var each = (Number(b.over) || 0.9) / Math.max(parts.length, 1);
           if (parts.length) tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
           var leaving = host ? host.querySelectorAll("[data-leave]") : [];
           if (leaving.length) tl.fromTo(leaving, { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "none", immediateRender: false }, b.at);
-        } else if (b.do === "draw") {
-          var plot = find(b.target);
+        } else if (b.do === "draw") { var plot = find(b.target);
           var lines = plot ? Array.prototype.slice.call(plot.querySelectorAll("[data-draw]")) : [];
-          lines.forEach(function (line) {
-            var n = line.getTotalLength();
+          lines.forEach(function (line) { var n = line.getTotalLength();
             line.style.strokeDasharray = n;
             tl.fromTo(line, { strokeDashoffset: n }, { strokeDashoffset: 0, duration: Number(b.over) || 0.9, ease: "power2.inOut" }, b.at);
           });
           var fading = plot ? plot.querySelectorAll("[data-fade]") : [];
           if (fading.length) tl.fromTo(fading, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
-        } else if (b.do === "scroll") {
-          var pane = find(b.target);
+        } else if (b.do === "scroll") { var pane = find(b.target);
           if (pane && pane.firstElementChild) tl.fromTo(pane.firstElementChild, { y: 0 }, { y: -(Number(b.by) || 300), duration: Number(b.over) || 1.5, ease: b.ease || "power1.inOut" }, b.at);
-        } else if (b.do === "count") {
-          var figure = find(b.target);
+        } else if (b.do === "count") { var figure = find(b.target);
           var parsed = figure && /^(\D*)(\d+(?:\.\d+)?)(.*)$/.exec(figure.textContent.trim());
-          if (parsed) {
-            var places = (parsed[2].split(".")[1] || "").length;
-            var counter = Object.defineProperty({}, "n", {
-              get: function () { return 0; },
-              set: function (n) { figure.textContent = parsed[1] + Number(n).toFixed(places) + parsed[3]; },
-            });
+          if (parsed) { var places = (parsed[2].split(".")[1] || "").length;
+            var counter = Object.defineProperty({}, "n", { get: function () { return 0; }, set: function (n) { figure.textContent = parsed[1] + Number(n).toFixed(places) + parsed[3]; }, });
             tl.fromTo(counter, { n: 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
           }
-        } else if (b.do === "veil") {
-          var gap = b.target === "window" ? 0 : 10;
+        } else if (b.do === "veil") { var gap = b.target === "window" ? 0 : 10;
           var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };
           var time = Number(b.over) || 0.6;
-          if (!holed) {
-            if (b.at <= 0.05) gsap.set(veil, hole);
+          if (!holed) { if (b.at <= 0.05) gsap.set(veil, hole);
             else tl.set(veil, hole, b.at);
             tl.fromTo(veil, { opacity: b.at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: time, ease: "power2.inOut", immediateRender: b.at <= 0.05 }, b.at);
-          } else {
-            tl.fromTo(veil, Object.assign({}, holed), Object.assign({ duration: time, ease: "power3.inOut", immediateRender: false }, hole), b.at);
+          } else { tl.fromTo(veil, Object.assign({}, holed), Object.assign({ duration: time, ease: "power3.inOut", immediateRender: false }, hole), b.at);
             if (b.target === "window") tl.fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at + time);
             else tl.fromTo(veil, { opacity: 1 }, { opacity: 1, duration: 0.05, immediateRender: false }, b.at);
           }
           holed = b.target === "window" ? null : hole;
           if (b.target !== "window" && pointer) tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
-        } else if (b.do === "say") {
-          says.push(b);
-        } else if (b.do === "highlight") {
-          var pad = 8;
+        } else if (b.do === "say") { says.push(b);
+        } else if (b.do === "highlight") { var pad = 8;
           tl.set(outline, { left: r[0] - pad, top: r[1] - pad, width: r[2] + pad * 2, height: r[3] + pad * 2 }, b.at);
           tl.fromTo(outline, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out", immediateRender: false }, b.at);
           if (b.over) tl.fromTo(outline, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "none", immediateRender: false }, b.at + Number(b.over));
         }
       });
-      var typing = beats.filter(function (b) { return b.do === "type" && b.text; }).map(function (b) {
-        var el = find(b.target);
+      var typing = beats.filter(function (b) { return b.do === "type" && b.text; }).map(function (b) { var el = find(b.target);
         return { el: el, text: String(b.text), at: b.at, end: b.at + (Number(b.over) || String(b.text).length * 0.042), placeholder: el ? el.textContent : "" };
       });
       var shown = null;
-      var clock = Object.defineProperty({}, "t", {
-        get: function () { return 0; },
-        set: function (t) {
-          var s = stateAt(t);
+      var clock = Object.defineProperty({}, "t", { get: function () { return 0; }, set: function (t) { var s = stateAt(t);
           if (s !== shown) app.setAttribute("data-state", (shown = s));
-          typing.forEach(function (ty) {
-            if (!ty.el) return;
+          typing.forEach(function (ty) { if (!ty.el) return;
             var n = Math.round(Math.max(0, Math.min(1, (t - ty.at) / (ty.end - ty.at))) * ty.text.length);
             ty.el.textContent = t < ty.at ? ty.placeholder : ty.text.slice(0, n) + (n < ty.text.length ? "▏" : "");
             if (t >= ty.at) ty.el.setAttribute("data-typed", "");
             else ty.el.removeAttribute("data-typed");
           });
-        },
-      });
+        }, });
       tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
-      if (v.drift !== false && v.drift !== "false") tl.fromTo(stage, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
-      var mask = {
-        band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
-        near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
-        centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)",
-      }[v.focus === "all" ? "centre" : v.focus] || "";
+      if (v.drift !== false && v.drift !== "false") tl.fromTo(rig, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
+      var mask = { band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)", near: "linear-gradient(to bottom, #000 0%, transparent 46%)", centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)", }[v.focus === "all" ? "centre" : v.focus] || "";
       dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
       tl.fromTo(dof, { opacity: v.focus && v.focus !== "all" ? 1 : 0 }, { opacity: v.focus && v.focus !== "all" ? 1 : 0, duration: 0.01 }, 0);
       var waiting = root.querySelectorAll("[data-shimmer]");
@@ -265,14 +223,8 @@
       var M = 7 * U + "px";
       var edge = function (h, v, align) { var o = { yPercent: 0, textAlign: align }; o[h] = M; o[v] = M; return o; };
       var mid = function (top, lift) { return { left: 0, right: 0, top: top, yPercent: lift, textAlign: "center" }; };
-      var PLACES = {
-        left: { left: M, top: "50%", yPercent: -50, textAlign: "left" }, right: { right: M, top: "50%", yPercent: -50, textAlign: "right" },
-        under: mid("66%", 0), over: mid("22%", -100), foot: mid("80%", 0),
-        "top-left": edge("left", "top", "left"), "top-right": edge("right", "top", "right"),
-        "bottom-left": edge("left", "bottom", "left"), "bottom-right": edge("right", "bottom", "right"),
-      };
-      ["left", "right"].forEach(function (name) {
-        var mine = says.filter(function (b) { return (b.place || "left") === name; });
+      var PLACES = { left: { left: M, top: "50%", yPercent: -50, textAlign: "left" }, right: { right: M, top: "50%", yPercent: -50, textAlign: "right" }, under: mid("66%", 0), over: mid("22%", -100), foot: mid("80%", 0), "top-left": edge("left", "top", "left"), "top-right": edge("right", "top", "right"), "bottom-left": edge("left", "bottom", "left"), "bottom-right": edge("right", "bottom", "right"), };
+      ["left", "right"].forEach(function (name) { var mine = says.filter(function (b) { return (b.place || "left") === name; });
         if (!mine.length) return;
         var gutter = $("gutter-" + name);
         gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 66%, transparent)";
@@ -281,17 +233,16 @@
         tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
         if (to < D) tl.fromTo(gutter, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, to - 0.1);
       });
-      says.forEach(function (b, i) {
-        var place = PLACES[b.place] || PLACES.left;
+      var placed = [];
+      says.forEach(function (b, i) { var place = PLACES[b.place] || PLACES.left;
         var small = b.size === "text";
         var block = document.createElement("div");
         block.className = "pt-say pt-d-" + String(small ? v.textFont : v.displayFont).toLowerCase().replace(/[^a-z0-9]+/g, "-");
         block.style.cssText += ";color:" + v.ink + ";font-size:" + (SIZES[b.size] || SIZES.title) * U + "px;text-align:" + place.textAlign;
         ["left", "right", "top", "bottom"].forEach(function (key) { if (place[key] !== undefined) block.style[key] = place[key]; });
         if (small) block.style.cssText += ";letter-spacing:0.01em;line-height:1.35;font-weight:500";
-        var lines = String(b.text || "").split("\n").map(function (text) {
-          var mask = document.createElement("div");
-          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em";
+        var lines = String(b.text || "").split("\n").map(function (text) { var mask = document.createElement("div");
+          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em;width:fit-content;margin-left:" + (place.textAlign === "left" ? "0" : "auto") + ";margin-right:" + (place.textAlign === "right" ? "0" : "auto");
           var inner = document.createElement("div");
           inner.textContent = text;
           mask.appendChild(inner);
@@ -302,10 +253,35 @@
         gsap.set(block, { yPercent: place.yPercent });
         var after = says.slice(i + 1).filter(function (n) { return (n.place || "left") === (b.place || "left"); })[0];
         var until = b.over ? b.at + Number(b.over) : after ? after.at : D + 1;
-        tl.fromTo(lines, { yPercent: b.at <= 0.05 ? 45 : 108 }, { yPercent: 0, duration: 0.7, ease: "expo.out", stagger: 0.09 }, b.at);
-        if (until < D) tl.fromTo(lines, { yPercent: 0 }, { yPercent: -108, duration: 0.35, ease: "power3.in", stagger: 0.05, immediateRender: false }, Math.max(b.at + 0.4, until - 0.4));
+        if (b.at <= 0.05) tl.fromTo(lines, { yPercent: 6, opacity: 1 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: "power2.out" }, 0);
+        else tl.fromTo(lines, { yPercent: 70, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.75, ease: "expo.out", stagger: 0.1 }, b.at);
+        if (until < D) tl.fromTo(block, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "power1.in", immediateRender: false }, Math.max(b.at + 0.4, until - 0.3));
+        placed.push({ block: block, lines: lines, text: String(b.text || "").replace(/\n/g, " "), from: b.at + 0.8, to: Math.min(until - 0.3, D), beside: b.place === "left" || b.place === "right" || !b.place });
       });
       tl.set({}, {}, D);
+      (function () { var found = {};
+        var note = function (key, text) { if (!found[key]) { found[key] = 1; console.warn("hyperstudio: " + text); } };
+        plan.forEach(function (p) { if (!p.to || p.b.target === "window") return;
+          var l = p.to.x + p.to.scale * p.r[0], t = p.to.y + p.to.scale * (p.r[1] + bar);
+          if (l < 0 || t < 0 || l + p.to.scale * p.r[2] > W || t + p.to.scale * p.r[3] > H) note("crop" + p.b.at, "the camera at " + p.b.at + 's leaves part of "' + p.b.target + '" outside the frame; lower its fill or move it');
+        });
+        var box = function (els) { var u = null;
+          els.forEach(function (el) { var r = el.getBoundingClientRect(); u = u ? { l: Math.min(u.l, r.left), t: Math.min(u.t, r.top), r: Math.max(u.r, r.right), b: Math.max(u.b, r.bottom) } : { l: r.left, t: r.top, r: r.right, b: r.bottom }; });
+          return u;
+        };
+        for (var t = 0.05; t < D; t += 0.1) { tl.seek(t, false);
+          var view = stage.getBoundingClientRect(), k = view.width / W || 1, m = 0.03;
+          view = { left: view.left, top: view.top, right: view.left + W * k, bottom: view.top + H * k };
+          var solid = box([Number(gsap.getProperty(veil, "opacity")) > 0.5 ? veil : $("frame")]);
+          placed.forEach(function (s) { if (t < s.from || t > s.to) return;
+            var r = box(s.lines);
+            if (r.l - view.left < W * m * k || r.t - view.top < H * m * k || view.right - r.r < W * m * k || view.bottom - r.b < H * m * k) note("safe" + s.text, '"' + s.text + '" runs outside the safe area');
+            var ox = Math.min(r.r, solid.r) - Math.max(r.l, solid.l), oy = Math.min(r.b, solid.b) - Math.max(r.t, solid.t);
+            if (!s.beside && ox > 0 && oy > 0 && ox * oy > 0.02 * (r.r - r.l) * (r.b - r.t)) note("over" + s.text, '"' + s.text + '" sits on top of the interface from ' + t.toFixed(1) + "s; move the line, or the product");
+          });
+        }
+        tl.seek(0, false);
+      })();
       window.__timelines[ID] = tl;
     })();
   </script>

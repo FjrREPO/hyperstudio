@@ -1,104 +1,21 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
   <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    #send-stage {
-      --ps-accent: #2747f0;
-      --ps-ink: #17150f;
-      --ps-paper: #f3efe6;
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      perspective: 2600px;
-    }
-    #send-rig {
-      position: absolute;
-      inset: 0;
-    }
-    #send-world {
-      position: absolute;
-      left: 0;
-      top: 0;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow:
-        0 0 0 1px rgba(128, 128, 128, 0.22),
-        0 14px 34px rgba(0, 0, 0, 0.14),
-        0 50px 130px rgba(0, 0, 0, 0.3);
-    }
-    #send-dof {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-    #send-sheet {
-      position: absolute;
-    }
-    #send-img {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-    }
-    #send-type {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    #send-caret {
-      flex: none;
-      width: 2px;
-      height: 78%;
-      margin-left: 2px;
-      background: var(--ps-accent);
-    }
-    #send-outline {
-      position: absolute;
-      border: 2.5px solid var(--ps-accent);
-      border-radius: 12px;
-      background: color-mix(in srgb, var(--ps-accent) 7%, transparent);
-    }
-    #send-ripple {
-      position: absolute;
-      width: 56px;
-      height: 56px;
-      margin: -28px 0 0 -28px;
-      border-radius: 50%;
-      background: color-mix(in srgb, var(--ps-accent) 30%, transparent);
-    }
-    #send-cursor {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 30px;
-      height: 30px;
-      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28));
-    }
-    #send-label {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      gap: 0.3em;
-      padding: 0.42em 0.8em;
-      border-radius: 0.55em;
-      background: var(--ps-ink);
-      color: var(--ps-paper);
-      font-weight: 500;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-    }
-    #send-label b {
-      font-weight: 600;
-      color: color-mix(in srgb, var(--ps-accent) 55%, white);
-    }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #send-stage { --ps-accent: #2747f0; --ps-ink: #17150f; --ps-paper: #f3efe6; position: absolute; inset: 0; overflow: hidden; perspective: 2600px; }
+    #send-rig { position: absolute; inset: 0; }
+    #send-world { position: absolute; left: 0; top: 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow:
+        0 0 0 1px rgba(128, 128, 128, 0.22), 0 14px 34px rgba(0, 0, 0, 0.14), 0 50px 130px rgba(0, 0, 0, 0.3); }
+    #send-dof { position: absolute; inset: 0; pointer-events: none; }
+    #send-sheet { position: absolute; }
+    #send-img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+    #send-type { position: absolute; display: flex; align-items: center; white-space: nowrap; overflow: hidden; }
+    #send-caret { flex: none; width: 2px; height: 78%; margin-left: 2px; background: var(--ps-accent); }
+    #send-outline { position: absolute; border: 2.5px solid var(--ps-accent); border-radius: 12px; background: color-mix(in srgb, var(--ps-accent) 7%, transparent); }
+    #send-ripple { position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: color-mix(in srgb, var(--ps-accent) 30%, transparent); }
+    #send-cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28)); }
+    #send-label { position: absolute; display: flex; align-items: center; gap: 0.3em; padding: 0.42em 0.8em; border-radius: 0.55em; background: var(--ps-ink); color: var(--ps-paper); font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; }
+    #send-label b { font-weight: 600; color: color-mix(in srgb, var(--ps-accent) 55%, white); }
     .ps-t-inter { font-family: "Inter", sans-serif; }
     .ps-t-outfit { font-family: "Outfit", sans-serif; }
     .ps-t-montserrat { font-family: "Montserrat", sans-serif; }
@@ -125,11 +42,9 @@
     </div>
   </div>
   <script>
-    (function () {
-      window.__timelines = window.__timelines || {};
+    (function () { window.__timelines = window.__timelines || {};
       var ID = "send";
-      var $ = function (name) {
-        return document.getElementById(ID + "-" + name);
+      var $ = function (name) { return document.getElementById(ID + "-" + name);
       };
       var stage = $("stage");
       var scope = stage.closest("[data-composition-id]");
@@ -138,51 +53,16 @@
       var D = Number(scope.getAttribute("data-duration")) || 2;
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
-      var v = Object.assign(
-        {
-          screen: "",
-          screenMeta: "",
-          isolate: "",
-          radius: 14,
-          from: "window",
-          to: "",
-          fill: 0.78,
-          move: "settle",
-          tilt: "none",
-          focus: "all",
-          enter: "none",
-          cursor: "",
-          click: true,
-          clickAt: 0.62,
-          highlight: "",
-          typeIn: "",
-          typeText: "",
-          typeColor: "#17150f",
-          typeBackground: "#ffffff",
-          label: "",
-          emphasis: "",
-          labelAt: "bottom-left",
-          background: "#f3efe6",
-          ink: "#17150f",
-          accent: "#2747f0",
-          textFont: "Inter",
-        },
-        given,
-      );
-      var slug = function (s) {
-        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      var v = Object.assign( { screen: "", screenMeta: "", isolate: "", radius: 14, from: "window", to: "", fill: 0.78, move: "settle", tilt: "none", focus: "all", enter: "none", cursor: "", click: true, clickAt: 0.62, highlight: "", typeIn: "", typeText: "", typeColor: "#17150f", typeBackground: "#ffffff", label: "", emphasis: "", labelAt: "bottom-left", background: "#f3efe6", ink: "#17150f", accent: "#2747f0", textFont: "Inter", }, given, );
+      var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
       };
       var meta = { width: 1440, height: 900, regions: {} };
-      try {
-        meta = JSON.parse(v.screenMeta);
-      } catch (e) {
-      }
+      try { meta = JSON.parse(v.screenMeta);
+      } catch (e) { }
       var whole = [0, 0, meta.width, meta.height];
-      var onScreen = function (name) {
-        return (name && meta.regions[name]) || null;
+      var onScreen = function (name) { return (name && meta.regions[name]) || null;
       };
-      var hide = function (el) {
-        el.style.display = "none";
+      var hide = function (el) { el.style.display = "none";
       };
       stage.style.setProperty("--ps-accent", v.accent);
       stage.style.setProperty("--ps-ink", v.ink);
@@ -192,8 +72,7 @@
       var ox = only[0];
       var oy = only[1];
       whole = [0, 0, only[2], only[3]];
-      var rect = function (name) {
-        var r = onScreen(name);
+      var rect = function (name) { var r = onScreen(name);
         return r ? [r[0] - ox, r[1] - oy, r[2], r[3]] : null;
       };
       var world = $("world");
@@ -210,59 +89,42 @@
       var label = $("label");
       var labelText = String(v.label).trim();
       var top = String(v.labelAt).indexOf("top") === 0;
-      if (labelText) {
-        var hot = String(v.emphasis).trim().toLowerCase();
-        labelText.split(/\s+/).forEach(function (word) {
-          var el = document.createElement(hot && word.toLowerCase().replace(/[^a-z0-9]/g, "") === hot.replace(/[^a-z0-9]/g, "") ? "b" : "span");
+      if (labelText) { var hot = String(v.emphasis).trim().toLowerCase();
+        labelText.split(/\s+/).forEach(function (word) { var el = document.createElement(hot && word.toLowerCase().replace(/[^a-z0-9]/g, "") === hot.replace(/[^a-z0-9]/g, "") ? "b" : "span");
           el.textContent = word;
           label.appendChild(el);
         });
         label.className = "ps-t-" + slug(v.textFont);
         label.style.fontSize = 3.3 * U + "px";
         label.style[top ? "top" : "bottom"] = 7 * U + "px";
-        if (String(v.labelAt).indexOf("center") > 0) {
-          label.style.left = "0";
+        if (String(v.labelAt).indexOf("center") > 0) { label.style.left = "0";
           label.style.right = "0";
           label.style.width = "fit-content";
           label.style.margin = "0 auto";
-        } else {
-          label.style.left = 8 * U + "px";
+        } else { label.style.left = 8 * U + "px";
         }
-      } else {
-        hide(label);
+      } else { hide(label);
       }
       var fill = Number(v.fill) || 0.78;
       var shift = labelText ? (top ? 3.2 : -3.2) * U : 0; // leave the label's side of the frame clear
-      var frame = function (r) {
-        var s = Math.min((W * fill) / r[2], (H * fill) / r[3], 3.2);
+      var frame = function (r) { var s = Math.min((W * fill) / r[2], (H * fill) / r[3], 3.2);
         return { scale: s, x: W / 2 - s * (r[0] + r[2] / 2), y: H / 2 + shift - s * (r[1] + r[3] / 2) };
       };
       var a = frame(rect(v.from) || whole);
       var toRect = rect(v.to);
-      var b = toRect ? frame(toRect) : frame((function (r) {
-            var k = 0.035;
+      var b = toRect ? frame(toRect) : frame((function (r) { var k = 0.035;
             return [r[0] + r[2] * k, r[1] + r[3] * k, r[2] * (1 - 2 * k), r[3] * (1 - 2 * k)];
           })(rect(v.from) || whole));
       var tl = gsap.timeline({ paused: true });
       var end = D - 0.04;
       var ease = { settle: "expo.out", ease: "power2.inOut", drift: "none" }[v.move] || "expo.out";
       if (!toRect) ease = "none";
-      tl.fromTo(
-        world,
-        { x: a.x, y: a.y, scale: a.scale, transformOrigin: "0 0" },
-        { x: b.x, y: b.y, scale: b.scale, duration: end, ease: ease },
-        0,
-      );
+      tl.fromTo( world, { x: a.x, y: a.y, scale: a.scale, transformOrigin: "0 0" }, { x: b.x, y: b.y, scale: b.scale, duration: end, ease: ease }, 0, );
       var turn = { left: [6, 22, 0, 3, 14, 0], right: [6, -22, 0, 3, -14, 0], up: [26, 0, 0, 16, 0, 0], desk: [50, 0, -24, 42, 0, -17] }[v.tilt];
-      if (turn) {
-        var from = { rotationX: turn[0], rotationY: turn[1], rotationZ: turn[2], transformOrigin: "50% 50%" };
+      if (turn) { var from = { rotationX: turn[0], rotationY: turn[1], rotationZ: turn[2], transformOrigin: "50% 50%" };
         tl.fromTo($("rig"), from, { rotationX: turn[3], rotationY: turn[4], rotationZ: turn[5], duration: end, ease: "power2.out" }, 0);
       }
-      var mask = {
-        band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
-        near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
-        centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)",
-      }[v.focus];
+      var mask = { band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)", near: "linear-gradient(to bottom, #000 0%, transparent 46%)", centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)", }[v.focus];
       var dof = $("dof");
       if (mask) dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
       else hide(dof);
@@ -270,8 +132,7 @@
       var typeRect = rect(v.typeIn);
       var text = String(v.typeText);
       var typeEnd = 0;
-      if (typeRect && text) {
-        var box = $("type");
+      if (typeRect && text) { var box = $("type");
         box.className = "ps-t-" + slug(v.textFont);
         box.style.left = typeRect[0] + ox + "px";
         box.style.top = typeRect[1] + oy + "px";
@@ -284,36 +145,27 @@
         var caret = $("caret");
         var typeStart = Math.min(0.3, D * 0.12);
         typeEnd = Math.max(typeStart + 0.4, D * 0.78);
-        var clock = Object.defineProperty({}, "t", {
-          get: function () {
-            return 0;
-          },
-          set: function (t) {
-            var p = Math.max(0, Math.min(1, (t - typeStart) / (typeEnd - typeStart)));
+        var clock = Object.defineProperty({}, "t", { get: function () { return 0;
+          }, set: function (t) { var p = Math.max(0, Math.min(1, (t - typeStart) / (typeEnd - typeStart)));
             typed.textContent = text.slice(0, Math.round(p * text.length));
             var typing = p > 0 && p < 1;
             caret.style.opacity = typing || Math.floor(t * 2.5) % 2 === 0 ? 1 : 0;
-          },
-        });
+          }, });
         tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
-      } else {
-        hide($("type"));
+      } else { hide($("type"));
       }
       var outlineRect = rect(v.highlight);
-      if (outlineRect) {
-        var pad = 8;
+      if (outlineRect) { var pad = 8;
         var outline = $("outline");
         outline.style.left = outlineRect[0] + ox - pad + "px";
         outline.style.top = outlineRect[1] + oy - pad + "px";
         outline.style.width = outlineRect[2] + pad * 2 + "px";
         outline.style.height = outlineRect[3] + pad * 2 + "px";
         tl.fromTo(outline, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power3.out" }, Math.min(0.5, D * 0.3));
-      } else {
-        hide($("outline"));
+      } else { hide($("outline"));
       }
       var target = rect(v.cursor);
-      if (target) {
-        var cx = target[0] + ox + target[2] * 0.66;
+      if (target) { var cx = target[0] + ox + target[2] * 0.66;
         var cy = target[1] + oy + target[3] * 0.66;
         var cursorSize = Math.max(30, Math.min(64, 42 / b.scale));
         $("cursor").style.width = $("cursor").style.height = cursorSize + "px";
@@ -328,14 +180,11 @@
         var ripple = $("ripple");
         ripple.style.left = cx + "px";
         ripple.style.top = cy + "px";
-        if (v.click !== false && v.click !== "false") {
-          tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.08 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%" }, arrive);
+        if (v.click !== false && v.click !== "false") { tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.08 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%" }, arrive);
           tl.fromTo(ripple, { opacity: 0, scale: 0.3 }, { keyframes: [{ opacity: 0.9, duration: 0.02 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: "power2.out" }] }, arrive);
-        } else {
-          hide(ripple);
+        } else { hide(ripple);
         }
-      } else {
-        hide($("cursor"));
+      } else { hide($("cursor"));
         hide($("ripple"));
       }
       if (labelText) tl.fromTo(label, { opacity: 0, y: (top ? -1 : 1) * U }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, Math.min(0.2, D * 0.1));

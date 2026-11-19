@@ -1,59 +1,14 @@
 <template>
   <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
   <style>
-    #root {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-    #problem-stage {
-      --sc-accent: #2747f0;
-      --sc-ink: #17150f;
-      --sc-paper: #f3efe6;
-      position: absolute;
-      inset: 0;
-      color: var(--sc-ink);
-    }
-    .sc-slot {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-    .sc-card {
-      display: flex;
-      align-items: center;
-      gap: 0.55em;
-      padding: 0.62em 0.95em;
-      border-radius: 0.7em;
-      background: color-mix(in srgb, var(--sc-ink) 13%, var(--sc-paper));
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--sc-ink) 24%, transparent),
-        0 0.9em 2.2em rgba(0, 0, 0, 0.22);
-      font-weight: 500;
-      letter-spacing: -0.012em;
-      white-space: nowrap;
-    }
-    .sc-dot {
-      flex: none;
-      width: 0.5em;
-      height: 0.5em;
-      border-radius: 50%;
-      background: color-mix(in srgb, var(--sc-ink) 45%, transparent);
-    }
-    .sc-hot .sc-dot {
-      background: var(--sc-accent);
-    }
-    #problem-line {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 50%;
-      text-align: center;
-      font-weight: 500;
-      line-height: 1.2;
-      letter-spacing: -0.028em;
-      white-space: nowrap;
-    }
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #problem-stage { --sc-accent: #2747f0; --sc-ink: #17150f; --sc-paper: #f3efe6; position: absolute; inset: 0; color: var(--sc-ink); }
+    .sc-slot { position: absolute; left: 0; top: 0; }
+    .sc-card { display: flex; align-items: center; gap: 0.55em; padding: 0.62em 0.95em; border-radius: 0.7em; background: color-mix(in srgb, var(--sc-ink) 13%, var(--sc-paper)); box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--sc-ink) 24%, transparent), 0 0.9em 2.2em rgba(0, 0, 0, 0.22); font-weight: 500; letter-spacing: -0.012em; white-space: nowrap; }
+    .sc-dot { flex: none; width: 0.5em; height: 0.5em; border-radius: 50%; background: color-mix(in srgb, var(--sc-ink) 45%, transparent); }
+    .sc-hot .sc-dot { background: var(--sc-accent); }
+    #problem-line { position: absolute; left: 0; right: 0; top: 50%; text-align: center; font-weight: 500; line-height: 1.2; letter-spacing: -0.028em; white-space: nowrap; }
     .sc-f-inter { font-family: "Inter", sans-serif; }
     .sc-f-outfit { font-family: "Outfit", sans-serif; }
     .sc-f-montserrat { font-family: "Montserrat", sans-serif; }
@@ -76,11 +31,9 @@
     </div>
   </div>
   <script>
-    (function () {
-      window.__timelines = window.__timelines || {};
+    (function () { window.__timelines = window.__timelines || {};
       var ID = "problem";
-      var $ = function (name) {
-        return document.getElementById(ID + "-" + name);
+      var $ = function (name) { return document.getElementById(ID + "-" + name);
       };
       var stage = $("stage");
       var scope = stage.closest("[data-composition-id]");
@@ -89,47 +42,20 @@
       var D = Number(scope.getAttribute("data-duration")) || 2.4;
       var U = Math.min(W, H) / 100;
       var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
-      var v = Object.assign(
-        {
-          note1: "Can someone pull Q3 by plan?",
-          note2: "Asked in #finance, 3 days ago",
-          note3: "export_final_v7.csv",
-          note4: "",
-          note5: "",
-          note6: "",
-          line: "",
-          collapse: true,
-          background: "#f3efe6",
-          ink: "#17150f",
-          accent: "#2747f0",
-          displayFont: "Inter",
-          textFont: "Inter",
-        },
-        given,
-      );
-      var slug = function (s) {
-        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      var v = Object.assign( { note1: "Can someone pull Q3 by plan?", note2: "Asked in #finance, 3 days ago", note3: "export_final_v7.csv", note4: "", note5: "", note6: "", line: "", collapse: true, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter", }, given, );
+      var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
       };
       stage.style.setProperty("--sc-accent", v.accent);
       stage.style.setProperty("--sc-ink", v.ink);
       stage.style.setProperty("--sc-paper", v.background);
       stage.className = "sc-f-" + slug(v.textFont);
       stage.style.fontSize = 3.4 * U + "px";
-      var SLOTS = [
-        [0.27, 0.27, -5],
-        [0.72, 0.21, 4],
-        [0.24, 0.72, 3.5],
-        [0.74, 0.76, -4],
-        [0.5, 0.11, -1.5],
-        [0.52, 0.9, 2],
-      ];
+      var SLOTS = [ [0.27, 0.27, -5], [0.72, 0.21, 4], [0.24, 0.72, 3.5], [0.74, 0.76, -4], [0.5, 0.11, -1.5], [0.52, 0.9, 2], ];
       var notes = [];
-      SLOTS.forEach(function (slot, i) {
-        var n = i + 1;
+      SLOTS.forEach(function (slot, i) { var n = i + 1;
         var text = String(v["note" + n] || "").trim();
         var el = $("slot" + n);
-        if (!text) {
-          el.style.display = "none";
+        if (!text) { el.style.display = "none";
           return;
         }
         $("text" + n).textContent = text;
@@ -138,39 +64,24 @@
       });
       var line = $("line");
       var lineText = String(v.line).trim();
-      if (lineText) {
-        line.textContent = lineText;
+      if (lineText) { line.textContent = lineText;
         line.className = "sc-f-" + slug(v.displayFont);
         line.style.fontSize = 6.2 * U + "px";
         line.style.marginTop = -3.7 * U + "px";
-      } else {
-        line.style.display = "none";
+      } else { line.style.display = "none";
       }
       var tl = gsap.timeline({ paused: true });
       var sweep = v.collapse === false || v.collapse === "false" ? D : Math.max(D - 0.5, D * 0.7);
-      notes.forEach(function (n, i) {
-        var ox = (n.x - W / 2) * 0.28;
+      notes.forEach(function (n, i) { var ox = (n.x - W / 2) * 0.28;
         var oy = (n.y - H / 2) * 0.28;
         var at = i * 0.13;
-        tl.fromTo(
-          n.slot,
-          { x: n.x + ox, y: n.y + oy, xPercent: -50, yPercent: -50, rotation: n.lean * 2.6, opacity: i === 0 ? 0.35 : 0 },
-          { x: n.x, y: n.y, rotation: n.lean, opacity: 1, duration: 0.6, ease: "power3.out" },
-          at,
-        );
+        tl.fromTo( n.slot, { x: n.x + ox, y: n.y + oy, xPercent: -50, yPercent: -50, rotation: n.lean * 2.6, opacity: i === 0 ? 0.35 : 0 }, { x: n.x, y: n.y, rotation: n.lean, opacity: 1, duration: 0.6, ease: "power3.out" }, at, );
         var dir = i % 2 === 0 ? 1 : -1;
         tl.fromTo(n.card, { x: -0.9 * U * dir, y: 0.5 * U }, { x: 0.9 * U * dir, y: -0.5 * U, duration: D, ease: "none" }, 0);
-        if (sweep < D) {
-          tl.fromTo(
-            n.slot,
-            { x: n.x, y: n.y, scale: 1, opacity: 1 },
-            { x: W / 2, y: H / 2, scale: 0.5, opacity: 0, duration: D - sweep - 0.04, ease: "power3.in", immediateRender: false },
-            sweep,
-          );
+        if (sweep < D) { tl.fromTo( n.slot, { x: n.x, y: n.y, scale: 1, opacity: 1 }, { x: W / 2, y: H / 2, scale: 0.5, opacity: 0, duration: D - sweep - 0.04, ease: "power3.in", immediateRender: false }, sweep, );
         }
       });
-      if (lineText) {
-        tl.fromTo(line, { opacity: 0, y: 1.6 * U }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.3);
+      if (lineText) { tl.fromTo(line, { opacity: 0, y: 1.6 * U }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.3);
       }
       tl.set({}, {}, D);
       window.__timelines[ID] = tl;
