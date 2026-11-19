@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "hyperstudio": {
+      "command": "node",
+      "args": ["packages/mcp/src/server.ts", "--workspace", "examples"]
+    }
+  }
+}

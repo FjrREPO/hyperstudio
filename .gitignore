@@ -7,3 +7,6 @@ renders/
 .claude/
 .DS_Store
 .hyperstudio/
+.env
+.env.*
+!.env.example
