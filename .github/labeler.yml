@@ -1,0 +1,30 @@
+"area: ir":
+  - changed-files:
+      - any-glob-to-any-file: "packages/ir/**"
+"area: compiler":
+  - changed-files:
+      - any-glob-to-any-file: "packages/compiler/**"
+"area: recipes":
+  - changed-files:
+      - any-glob-to-any-file: "packages/recipes/**"
+"area: cli":
+  - changed-files:
+      - any-glob-to-any-file: "packages/cli/**"
+"area: skill":
+  - changed-files:
+      - any-glob-to-any-file: "skills/**"
+"area: examples":
+  - changed-files:
+      - any-glob-to-any-file: "examples/**"
+"area: tooling":
+  - changed-files:
+      - any-glob-to-any-file: ["biome.json", "tsconfig.json", "pnpm-workspace.yaml", ".husky/**"]
+"area: repo":
+  - changed-files:
+      - any-glob-to-any-file: [".github/**", "LICENSE", "CONTRIBUTING.md", "SECURITY.md", "CHANGELOG.md"]
+"type: docs":
+  - changed-files:
+      - all-globs-to-all-files: ["{docs/**,**/*.md}"]
+"type: test":
+  - changed-files:
+      - all-globs-to-all-files: ["{tests/**,**/*.test.ts}"]
