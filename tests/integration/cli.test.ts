@@ -9,7 +9,7 @@ import { test } from "node:test";
 
 const ROOT = join(import.meta.dirname, "../..");
 const CLI = join(ROOT, "packages/cli/src/cli.ts");
-const EXAMPLE = join(ROOT, "examples/luxury-watch-commercial/commercial.json");
+const EXAMPLE = join(ROOT, "examples/luxury-watch-commercial/video.json");
 const run = (...args: string[]) => {
   const r = spawnSync(process.execPath, [CLI, ...args], { encoding: "utf8" });
   return { code: r.status, out: r.stdout, err: r.stderr };
