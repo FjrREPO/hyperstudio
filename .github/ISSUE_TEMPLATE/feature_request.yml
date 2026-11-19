@@ -1,0 +1,22 @@
+name: Feature request
+description: Something the IR, compiler or CLI should do
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What you are trying to make
+      description: The video or workflow this would unlock. A concrete case beats a general wish.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+  - type: checkboxes
+    id: upstream
+    attributes:
+      label: Scope
+      options:
+        - label: HyperFrames does not already do this (HyperStudio does not rebuild HyperFrames features)
+          required: true
