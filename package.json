@@ -4,7 +4,7 @@
   "description": "Creative IR, deterministic compiler and cinematic recipes on top of HyperFrames",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@12.21.0",
   "engines": {
     "node": ">=24"
   },
@@ -22,13 +22,14 @@
     "test:integration": "node --test \"tests/integration/*.test.ts\"",
     "test:regression": "node --test \"tests/regression/*.test.ts\"",
     "test:update": "UPDATE_GOLDEN=1 node --test \"tests/regression/*.test.ts\"",
-    "test:e2e": "HYPERSTUDIO_E2E=1 node --test \"tests/integration/*.e2e.test.ts\""
+    "test:e2e": "HYPERSTUDIO_E2E=1 node --test \"tests/integration/*.e2e.test.ts\"",
+    "deps:update": "pnpm dlx npm-check-updates -u --workspaces --root && pnpm install && pnpm verify"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.0",
-    "@types/node": "^24.0.0",
+    "@biomejs/biome": "^2.6.8",
+    "@types/node": "^26.6.6",
     "husky": "^9.1.7",
-    "typescript": "^5.9.0"
+    "typescript": "^7.0.2"
   },
   "license": "MIT",
   "repository": {
