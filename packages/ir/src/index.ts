@@ -113,6 +113,11 @@ const Audio = z.strictObject({
   id,
   src: z.string().min(1),
   origin: origin.default("supplied"),
+  /** What the clip is. Two voice clips may not play at once. */
+  role: z.enum(["voice", "music", "sfx"]).default("music"),
+  /** Tie the clip to a scene: `start` then counts from that scene's start, so narration follows a retimed film. */
+  scene: id.optional(),
+  /** Seconds from the start of the film, or of `scene` when one is named. */
   start: z.number().min(0).default(0),
   duration: seconds.optional(),
   volume: z.number().min(0).max(3.98).default(1),

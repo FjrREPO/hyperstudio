@@ -116,15 +116,17 @@ and fading into it is warned about (frame 0 would be empty).
 
 ## `audio[]`
 
-| Field               | Type                                  | Default    | Notes                          |
-| ------------------- | ------------------------------------- | ---------- | ------------------------------ |
-| `id`                | lowercase id                          | required   | Unique across scenes and audio |
-| `src`               | path                                  | required   |                                |
-| `origin`            | `captured`, `supplied`, `placeholder` | `supplied` |                                |
-| `start`             | seconds                               | 0          |                                |
-| `duration`          | seconds                               | to the end | Must not run past the end      |
-| `volume`            | 0 to 3.98                             | 1          | 1 = 0 dB                       |
-| `fadeIn`, `fadeOut` | seconds                               | 0          |                                |
+| Field               | Type                                  | Default    | Notes                                                     |
+| ------------------- | ------------------------------------- | ---------- | --------------------------------------------------------- |
+| `id`                | lowercase id                          | required   | Unique across scenes and audio                            |
+| `src`               | path                                  | required   |                                                           |
+| `origin`            | `captured`, `supplied`, `placeholder` | `supplied` | Use `placeholder` for a draft voice                       |
+| `role`              | `voice`, `music`, `sfx`               | `music`    | Two voice clips may not overlap                           |
+| `scene`             | scene id                              | none       | `start` then counts from that scene's start               |
+| `start`             | seconds                               | 0          | From the film's start, or the scene's when `scene` is set |
+| `duration`          | seconds                               | to the end | Must not run past the end                                 |
+| `volume`            | 0 to 3.98                             | 1          | 1 = 0 dB                                                  |
+| `fadeIn`, `fadeOut` | seconds                               | 0          |                                                           |
 
 ## What the compiler enforces
 

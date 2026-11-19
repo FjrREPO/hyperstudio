@@ -234,6 +234,39 @@ test("a figure on screen needs a source", () => {
   );
 });
 
+test("audio can follow a scene, and two voices may not overlap", () => {
+  const sfx = { src: "assets/ui-sfx.m4a", origin: "placeholder" };
+  // Compile a variation that keeps the files and return the audio plan.
+  const starts = (audio: object[]) => {
+    const ir = structuredClone(base);
+    ir.audio = audio.map((a) => ({ ...sfx, ...a }));
+    const file = join(EXAMPLE_DIR, ".tmp-audio.json");
+    writeFileSync(file, JSON.stringify(ir));
+    try {
+      return compile(file, { validateOnly: true }).audio.map((a) => [a.id, a.start]);
+    } catch (e) {
+      assert.ok(e instanceof CompileError, String(e));
+      return e.issues.map((i) => i.path);
+    } finally {
+      rmSync(file);
+    }
+  };
+  // "answer" starts at 5.3 s, so a clip 0.2 s into it starts at 5.5 s.
+  assert.deepEqual(starts([{ id: "vo", role: "voice", scene: "answer", start: 0.2, duration: 1.4 }]), [
+    ["vo", 5.5],
+  ]);
+  assert.deepEqual(starts([{ id: "vo", role: "voice", scene: "nowhere", duration: 1 }]), ["audio.0.scene"]);
+  assert.deepEqual(
+    starts([
+      { id: "one", role: "voice", start: 1, duration: 2 },
+      { id: "two", role: "voice", start: 2.5, duration: 1 },
+    ]),
+    ["audio"],
+  );
+  // Music under a voice is the normal case and is fine.
+  assert.equal(starts([{ id: "bed" }, { id: "vo", role: "voice", start: 1, duration: 2 }]).length, 2);
+});
+
 test("a slow film is allowed but flagged", () => {
   const watch = join(EXAMPLE_DIR, "../luxury-watch-commercial/video.json");
   const { warnings } = compile(watch, { validateOnly: true });

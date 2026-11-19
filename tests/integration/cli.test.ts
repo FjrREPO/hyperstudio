@@ -144,3 +144,59 @@ test("assets: usage errors are reported as such", () => {
   assert.equal(run("assets", "search", "rain", "--kind", "smell").code, 2);
   assert.equal(run("assets", "download", "1").code, 2);
 });
+
+test("audio: providers, dry runs and a missing key never generate or spend", () => {
+  const providers = JSON.parse(run("audio", "providers", "--json").out);
+  assert.deepEqual(
+    providers.map((p: { id: string; cost: string }) => [p.id, p.cost]),
+    [
+      ["local", "none"],
+      ["system", "none"],
+      ["elevenlabs", "plan-credits"],
+    ],
+  );
+  const dry = JSON.parse(
+    run("audio", "tts", "Hello there.", "--provider", "elevenlabs", "--out", "x.mp3", "--dry-run", "--json")
+      .out,
+  );
+  assert.equal(dry.wouldUse, "12 credits");
+
+  const noKey = spawnSync(
+    process.execPath,
+    [
+      CLI,
+      "audio",
+      "tts",
+      "Hello.",
+      "--provider",
+      "elevenlabs",
+      "--voice",
+      "v1",
+      "--out",
+      join(tmpdir(), "hs-none.mp3"),
+    ],
+    {
+      encoding: "utf8",
+      env: { ...process.env, NO_COLOR: "1", ELEVENLABS_API_KEY: "" },
+    },
+  );
+  assert.equal(noKey.status, 1);
+  assert.match(noKey.stderr, /ELEVENLABS_API_KEY is not set.*nothing was spent/);
+});
+
+// Reading a media file needs ffprobe, which ships with FFmpeg. A machine without it skips this test.
+const hasFfprobe = spawnSync("ffprobe", ["-version"]).status === 0;
+
+test("audio: inspect reads a real file", { skip: !hasFfprobe && "ffprobe is not installed" }, () => {
+  const info = JSON.parse(
+    run("audio", "inspect", join(ROOT, "examples/saas-product-showcase/assets/ui-sfx.m4a"), "--json").out,
+  );
+  assert.equal(Math.round(info.seconds), 15);
+  assert.equal(info.codec, "aac");
+});
+
+test("audio: usage errors are reported as such", () => {
+  assert.equal(run("audio").code, 2);
+  assert.equal(run("audio", "tts").code, 2);
+  assert.equal(run("audio", "dub", "x.mp4").code, 2);
+});

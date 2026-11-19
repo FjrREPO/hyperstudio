@@ -16,6 +16,9 @@
 "area: assets":
   - changed-files:
       - any-glob-to-any-file: "packages/assets/**"
+"area: audio":
+  - changed-files:
+      - any-glob-to-any-file: "packages/audio/**"
 "area: examples":
   - changed-files:
       - any-glob-to-any-file: "examples/**"

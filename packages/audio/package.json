@@ -1,0 +1,8 @@
+{
+  "name": "@hyperstudio/audio",
+  "version": "0.2.0",
+  "description": "Voiceover and dubbing providers with cost estimates and explicit confirmation for anything paid",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts"
+}

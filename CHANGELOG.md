@@ -6,6 +6,8 @@ Notable changes, newest first. Versions follow [Semantic Versioning](https://sem
 
 ### Added
 
+- `@hyperstudio/audio` and `hyperstudio audio`: voiceover from local files or a system draft voice, and an optional ElevenLabs client that reads the plan first (Free plan inside its credits and marked non-commercial, paid plan confirmed, never upgraded, never generated twice); dubbing; `inspect`; `status`.
+- Audio in the IR: `role` and `scene`, so narration follows the shot it belongs to; overlapping voice clips are rejected.
 - `@hyperstudio/assets` and `hyperstudio assets`: search free sources (Openverse, Poly Haven, optional Pixabay) through refkit, a strict licence gate for commercial film use, a 24-hour cache and request log, downloads recorded in `LICENSES.json`, and credits owed reported by `compile`.
 
 ## 0.2.0 - 2026-11-19

@@ -203,11 +203,16 @@ importers:
         specifier: ^0.5.2
         version: 0.5.2
 
+  packages/audio: {}
+
   packages/cli:
     dependencies:
       '@hyperstudio/assets':
         specifier: workspace:*
         version: link:../assets
+      '@hyperstudio/audio':
+        specifier: workspace:*
+        version: link:../audio
       '@hyperstudio/compiler':
         specifier: workspace:*
         version: link:../compiler

@@ -222,13 +222,18 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
   const audio = ir.audio.map((a, i) => {
     const at = `audio.${i}`;
     claimId(a.id, `${at}.id`);
-    const start = toFrames(a.start, `${at}.start`);
+    const anchor = a.scene === undefined ? undefined : planned.find((s) => s.id === a.scene);
+    if (a.scene !== undefined && !anchor)
+      fail(`${at}.scene`, `unknown scene "${a.scene}". Scenes: ${planned.map((s) => s.id).join(", ")}`);
+    const start = (anchor?.startFrame ?? 0) + toFrames(a.start, `${at}.start`);
     const frames = a.duration === undefined ? total - start : toFrames(a.duration, `${at}.duration`);
     if (start >= total) fail(`${at}.start`, `starts after the video ends (${seconds(total)}s)`);
     else if (start + frames > total)
       fail(`${at}.duration`, `runs past the end of the video (${seconds(total)}s)`);
     return {
       id: a.id,
+      role: a.role,
+      explicit: a.duration !== undefined,
       src: useAsset(a.src, `${at}.src`, a.origin, `audio: ${a.id}`),
       start: seconds(start),
       duration: seconds(frames),
@@ -236,6 +241,14 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
       fadeIn: a.fadeIn,
       fadeOut: a.fadeOut,
     };
+  });
+
+  // Two voices at once cannot both be heard. Only clips with a stated length can be compared.
+  const voices = audio.filter((a) => a.role === "voice" && a.explicit).sort((x, y) => x.start - y.start);
+  voices.forEach((voice, i) => {
+    const next = voices[i + 1];
+    if (next && voice.start + voice.duration > next.start + 1e-6)
+      fail("audio", `voice clips "${voice.id}" and "${next.id}" overlap; shorten one or move it`);
   });
 
   if (issues.length > 0) throw new CompileError(issues);
