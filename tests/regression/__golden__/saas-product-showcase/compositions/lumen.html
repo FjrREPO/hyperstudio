@@ -1,0 +1,312 @@
+<template>
+  <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; }
+    #lumen-stage { --pt-accent: #2747f0; position: absolute; inset: 0; overflow: hidden; perspective: 2600px; }
+    #lumen-rig { position: absolute; inset: 0; }
+    #lumen-cam { position: absolute; left: 0; top: 0; }
+    #lumen-frame {
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.22), 0 14px 34px rgba(0, 0, 0, 0.14), 0 50px 130px rgba(0, 0, 0, 0.3);
+    }
+    #lumen-bar { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; background: #f1f1f3; border-bottom: 1px solid #e2e2e6; }
+    #lumen-bar i { width: 12px; height: 12px; border-radius: 50%; background: #d3d4da; }
+    #lumen-over { position: absolute; left: 0; top: 0; pointer-events: none; }
+    #lumen-outline { position: absolute; border: 2.5px solid var(--pt-accent); border-radius: 14px; background: color-mix(in srgb, var(--pt-accent) 6%, transparent); }
+    #lumen-ripple { position: absolute; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: color-mix(in srgb, var(--pt-accent) 30%, transparent); }
+    #lumen-cursor { position: absolute; left: 0; top: 0; width: 30px; height: 30px; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.28)); }
+    #lumen-dof { position: absolute; inset: 0; pointer-events: none; }
+    #lumen-veil { position: absolute; border-radius: 16px; }
+    #lumen-says { position: absolute; inset: 0; pointer-events: none; }
+    .pt-gutter { position: absolute; top: 0; bottom: 0; width: 46%; opacity: 0; }
+    .pt-say { position: absolute; font-weight: 500; line-height: 1.04; letter-spacing: -0.035em; white-space: nowrap; }
+    .pt-d-inter { font-family: "Inter", sans-serif; } .pt-d-outfit { font-family: "Outfit", sans-serif; } .pt-d-montserrat { font-family: "Montserrat", sans-serif; } .pt-d-poppins { font-family: "Poppins", sans-serif; }
+    .pt-d-playfair-display { font-family: "Playfair Display", serif; } .pt-d-eb-garamond { font-family: "EB Garamond", serif; } .pt-d-oswald { font-family: "Oswald", sans-serif; } .pt-d-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; } .pt-d-ibm-plex-mono { font-family: "IBM Plex Mono", monospace; }
+  </style>
+  <div id="root" data-composition-id="lumen" data-start="0" data-duration="22.8" data-width="1920" data-height="1080" data-composition-variables='[{"id":"screen","type":"image","role":"content","label":"Screen","description":"Supplied by the compiler from the scene&#39;s screen.","default":""},{"id":"screenMeta","type":"string","role":"content","label":"Screen geometry","description":"Supplied by the compiler: the screen&#39;s size and regions as JSON.","default":""},{"id":"beats","type":"string","role":"content","label":"Beats","description":"Supplied by the compiler from the scene&#39;s beats.","default":"[]"},{"id":"state","type":"string","role":"look","label":"Opening state","description":"The state the interface is in when the take starts. Empty uses the page&#39;s own.","default":""},{"id":"from","type":"string","role":"region","label":"Start framing","description":"The region the camera frames at the start. window is the whole interface.","default":"window"},{"id":"fill","type":"number","role":"layout","label":"Frame fill","description":"How much of the frame the framed region may take, by width or height. Lower leaves more space around it.","default":0.86,"min":0.3,"max":1,"step":0.02},{"id":"maxZoom","type":"number","role":"layout","label":"Closest zoom","description":"The camera never magnifies the interface beyond this, so close-ups keep their surroundings and stay readable.","default":1.8,"min":1,"max":6,"step":0.1},{"id":"side","type":"enum","role":"layout","label":"Side","description":"Where in the frame the interface sits. Put it to one side when the film&#39;s own lines share the frame; a camera beat can change it.","default":"centre","options":[{"value":"centre","label":"Centred"},{"value":"left","label":"Left, with room on the right"},{"value":"right","label":"Right, with room on the left"}]},{"id":"level","type":"enum","role":"layout","label":"Level","description":"How high in the frame the interface sits. Low lets it bleed off the bottom under a headline; a camera beat can change it.","default":"middle","options":[{"value":"high","label":"High"},{"value":"middle","label":"Middle"},{"value":"low","label":"Low"}]},{"id":"lens","type":"enum","role":"look","label":"Lens","description":"Long keeps perspective gentle. Wide exaggerates it, so a turned interface reads as an object in space.","default":"long","options":[{"value":"long","label":"Long"},{"value":"wide","label":"Wide"}]},{"id":"chrome","type":"enum","role":"look","label":"Window","description":"Draw the interface inside an application window, or bare.","default":"window","options":[{"value":"window","label":"Application window"},{"value":"none","label":"Bare"}]},{"id":"radius","type":"number","role":"look","label":"Corner radius","description":"Corner radius of what is shown, in the screenshot&#39;s pixels. Match the isolated component&#39;s own corners.","default":14,"min":0,"max":48,"step":1},{"id":"tilt","type":"enum","role":"layout","label":"Perspective","description":"The angle the interface is seen from when the take starts. A camera beat can turn it to another angle.","default":"none","options":[{"value":"none","label":"Flat"},{"value":"left","label":"Turned to the left"},{"value":"right","label":"Turned to the right"},{"value":"up","label":"Leaning back"},{"value":"desk","label":"Lying on a desk, seen from above at an angle"}]},{"id":"focus","type":"enum","role":"layout","label":"Focus","description":"Which part of the frame is sharp when the take starts. A camera beat can pull focus.","default":"all","options":[{"value":"all","label":"Everything sharp"},{"value":"band","label":"A sharp band across the middle"},{"value":"near","label":"Sharp below, soft at the top (the far edge)"},{"value":"centre","label":"Sharp in the centre"}]},{"id":"drift","type":"boolean","role":"motion","label":"Slow push","description":"A slow, constant push-in under every camera move, so the picture never comes to a dead stop while text is typed or read.","default":true},{"id":"spill","type":"boolean","role":"look","label":"Light spill","description":"The screen throws a soft light in the film&#39;s accent on the stage around it. For a dark stage, so the interface belongs to it.","default":false},{"id":"background","type":"color","role":"brand","label":"Stage background","default":"#f3efe6"},{"id":"ink","type":"color","role":"brand","label":"Text colour","default":"#17150f"},{"id":"accent","type":"color","role":"brand","label":"Accent colour","description":"The film&#39;s one accent. Used for emphasis only.","default":"#2747f0"},{"id":"displayFont","type":"enum","role":"brand","label":"Display typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Oswald","label":"Oswald"},{"value":"Archivo Black","label":"Archivo Black"}]},{"id":"textFont","type":"enum","role":"brand","label":"Text typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Outfit","label":"Outfit"},{"value":"Montserrat","label":"Montserrat"},{"value":"Poppins","label":"Poppins"},{"value":"IBM Plex Mono","label":"IBM Plex Mono"}]}]'>
+    <div id="lumen-stage">
+      <div id="lumen-rig">
+        <div id="lumen-cam" data-layout-allow-overflow>
+          <div id="lumen-frame" data-layout-allow-overflow>
+            <div id="lumen-bar"><i></i><i></i><i></i></div>
+            <div id="lumen-world" data-layout-ignore></div>
+          </div>
+          <div id="lumen-over" data-layout-allow-overflow>
+            <div id="lumen-veil" data-layout-allow-occlusion data-layout-allow-overflow></div>
+            <div id="lumen-outline" data-layout-allow-occlusion></div>
+            <div id="lumen-ripple" data-layout-allow-occlusion></div>
+            <svg id="lumen-cursor" viewBox="0 0 30 30" data-layout-allow-occlusion>
+              <path d="M5 3l18 9.6-7.6 2.2-2.6 7.6z" fill="#17150f" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div id="lumen-dof" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="lumen-gutter-left" class="pt-gutter" style="left: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="lumen-gutter-right" class="pt-gutter" style="right: 0" data-layout-allow-occlusion data-layout-ignore></div>
+      <div id="lumen-says" data-layout-allow-occlusion></div>
+    </div>
+    <script type="application/json" id="lumen-ui">{"css":"\n      .app {\n        --ui-side: #efede8;\n        --ui-canvas: #ffffff;\n        --ui-ink: #0d0e12;\n        --ui-muted: #6b6f7b;\n        --ui-faint: #9a9eab;\n        --ui-line: #e6e7eb;\n        --ui-accent: #3b5bff;\n        --ui-accent-soft: #eef1ff;\n        --ui-green: #18a566;\n      }\n      * { margin: 0; padding: 0; box-sizing: border-box; }\n      html, body { width: 1440px; height: 900px; overflow: hidden; }\n      .app { width: 1440px; height: 900px; overflow: hidden; font-family: Inter, sans-serif; color: var(--ui-ink); background: var(--ui-canvas); display: flex; font-size: 15px; line-height: normal; text-align: left; -webkit-font-smoothing: antialiased; }\n      /* What each state shows. */\n      .app:not([data-state=\"home\"], [data-state=\"asked\"]) #view-home,\n      .app:is([data-state=\"home\"], [data-state=\"asked\"]) #view-answer,\n      .app:not([data-state=\"share\"]) #popover,\n      .app:not([data-state=\"thinking\"], [data-state=\"arriving\"]) .skeleton,\n      .app:not([data-state=\"thinking\"], [data-state=\"arriving\"]) .status { display: none; }\n      .app[data-state=\"thinking\"] #card [data-reveal] { opacity: 0; }\n      /* Added to a board: the button says so, and the board appears in the sidebar. */\n      .app:not([data-state=\"boarded\"], [data-state=\"share\"], [data-state=\"followup\"]) :is(#board-new, .added) { display: none; }\n      .app:is([data-state=\"boarded\"], [data-state=\"share\"], [data-state=\"followup\"]) .add { display: none; }\n      .board.new { color: var(--ui-ink); font-weight: 600; background: var(--ui-accent-soft); border-radius: 9px; }\n      .btn.added { border-color: #b9e3cf; background: #ecf8f1; color: #0f7a4a; }\n      /* A follow-up: the first answer folds to its headline and the second arrives under it. */\n      .app:not([data-state=\"followup\"]) :is(#question2, #card2) { display: none; }\n      .app[data-state=\"followup\"] #card :is(.chart, .foot, .detail) { display: none; }\n      .app[data-state=\"followup\"] #card { padding-bottom: 26px; }\n      .app[data-state=\"followup\"] .answer-line { font-size: 24px; }\n      .reasons { margin-top: 16px; display: grid; gap: 10px; }\n      .reason { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 500; }\n      .reason i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ui-accent); }\n      .reason small { margin-left: auto; font-size: 13px; color: var(--ui-faint); font-weight: 400; }\n      .app[data-state=\"asked\"] #ask .input, #ask .input[data-typed] { color: var(--ui-ink); }\n      .app[data-state=\"asked\"] #ask .send, #ask:has(.input[data-typed]) .send { background: var(--ui-accent); box-shadow: 0 8px 18px rgba(59, 91, 255, 0.35); }\n      .card { position: relative; }\n      .status { font-weight: 500; color: var(--ui-faint); }\n      .skeleton { position: absolute; left: 30px; right: 30px; top: 62px; }\n      .skeleton i { display: block; margin-top: 12px; border-radius: 9px; background: linear-gradient(90deg, #eceef4, #f5f6f9); }\n      svg { display: block; flex: none; }\n\n      /* Sidebar */\n      aside { width: 248px; background: var(--ui-side); border-right: 1px solid var(--ui-line); padding: 20px 14px; display: flex; flex-direction: column; }\n      .brand { display: flex; align-self: flex-start; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; margin: 0 4px 16px; padding: 4px 8px 4px 4px; }\n      .mark { width: 26px; height: 26px; }\n      .space { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 9px 10px; border-radius: 11px; background: var(--ui-canvas); border: 1px solid var(--ui-line); font-weight: 600; font-size: 14px; }\n      .space i { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, #ff9d5c, #ff5c8a); }\n      .space span { margin-left: auto; color: var(--ui-faint); font-weight: 500; font-size: 12px; }\n      nav a { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 9px; color: var(--ui-muted); font-weight: 500; }\n      nav a.on { background: var(--ui-canvas); color: var(--ui-ink); box-shadow: 0 0 0 1px var(--ui-line), 0 1px 2px rgba(13, 14, 18, 0.05); }\n      nav svg { width: 18px; height: 18px; }\n      nav a.on svg { color: var(--ui-accent); }\n      .group { margin: 22px 10px 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-faint); }\n      .board { display: flex; align-items: center; gap: 11px; padding: 7px 10px; color: var(--ui-muted); font-size: 14px; font-weight: 500; }\n      .board i { width: 8px; height: 8px; margin: 0 5px; border-radius: 3px; }\n      .who { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; font-size: 13px; color: var(--ui-muted); border-top: 1px solid var(--ui-line); }\n      .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #ffd9a8, #f3a56b); color: #6b3d12; font-weight: 700; font-size: 12px; display: grid; place-items: center; }\n      .who b { display: block; color: var(--ui-ink); font-weight: 600; font-size: 14px; }\n\n      /* Main */\n      main { flex: 1; display: flex; flex-direction: column; background: radial-gradient(900px 420px at 50% -80px, #f3f5ff, transparent 70%); }\n      header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; border-bottom: 1px solid var(--ui-line); color: var(--ui-faint); font-weight: 500; font-size: 14px; }\n      header b { color: var(--ui-ink); font-weight: 600; }\n      .sources { display: flex; gap: 8px; align-items: center; }\n      .chip { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; background: var(--ui-canvas); border: 1px solid var(--ui-line); color: var(--ui-ink); font-weight: 500; font-size: 13px; }\n      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ui-green); margin-right: 7px; box-shadow: 0 0 0 3px rgba(24, 165, 102, 0.16); }\n      .column { width: 780px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }\n\n      /* Ask bar */\n      .ask { display: flex; align-items: center; gap: 14px; height: 72px; padding: 0 12px 0 24px; border-radius: 20px; background: var(--ui-canvas); border: 1px solid #d5d8e2; box-shadow: 0 0 0 5px rgba(59, 91, 255, 0.07), 0 14px 34px rgba(13, 14, 18, 0.08); }\n      .ask .input { flex: 1; height: 28px; line-height: 28px; font-size: 19px; color: var(--ui-faint); white-space: nowrap; overflow: hidden; }\n      .send { width: 48px; height: 48px; border-radius: 15px; background: #d5d8e2; display: grid; place-items: center; flex: none; }\n      .send svg { width: 20px; height: 20px; }\n\n      /* Home */\n      .home { padding-top: 118px; }\n      h1 { font-size: 44px; font-weight: 600; letter-spacing: -0.035em; }\n      .lede { margin: 10px 0 30px; font-size: 18px; color: var(--ui-muted); }\n      .suggest { display: flex; gap: 10px; margin-top: 18px; }\n      .recent { margin-top: 56px; }\n      .recent h2 { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ui-faint); margin-bottom: 12px; }\n      .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }\n      .tile { padding: 16px 16px 14px; border-radius: 16px; background: var(--ui-canvas); border: 1px solid var(--ui-line); box-shadow: 0 1px 2px rgba(13, 14, 18, 0.04); }\n      .tile p { font-weight: 500; font-size: 14px; line-height: 1.35; height: 38px; }\n      .spark { width: 96px; height: 32px; margin: 12px 0 10px; }\n      .tile span { font-size: 12px; color: var(--ui-faint); }\n\n      /* Answer */\n      .thread { padding-top: 34px; flex: 1; display: flex; flex-direction: column; }\n      .question { align-self: flex-end; max-width: 520px; padding: 13px 20px; border-radius: 18px 18px 5px 18px; background: var(--ui-ink); color: #fff; font-size: 17px; font-weight: 500; }\n      .card { margin-top: 22px; padding: 28px 30px 22px; border-radius: 22px; background: var(--ui-canvas); border: 1px solid var(--ui-line); box-shadow: 0 1px 2px rgba(13, 14, 18, 0.04), 0 22px 50px rgba(13, 14, 18, 0.08); }\n      .card .by { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ui-muted); margin-bottom: 14px; }\n      .card .by .mark { width: 18px; height: 18px; }\n      .answer-line { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.18; }\n      .answer-line em { font-style: normal; color: var(--ui-accent); }\n      .detail { margin-top: 8px; color: var(--ui-muted); font-size: 16px; }\n      .chart { margin-top: 22px; display: grid; grid-template-columns: 404px 1fr; gap: 26px; align-items: center; }\n      .plot { width: 404px; height: 190px; border-radius: 14px; background: linear-gradient(#fafbff, #fff); border: 1px solid var(--ui-line); }\n      .plot text { font: 500 11px Inter, sans-serif; fill: #9a9eab; }\n      .rows { display: grid; gap: 8px; }\n      .plan { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 13px; border: 1px solid transparent; font-weight: 500; }\n      .plan i { width: 10px; height: 10px; border-radius: 50%; background: #c9ccd6; }\n      .plan small { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; color: var(--ui-faint); }\n      .plan b { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }\n      .plan.hot { background: var(--ui-accent-soft); border-color: #d6ddff; }\n      .plan.hot i { background: var(--ui-accent); box-shadow: 0 0 0 4px rgba(59, 91, 255, 0.18); }\n      .plan.hot b { color: var(--ui-accent); }\n      .foot { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--ui-line); display: flex; align-items: center; justify-content: space-between; }\n      .foot .src { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ui-muted); }\n      .foot .src svg { width: 16px; height: 16px; color: var(--ui-faint); }\n      .actions { display: flex; gap: 10px; position: relative; }\n      .btn { padding: 10px 17px; border-radius: 11px; border: 1px solid #d5d8e2; font-weight: 600; font-size: 14px; background: var(--ui-canvas); }\n      .btn.primary { background: var(--ui-ink); color: #fff; border-color: var(--ui-ink); }\n      .popover { position: absolute; right: 0; bottom: 54px; width: 340px; padding: 16px 18px; border-radius: 16px; background: var(--ui-ink); color: #fff; box-shadow: 0 24px 50px rgba(13, 14, 18, 0.3); }\n      .popover b { display: flex; align-items: center; gap: 8px; font-size: 15px; }\n      .popover b::before { content: \"\"; width: 18px; height: 18px; border-radius: 50%; background: var(--ui-green) url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.4l2.6 2.6L13 6.6' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") center / contain; }\n      .popover .link { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.1); font-size: 14px; color: #dfe1ea; }\n      .popover .to { margin-top: 10px; font-size: 13px; color: #9a9eab; }\n      .follow { margin: auto 0 30px; height: 60px; box-shadow: 0 8px 22px rgba(13, 14, 18, 0.06); }\n      .follow .send { width: 40px; height: 40px; border-radius: 13px; }\n      .follow:has(.input[data-typed]) .send { background: var(--ui-accent); }\n      .follow .input[data-typed] { color: var(--ui-ink); }\n      [hidden] { display: none !important; }\n    ","html":"\u003cdiv class=\"app\" data-state=\"home\" data-states=\"home asked thinking arriving answer boarded share followup\" data-region=\"window\">\n    \u003caside>\n      \u003cdiv class=\"brand\" data-region=\"brand\">\u003csvg class=\"mark\" viewBox=\"0 0 26 26\">\u003ccircle cx=\"13\" cy=\"13\" r=\"12\" fill=\"#0d0e12\" />\u003cpath d=\"M13 4a9 9 0 0 1 0 18z\" fill=\"#3b5bff\" />\u003ccircle cx=\"13\" cy=\"13\" r=\"3.4\" fill=\"#fff\" />\u003c/svg>Lumen\u003c/div>\n      \u003cdiv class=\"space\">\u003ci>\u003c/i>Northwind\u003cspan>Workspace\u003c/span>\u003c/div>\n      \u003cnav>\n        \u003ca class=\"on\">\u003csvg viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\u003cpath d=\"M4 5.5A2.5 2.5 0 0 1 6.5 3h7A2.5 2.5 0 0 1 16 5.5v5a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3A2.5 2.5 0 0 1 4 10.5z\"/>\u003c/svg>Ask\u003c/a>\n        \u003ca>\u003csvg viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\u003crect x=\"3\" y=\"3\" width=\"6\" height=\"8\" rx=\"1.5\"/>\u003crect x=\"11\" y=\"3\" width=\"6\" height=\"5\" rx=\"1.5\"/>\u003crect x=\"3\" y=\"13\" width=\"6\" height=\"4\" rx=\"1.5\"/>\u003crect x=\"11\" y=\"10\" width=\"6\" height=\"7\" rx=\"1.5\"/>\u003c/svg>Boards\u003c/a>\n        \u003ca>\u003csvg viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\u003cellipse cx=\"10\" cy=\"5\" rx=\"6\" ry=\"2.5\"/>\u003cpath d=\"M4 5v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5\"/>\u003c/svg>Sources\u003c/a>\n        \u003ca>\u003csvg viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\u003ccircle cx=\"7.5\" cy=\"7\" r=\"3\"/>\u003cpath d=\"M2.5 16.5c.4-2.6 2.4-4 5-4s4.6 1.4 5 4M13 4.3a3 3 0 0 1 0 5.4M15 12.8c1.4.5 2.3 1.7 2.5 3.7\"/>\u003c/svg>Team\u003c/a>\n      \u003c/nav>\n      \u003cdiv class=\"group\">Pinned boards\u003c/div>\n      \u003cdiv class=\"board\">\u003ci style=\"background: #3b5bff\">\u003c/i>Revenue weekly\u003c/div>\n      \u003cdiv class=\"board\">\u003ci style=\"background: #ff8a4c\">\u003c/i>Churn watch\u003c/div>\n      \u003cdiv class=\"board\">\u003ci style=\"background: #18a566\">\u003c/i>Board pack\u003c/div>\n      \u003cdiv class=\"board new\" id=\"board-new\" data-region=\"board-new\">\u003ci style=\"background: #3b5bff\">\u003c/i>Q3 plan growth\u003c/div>\n      \u003cdiv class=\"who\">\u003cdiv class=\"avatar\">DK\u003c/div>\u003cdiv>\u003cb>Dana Kim\u003c/b>Northwind\u003c/div>\u003c/div>\n    \u003c/aside>\n\n    \u003cmain>\n      \u003cheader>\n        \u003cspan>Ask &nbsp;/&nbsp; \u003cb>New question\u003c/b>\u003c/span>\n        \u003cdiv class=\"sources\" data-region=\"connected\">\u003cspan class=\"chip\">\u003cspan class=\"dot\">\u003c/span>Billing\u003c/span>\u003cspan class=\"chip\">\u003cspan class=\"dot\">\u003c/span>CRM\u003c/span>\u003c/div>\n      \u003c/header>\n\n      \n      \u003csection class=\"column home\" id=\"view-home\">\n        \u003ch1 data-region=\"greeting\">Good morning, Dana.\u003c/h1>\n        \u003cp class=\"lede\">Ask anything about your revenue.\u003c/p>\n        \u003cdiv class=\"ask\" id=\"ask\" data-region=\"ask-bar\">\n          \u003cdiv class=\"input\" id=\"ask-input\" data-region=\"ask-input\">Ask a question…\u003c/div>\n          \u003cdiv class=\"send\" data-region=\"send\">\u003csvg viewBox=\"0 0 18 18\">\u003cpath d=\"M9 14V4m-4.5 4.5L9 4l4.5 4.5\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />\u003c/svg>\u003c/div>\n        \u003c/div>\n        \u003cdiv class=\"suggest\">\u003cspan class=\"chip\">MRR this month\u003c/span>\u003cspan class=\"chip\">Churn by plan\u003c/span>\u003cspan class=\"chip\">Largest accounts\u003c/span>\u003c/div>\n        \u003cdiv class=\"recent\">\n          \u003ch2>Recent\u003c/h2>\n          \u003cdiv class=\"tiles\">\n            \u003cdiv class=\"tile\">\u003cp>Why did trials dip in August?\u003c/p>\u003csvg class=\"spark\" viewBox=\"0 0 96 32\" fill=\"none\">\u003cpath d=\"M2 8 L20 10 L38 9 L56 24 L74 20 L94 14\" stroke=\"#ff8a4c\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\u003c/svg>\u003cspan>Friday\u003c/span>\u003c/div>\n            \u003cdiv class=\"tile\">\u003cp>Net revenue retention by cohort\u003c/p>\u003csvg class=\"spark\" viewBox=\"0 0 96 32\" fill=\"none\">\u003cpath d=\"M2 24 L20 20 L38 21 L56 14 L74 12 L94 6\" stroke=\"#3b5bff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\u003c/svg>\u003cspan>Thursday\u003c/span>\u003c/div>\n            \u003cdiv class=\"tile\">\u003cp>Which invoices are overdue?\u003c/p>\u003csvg class=\"spark\" viewBox=\"0 0 96 32\" fill=\"none\">\u003cpath d=\"M2 16 L20 12 L38 18 L56 13 L74 17 L94 12\" stroke=\"#18a566\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\u003c/svg>\u003cspan>Tuesday\u003c/span>\u003c/div>\n          \u003c/div>\n        \u003c/div>\n      \u003c/section>\n\n      \n      \u003csection class=\"column thread\" id=\"view-answer\">\n        \u003cdiv class=\"question\" data-region=\"question\">Which plan grew fastest last quarter?\u003c/div>\n        \u003cdiv class=\"card\" id=\"card\" data-region=\"answer\">\n          \u003cdiv class=\"by\">\u003csvg class=\"mark\" viewBox=\"0 0 26 26\">\u003ccircle cx=\"13\" cy=\"13\" r=\"12\" fill=\"#0d0e12\" />\u003cpath d=\"M13 4a9 9 0 0 1 0 18z\" fill=\"#3b5bff\" />\u003ccircle cx=\"13\" cy=\"13\" r=\"3.4\" fill=\"#fff\" />\u003c/svg>Lumen\u003cspan class=\"status\" data-leave>&nbsp;· reading billing, 2,318 invoices\u003c/span>\u003c/div>\n          \u003cdiv class=\"skeleton\" data-leave data-shimmer>\u003ci style=\"width: 78%; height: 34px\">\u003c/i>\u003ci style=\"width: 52%; height: 16px\">\u003c/i>\u003ci style=\"width: 100%; height: 190px; margin-top: 26px\">\u003c/i>\u003c/div>\n          \u003cdiv class=\"answer-line\" data-region=\"answer-line\" data-reveal>\u003cem>Team\u003c/em> grew fastest: up 18% over the quarter.\u003c/div>\n          \u003cp class=\"detail\" data-reveal>Starter grew 6% and Scale grew 11% in the same period.\u003c/p>\n          \u003cdiv class=\"chart\" data-region=\"chart\">\n            \n            \u003csvg class=\"plot\" data-region=\"plot\" data-reveal viewBox=\"0 0 404 190\">\n              \u003cdefs>\u003clinearGradient id=\"area\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\u003cstop offset=\"0\" stop-color=\"#3b5bff\" stop-opacity=\"0.22\" />\u003cstop offset=\"1\" stop-color=\"#3b5bff\" stop-opacity=\"0\" />\u003c/linearGradient>\u003c/defs>\n              \u003cg stroke=\"#eceef3\" stroke-width=\"1\">\u003cpath d=\"M28 40H384M28 85H384M28 130H384\" />\u003c/g>\n              \u003cpath d=\"M28 142 L206 96 L384 38 V150 H28 Z\" fill=\"url(#area)\" data-fade />\n              \u003cg fill=\"none\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n                \u003cpath d=\"M28 142 L206 125 L384 108\" data-draw stroke=\"#c9ccd6\" />\n                \u003cpath d=\"M28 142 L206 113 L384 79\" data-draw stroke=\"#9aa0b4\" />\n                \u003cpath d=\"M28 142 L206 96 L384 38\" data-draw stroke=\"#3b5bff\" stroke-width=\"3\" />\n              \u003c/g>\n              \u003cg data-fade>\u003ccircle cx=\"384\" cy=\"108\" r=\"4\" fill=\"#c9ccd6\" />\u003ccircle cx=\"384\" cy=\"79\" r=\"4\" fill=\"#9aa0b4\" />\n              \u003ccircle cx=\"384\" cy=\"38\" r=\"9\" fill=\"#3b5bff\" fill-opacity=\"0.18\" />\u003ccircle cx=\"384\" cy=\"38\" r=\"5\" fill=\"#3b5bff\" stroke=\"#fff\" stroke-width=\"2\" />\u003c/g>\n              \u003ctext x=\"28\" y=\"174\">Jul\u003c/text>\u003ctext x=\"206\" y=\"174\" text-anchor=\"middle\">Aug\u003c/text>\u003ctext x=\"384\" y=\"174\" text-anchor=\"end\">Sep\u003c/text>\n            \u003c/svg>\n            \u003cdiv class=\"rows\">\n              \u003cdiv class=\"plan hot\" data-region=\"bar-team\" data-reveal>\u003ci>\u003c/i>\u003cspan>Team\u003csmall>Mid-size accounts\u003c/small>\u003c/span>\u003cb data-region=\"team-value\">+18%\u003c/b>\u003c/div>\n              \u003cdiv class=\"plan\" data-reveal>\u003ci style=\"background: #9aa0b4\">\u003c/i>\u003cspan>Scale\u003csmall>Enterprise accounts\u003c/small>\u003c/span>\u003cb>+11%\u003c/b>\u003c/div>\n              \u003cdiv class=\"plan\" data-reveal>\u003ci>\u003c/i>\u003cspan>Starter\u003csmall>Self-serve\u003c/small>\u003c/span>\u003cb>+6%\u003c/b>\u003c/div>\n            \u003c/div>\n          \u003c/div>\n          \u003cdiv class=\"foot\" data-region=\"foot\" data-reveal>\n            \u003cspan class=\"src\" data-region=\"sources\">\u003csvg viewBox=\"0 0 20 20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\u003cellipse cx=\"10\" cy=\"5\" rx=\"6\" ry=\"2.5\"/>\u003cpath d=\"M4 5v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5\"/>\u003c/svg>From billing · 2,318 invoices · July to September\u003c/span>\n            \u003cdiv class=\"actions\" data-region=\"actions\">\n              \u003cspan class=\"btn add\" data-region=\"add-board\">Add to board\u003c/span>\u003cspan class=\"btn added\" data-region=\"added-board\">Added to boards\u003c/span>\n              \u003cspan class=\"btn primary\" data-region=\"share-button\">Share\u003c/span>\n              \u003cdiv class=\"popover\" id=\"popover\" data-region=\"share-popover\">\n                \u003cb>Link copied\u003c/b>\n                \u003cdiv class=\"link\">lumen.example/a/q3-plan-growth\u003c/div>\n                \u003cdiv class=\"to\">Anyone at Northwind can open it\u003c/div>\n              \u003c/div>\n            \u003c/div>\n          \u003c/div>\n        \u003c/div>\n        \u003cdiv class=\"question\" id=\"question2\" data-region=\"question2\" style=\"margin-top: 22px\">Why did Team grow?\u003c/div>\n        \u003cdiv class=\"card\" id=\"card2\" data-region=\"answer2\">\n          \u003cdiv class=\"by\">\u003csvg class=\"mark\" viewBox=\"0 0 26 26\">\u003ccircle cx=\"13\" cy=\"13\" r=\"12\" fill=\"#0d0e12\" />\u003cpath d=\"M13 4a9 9 0 0 1 0 18z\" fill=\"#3b5bff\" />\u003ccircle cx=\"13\" cy=\"13\" r=\"3.4\" fill=\"#fff\" />\u003c/svg>Lumen\u003c/div>\n          \u003cdiv class=\"answer-line\" style=\"font-size: 26px\" data-reveal>Mostly upgrades from \u003cem>Starter\u003c/em>.\u003c/div>\n          \u003cdiv class=\"reasons\">\n            \u003cdiv class=\"reason\" data-reveal>\u003ci>\u003c/i>41 Starter accounts moved up to Team\u003csmall>from billing\u003c/small>\u003c/div>\n            \u003cdiv class=\"reason\" data-reveal>\u003ci>\u003c/i>Two annual Team contracts started in August\u003csmall>from CRM\u003c/small>\u003c/div>\n            \u003cdiv class=\"reason\" data-reveal>\u003ci>\u003c/i>Churn on Team held flat\u003csmall>from billing\u003c/small>\u003c/div>\n          \u003c/div>\n        \u003c/div>\n        \u003cdiv class=\"ask follow\" data-region=\"follow\">\u003cdiv class=\"input\" data-region=\"follow-input\">Ask a follow-up…\u003c/div>\u003cdiv class=\"send\" data-region=\"follow-send\">\u003csvg viewBox=\"0 0 18 18\">\u003cpath d=\"M9 14V4m-4.5 4.5L9 4l4.5 4.5\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" />\u003c/svg>\u003c/div>\u003c/div>\n      \u003c/section>\n    \u003c/main>\n\n    \u003c/div>"}</script>
+  </div>
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var ID = "lumen";
+      var $ = function (name) { return document.getElementById(ID + "-" + name); };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 6;
+      var U = Math.min(W, H) / 100;
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign(
+        { screenMeta: "", beats: "[]", state: "", from: "window", fill: 0.86, maxZoom: 1.8, side: "centre", level: "middle", lens: "long", chrome: "window", radius: 14, tilt: "none", focus: "all", drift: true, spill: false, background: "#f3efe6", ink: "#17150f", accent: "#2747f0", displayFont: "Inter", textFont: "Inter" },
+        given,
+      );
+      var parse = function (text, fallback) { try { return JSON.parse(text); } catch (e) { return fallback; } };
+      var meta = parse(v.screenMeta, { width: 1440, height: 900 });
+      var beats = parse(v.beats, []).slice().sort(function (a, b) { return a.at - b.at; });
+      var ui = parse($("ui").textContent, {});
+      stage.style.setProperty("--pt-accent", v.accent);
+      if (v.lens === "wide") stage.style.perspective = "1250px";
+      var world = $("world");
+      world.style.width = meta.width + "px";
+      world.style.height = meta.height + "px";
+      var root = world.attachShadow({ mode: "open" });
+      root.innerHTML = "<style>" + (ui.css || "") + "</style>" + (ui.html || "");
+      var app = root.querySelector(".app") || world;
+      var bar = v.chrome === "window" ? 38 : 0;
+      if (!bar) $("bar").style.display = "none";
+      $("frame").style.borderRadius = (Number(v.radius) || 0) + "px";
+      if (v.spill === true || v.spill === "true") $("frame").style.boxShadow = "0 0 0 1px rgba(128,128,128,.22), 0 0 " + 26 * U + "px color-mix(in srgb, " + v.accent + " 42%, transparent), 0 50px 130px rgba(0,0,0,.4)";
+      var over = $("over");
+      over.style.top = bar + "px";
+      var first = String(v.state || app.getAttribute("data-state") || "");
+      var changes = [{ at: 0, state: first }];
+      beats.forEach(function (b) { if (b.state) changes.push({ at: b.at + (b.do === "click" ? 0.07 : 0), state: b.state }); });
+      var stateAt = function (t) {
+        var s = first;
+        changes.forEach(function (c) { if (c.at <= t + 1e-6) s = c.state; });
+        return s;
+      };
+      var rect = function (name, t) {
+        if (!name || name === "window") return [0, 0, meta.width, meta.height];
+        app.setAttribute("data-state", stateAt(t));
+        var el = root.querySelector('[data-region="' + name + '"]');
+        if (!el) return null;
+        var a = app.getBoundingClientRect();
+        var r = el.getBoundingClientRect();
+        var k = a.width / meta.width || 1;
+        return r.width ? [(r.left - a.left) / k, (r.top - a.top) / k, r.width / k, r.height / k] : null;
+      };
+      var find = function (name) { return root.querySelector('[data-region="' + name + '"]'); };
+      var whole = [0, 0, meta.width, meta.height];
+      var fill = Number(v.fill) || 0.86;
+      var SIDES = { left: 0.3, centre: 0.5, right: 0.7 };
+      var side = SIDES[v.side] || 0.5;
+      var LEVELS = { high: 0.36, middle: 0.5, low: 0.66 };
+      var level = LEVELS[v.level] || 0.5;
+      var frame = function (r, f, cap) {
+        var room = side === 0.5 ? 1 : 0.56;
+        var s = Math.min((W * f * room) / r[2], (H * f) / (r[3] + (r[2] === meta.width ? bar : 0)), cap || Number(v.maxZoom) || 1.8);
+        return { scale: s, x: W * side - s * (r[0] + r[2] / 2), y: H * level - s * (r[1] + bar + r[3] / 2) };
+      };
+      var plan = beats.map(function (b) {
+        var after = b.at + (b.do === "click" || b.do === "state" ? 0.12 : 0);
+        if (b.do === "camera" && b.side) side = SIDES[b.side] || side;
+        if (b.do === "camera" && b.level) level = LEVELS[b.level] || level;
+        var r = rect(b.target, b.do === "camera" ? after : b.at) || whole;
+        return { b: b, r: r, to: b.do === "camera" ? frame(r, Number(b.fill) || fill, Number(b.zoom) || 0) : null };
+      });
+      side = SIDES[v.side] || 0.5;
+      level = LEVELS[v.level] || 0.5;
+      var start = frame(rect(v.from, 0) || whole, fill);
+      app.setAttribute("data-state", first);
+      var tl = gsap.timeline({ paused: true });
+      var cam = $("cam");
+      var cursor = $("cursor");
+      var ripple = $("ripple");
+      var outline = $("outline");
+      var here = start;
+      var pointer = null;
+      var rig = $("rig");
+      var dof = $("dof");
+      var veil = $("veil");
+      var says = [];
+      var holed = null;
+      var TURNS = { none: [0, 0, 0], left: [3, 12, 0], right: [3, -12, 0], up: [15, 0, 0], desk: [42, 0, -17] };
+      var turned = TURNS[v.tilt] || TURNS.none;
+      var soft = v.focus && v.focus !== "all" ? 1 : 0;
+      gsap.set(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2], transformOrigin: "50% 50%" });
+      gsap.set(veil, { opacity: 0, boxShadow: "0 0 0 9000px " + v.background });
+      tl.fromTo(cam, { x: start.x, y: start.y, scale: start.scale, transformOrigin: "0 0" }, { x: start.x, y: start.y, scale: start.scale, duration: 0.01 }, 0);
+      gsap.set([ripple, outline], { opacity: 0 });
+      gsap.set(cursor, { opacity: 0 });
+      plan.forEach(function (p) {
+        var b = p.b;
+        var r = p.r;
+        var cx = r[0] + r[2] * 0.62;
+        var cy = r[1] + r[3] * 0.62;
+        if (b.do === "camera") {
+          var to = p.to;
+          var length = Number(b.over) || 0.9;
+          tl.fromTo(cam, { x: here.x, y: here.y, scale: here.scale }, { x: to.x, y: to.y, scale: to.scale, duration: length, ease: b.ease || "power3.inOut", immediateRender: false }, b.at);
+          here = to;
+          if (b.tilt && TURNS[b.tilt]) {
+            var next = TURNS[b.tilt];
+            tl.fromTo(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2] }, { rotationX: next[0], rotationY: next[1], rotationZ: next[2], duration: length, ease: "power2.inOut", immediateRender: false }, b.at);
+            turned = next;
+          }
+          if (b.focus) {
+            var sharp = b.focus === "all" ? 0 : 1;
+            tl.fromTo(dof, { opacity: soft }, { opacity: sharp, duration: length, ease: "none", immediateRender: false }, b.at);
+            soft = sharp;
+          }
+        } else if (b.do === "cursor" || b.do === "click") {
+          var travel = Math.min(Number(b.over) || 0.6, b.at);
+          var from = pointer || { x: cx + 260, y: cy + 170 };
+          if (!pointer) tl.fromTo(cursor, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, Math.max(0, b.at - travel));
+          tl.fromTo(cursor, { x: from.x - 5 }, { x: cx - 5, duration: travel, ease: "power2.inOut", immediateRender: !pointer }, b.at - travel);
+          tl.fromTo(cursor, { y: from.y - 3 }, { y: cy - 3, duration: travel, ease: "power3.out", immediateRender: !pointer }, b.at - travel);
+          pointer = { x: cx, y: cy };
+          if (b.do === "click") {
+            tl.fromTo(cursor, { scale: 1 }, { keyframes: [{ scale: 0.8, duration: 0.07 }, { scale: 1, duration: 0.16 }], transformOrigin: "20% 12%", immediateRender: false }, b.at);
+            tl.fromTo(ripple, { x: cx, y: cy, opacity: 0.9, scale: 0.3 }, { opacity: 0, scale: 1.7, duration: 0.5, ease: "power2.out", immediateRender: false }, b.at);
+          }
+        } else if (b.do === "reveal") {
+          var host = find(b.target);
+          var parts = host ? Array.prototype.slice.call(host.querySelectorAll("[data-reveal]")) : [];
+          if (!parts.length && host) parts = Array.prototype.slice.call(host.children);
+          var each = (Number(b.over) || 0.9) / Math.max(parts.length, 1);
+          if (parts.length) tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
+          var leaving = host ? host.querySelectorAll("[data-leave]") : [];
+          if (leaving.length) tl.fromTo(leaving, { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "none", immediateRender: false }, b.at);
+        } else if (b.do === "draw") {
+          var plot = find(b.target);
+          var lines = plot ? Array.prototype.slice.call(plot.querySelectorAll("[data-draw]")) : [];
+          lines.forEach(function (line) {
+            var n = line.getTotalLength();
+            line.style.strokeDasharray = n;
+            tl.fromTo(line, { strokeDashoffset: n }, { strokeDashoffset: 0, duration: Number(b.over) || 0.9, ease: "power2.inOut" }, b.at);
+          });
+          var fading = plot ? plot.querySelectorAll("[data-fade]") : [];
+          if (fading.length) tl.fromTo(fading, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
+        } else if (b.do === "scroll") {
+          var pane = find(b.target);
+          if (pane && pane.firstElementChild) tl.fromTo(pane.firstElementChild, { y: 0 }, { y: -(Number(b.by) || 300), duration: Number(b.over) || 1.5, ease: b.ease || "power1.inOut" }, b.at);
+        } else if (b.do === "count") {
+          var figure = find(b.target);
+          var parsed = figure && /^(\D*)(\d+(?:\.\d+)?)(.*)$/.exec(figure.textContent.trim());
+          if (parsed) {
+            var places = (parsed[2].split(".")[1] || "").length;
+            var counter = Object.defineProperty({}, "n", {
+              get: function () { return 0; },
+              set: function (n) { figure.textContent = parsed[1] + Number(n).toFixed(places) + parsed[3]; },
+            });
+            tl.fromTo(counter, { n: 0 }, { n: Number(parsed[2]), duration: Number(b.over) || 0.8, ease: "power2.out" }, b.at);
+          }
+        } else if (b.do === "veil") {
+          var gap = b.target === "window" ? 0 : 10;
+          var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };
+          var time = Number(b.over) || 0.6;
+          if (!holed) {
+            if (b.at <= 0.05) gsap.set(veil, hole);
+            else tl.set(veil, hole, b.at);
+            tl.fromTo(veil, { opacity: b.at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: time, ease: "power2.inOut", immediateRender: b.at <= 0.05 }, b.at);
+          } else {
+            tl.fromTo(veil, Object.assign({}, holed), Object.assign({ duration: time, ease: "power3.inOut", immediateRender: false }, hole), b.at);
+            if (b.target === "window") tl.fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at + time);
+            else tl.fromTo(veil, { opacity: 1 }, { opacity: 1, duration: 0.05, immediateRender: false }, b.at);
+          }
+          holed = b.target === "window" ? null : hole;
+          if (b.target !== "window" && pointer) tl.fromTo([cursor, outline], { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at);
+        } else if (b.do === "say") {
+          says.push(b);
+        } else if (b.do === "highlight") {
+          var pad = 8;
+          tl.set(outline, { left: r[0] - pad, top: r[1] - pad, width: r[2] + pad * 2, height: r[3] + pad * 2 }, b.at);
+          tl.fromTo(outline, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out", immediateRender: false }, b.at);
+          if (b.over) tl.fromTo(outline, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "none", immediateRender: false }, b.at + Number(b.over));
+        }
+      });
+      var typing = beats.filter(function (b) { return b.do === "type" && b.text; }).map(function (b) {
+        var el = find(b.target);
+        return { el: el, text: String(b.text), at: b.at, end: b.at + (Number(b.over) || String(b.text).length * 0.042), placeholder: el ? el.textContent : "" };
+      });
+      var shown = null;
+      var clock = Object.defineProperty({}, "t", {
+        get: function () { return 0; },
+        set: function (t) {
+          var s = stateAt(t);
+          if (s !== shown) app.setAttribute("data-state", (shown = s));
+          typing.forEach(function (ty) {
+            if (!ty.el) return;
+            var n = Math.round(Math.max(0, Math.min(1, (t - ty.at) / (ty.end - ty.at))) * ty.text.length);
+            ty.el.textContent = t < ty.at ? ty.placeholder : ty.text.slice(0, n) + (n < ty.text.length ? "▏" : "");
+            if (t >= ty.at) ty.el.setAttribute("data-typed", "");
+            else ty.el.removeAttribute("data-typed");
+          });
+        },
+      });
+      tl.fromTo(clock, { t: 0 }, { t: D, duration: D, ease: "none" }, 0);
+      if (v.drift !== false && v.drift !== "false") tl.fromTo(stage, { scale: 1 }, { scale: 1.035, duration: D, ease: "none" }, 0);
+      var mask = {
+        band: "linear-gradient(to bottom, #000 0%, transparent 30%, transparent 70%, #000 100%)",
+        near: "linear-gradient(to bottom, #000 0%, transparent 46%)",
+        centre: "radial-gradient(ellipse 62% 66% at 50% 50%, transparent 68%, #000 100%)",
+      }[v.focus === "all" ? "centre" : v.focus] || "";
+      dof.style.cssText += ";backdrop-filter:blur(" + 0.5 * U + "px);-webkit-mask-image:" + mask + ";mask-image:" + mask;
+      tl.fromTo(dof, { opacity: v.focus && v.focus !== "all" ? 1 : 0 }, { opacity: v.focus && v.focus !== "all" ? 1 : 0, duration: 0.01 }, 0);
+      var waiting = root.querySelectorAll("[data-shimmer]");
+      if (waiting.length) tl.fromTo(waiting, { filter: "brightness(1)" }, { filter: "brightness(0.955)", duration: 0.45, ease: "sine.inOut", repeat: Math.ceil(D / 0.45), yoyo: true }, 0);
+      var SIZES = { display: 17, hero: 11.5, title: 6.4, text: 3.4 };
+      var M = 7 * U + "px";
+      var edge = function (h, v, align) { var o = { yPercent: 0, textAlign: align }; o[h] = M; o[v] = M; return o; };
+      var mid = function (top, lift) { return { left: 0, right: 0, top: top, yPercent: lift, textAlign: "center" }; };
+      var PLACES = {
+        left: { left: M, top: "50%", yPercent: -50, textAlign: "left" }, right: { right: M, top: "50%", yPercent: -50, textAlign: "right" },
+        under: mid("66%", 0), over: mid("22%", -100), foot: mid("80%", 0),
+        "top-left": edge("left", "top", "left"), "top-right": edge("right", "top", "right"),
+        "bottom-left": edge("left", "bottom", "left"), "bottom-right": edge("right", "bottom", "right"),
+      };
+      ["left", "right"].forEach(function (name) {
+        var mine = says.filter(function (b) { return (b.place || "left") === name; });
+        if (!mine.length) return;
+        var gutter = $("gutter-" + name);
+        gutter.style.background = "linear-gradient(to " + (name === "left" ? "right" : "left") + ", " + v.background + " 66%, transparent)";
+        var last = mine[mine.length - 1];
+        var to = last.over ? last.at + Number(last.over) : D + 1;
+        tl.fromTo(gutter, { opacity: mine[0].at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, mine[0].at);
+        if (to < D) tl.fromTo(gutter, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.inOut", immediateRender: false }, to - 0.1);
+      });
+      says.forEach(function (b, i) {
+        var place = PLACES[b.place] || PLACES.left;
+        var small = b.size === "text";
+        var block = document.createElement("div");
+        block.className = "pt-say pt-d-" + String(small ? v.textFont : v.displayFont).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        block.style.cssText += ";color:" + v.ink + ";font-size:" + (SIZES[b.size] || SIZES.title) * U + "px;text-align:" + place.textAlign;
+        ["left", "right", "top", "bottom"].forEach(function (key) { if (place[key] !== undefined) block.style[key] = place[key]; });
+        if (small) block.style.cssText += ";letter-spacing:0.01em;line-height:1.35;font-weight:500";
+        var lines = String(b.text || "").split("\n").map(function (text) {
+          var mask = document.createElement("div");
+          mask.style.cssText = "overflow:hidden;padding-bottom:0.12em;margin-bottom:-0.12em";
+          var inner = document.createElement("div");
+          inner.textContent = text;
+          mask.appendChild(inner);
+          block.appendChild(mask);
+          return inner;
+        });
+        $("says").appendChild(block);
+        gsap.set(block, { yPercent: place.yPercent });
+        var after = says.slice(i + 1).filter(function (n) { return (n.place || "left") === (b.place || "left"); })[0];
+        var until = b.over ? b.at + Number(b.over) : after ? after.at : D + 1;
+        tl.fromTo(lines, { yPercent: b.at <= 0.05 ? 45 : 108 }, { yPercent: 0, duration: 0.7, ease: "expo.out", stagger: 0.09 }, b.at);
+        if (until < D) tl.fromTo(lines, { yPercent: 0 }, { yPercent: -108, duration: 0.35, ease: "power3.in", stagger: 0.05, immediateRender: false }, Math.max(b.at + 0.4, until - 0.4));
+      });
+      tl.set({}, {}, D);
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>
