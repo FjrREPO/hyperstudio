@@ -184,12 +184,18 @@ test("audio: providers, dry runs and a missing key never generate or spend", () 
   assert.match(noKey.stderr, /ELEVENLABS_API_KEY is not set.*nothing was spent/);
 });
 
-test("audio: inspect reads a real file, and usage errors are reported as such", () => {
+// Reading a media file needs ffprobe, which ships with FFmpeg. A machine without it skips this test.
+const hasFfprobe = spawnSync("ffprobe", ["-version"]).status === 0;
+
+test("audio: inspect reads a real file", { skip: !hasFfprobe && "ffprobe is not installed" }, () => {
   const info = JSON.parse(
     run("audio", "inspect", join(ROOT, "examples/saas-product-showcase/assets/ui-sfx.m4a"), "--json").out,
   );
   assert.equal(Math.round(info.seconds), 15);
   assert.equal(info.codec, "aac");
+});
+
+test("audio: usage errors are reported as such", () => {
   assert.equal(run("audio").code, 2);
   assert.equal(run("audio", "tts").code, 2);
   assert.equal(run("audio", "dub", "x.mp4").code, 2);
