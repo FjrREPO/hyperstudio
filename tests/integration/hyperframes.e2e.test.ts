@@ -18,7 +18,10 @@ for (const name of names) {
   }, () => {
     const out = mkdtempSync(join(tmpdir(), "hs-e2e-"));
     compile(join(EXAMPLES, name, "video.json"), { output: out });
-    const r = spawnSync("npx", ["-y", "hyperframes", "lint", "--json"], { cwd: out, encoding: "utf8" });
+    const r = spawnSync("npx", ["-y", "hyperframes@0.9.69", "lint", "--json"], {
+      cwd: out,
+      encoding: "utf8",
+    });
     const report = JSON.parse(r.stdout.slice(r.stdout.indexOf("{")));
     assert.equal(report.errorCount ?? report.lint?.errorCount ?? 0, 0, r.stdout.slice(0, 2000));
     assert.equal(r.status, 0, r.stderr.slice(0, 2000));

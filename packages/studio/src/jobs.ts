@@ -10,6 +10,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
+import { HYPERFRAMES } from "./review.ts";
 
 // A render takes from seconds to minutes, so it runs as a background job: start it, get an id, ask later.
 // A job is a process plus a small JSON record; its log is the HyperFrames CLI's own output.
@@ -61,7 +62,7 @@ export function createJobs(stateDir: string) {
       const id = `render-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
       const log = join(dir, `${id}.log`);
       const out = openSync(log, "w");
-      const child = spawn("npx", ["-y", "hyperframes", "render", "--quality", quality, "-o", output], {
+      const child = spawn("npx", ["-y", HYPERFRAMES, "render", "--quality", quality, "-o", output], {
         cwd: buildDir,
         detached: true,
         stdio: ["ignore", out, out],
