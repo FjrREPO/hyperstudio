@@ -38,15 +38,16 @@ npx hyperframes render --quality looks -o ../renders/saas-product-showcase.mp4
 
 ## Commands
 
-| Command                                                         | Does                                                                     |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `pnpm hyperstudio compile <ir.json> [-o dir] [--validate-only]` | Validate an IR and write a HyperFrames project                           |
-| `pnpm hyperstudio review <ir.json>`                             | Compile, run `hyperframes check`, snapshot every shot, start `REVIEW.md` |
-| `pnpm hyperstudio recipes [name]`                               | List the recipes, or show one recipe's variables                         |
-| `--json`, `--pretty`                                            | Machine-readable output for any command that prints a result             |
-| `pnpm verify`                                                   | Biome, type check and tests                                              |
-| `pnpm deps:update`                                              | Update every dependency with npm-check-updates, then verify              |
-| `pnpm skill:link`                                               | Link the skill into `.claude/skills/` for Claude Code in this repo       |
+| Command                                                                         | Does                                                                                   |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `pnpm hyperstudio compile <ir.json> [-o dir] [--validate-only]`                 | Validate an IR and write a HyperFrames project                                         |
+| `pnpm hyperstudio review <ir.json>`                                             | Compile, run `hyperframes check`, snapshot every shot, start `REVIEW.md`               |
+| `pnpm hyperstudio recipes [name]`                                               | List the recipes, or show one recipe's variables                                       |
+| `pnpm hyperstudio audio providers \| tts \| voices \| dub \| inspect \| status` | Voiceover and dubbing: local and free by default; ElevenLabs only when named and keyed |
+| `--json`, `--pretty`                                                            | Machine-readable output for any command that prints a result                           |
+| `pnpm verify`                                                                   | Biome, type check and tests                                                            |
+| `pnpm deps:update`                                                              | Update every dependency with npm-check-updates, then verify                            |
+| `pnpm skill:link`                                                               | Link the skill into `.claude/skills/` for Claude Code in this repo                     |
 
 Exit codes: 0 success, 1 the IR was rejected or a check failed, 2 the command line was wrong.
 
@@ -77,7 +78,8 @@ packages/
   compiler/    @hyperstudio/compiler  IR → HyperFrames project; the only code that knows HyperFrames
   recipes/     @hyperstudio/recipes   blocks/<name>/{registry-item.json, <name>.html}
   assets/      @hyperstudio/assets    Free asset search, the licence gate, the download ledger
-  cli/         hyperstudio            compile, review, recipes, assets
+  audio/       @hyperstudio/audio     Voiceover and dubbing providers, estimates, cost controls
+  cli/         hyperstudio            compile, review, recipes, assets, audio
 skills/hyperstudio-director/          Claude Code skill: direction → shots → IR → review → render
 examples/                             A film per folder: video.json, screens/, assets/, REVIEW.md
 tests/                                integration/ and regression/ (unit tests sit beside the code)
@@ -91,6 +93,8 @@ docs/
 - [Recipe development](docs/RECIPE-DEVELOPMENT.md)
 - [Example workflow](docs/EXAMPLE-WORKFLOW.md)
 - [Asset engine](docs/ASSET-ENGINE.md) · [Asset licensing](docs/ASSET-LICENSING.md)
+- [Audio engine](docs/AUDIO-ENGINE.md) · [ElevenLabs](docs/ELEVENLABS-INTEGRATION.md) ·
+  [Cost controls](docs/AUDIO-COST-CONTROLS.md) · [Audio licensing](docs/AUDIO-LICENSING.md)
 - [Creative quality review and proposal](docs/CREATIVE-QUALITY-PROPOSAL.md): why the first approach was replaced
 - [Architecture](docs/ARCHITECTURE.md) · [Technical decisions](docs/TECHNICAL-DECISIONS.md) ·
   [HyperFrames research](docs/HYPERFRAMES-RESEARCH.md)

@@ -133,3 +133,18 @@ gate is our own code and tests, so replacing it would not touch the policy.
 An asset is selected automatically only when its own licence is known to allow commercial use and
 modification. Unknown is not free. This is stated in the CLI output as well as the docs, because the easy
 mistake is to treat an open-source search tool as a guarantee about what it finds.
+
+## D18. Audio is local and free by default; ElevenLabs is optional and plan-aware
+
+Voiceover defaults to files you have and a system draft voice. ElevenLabs is used only when named and keyed,
+and its client reads the account's plan first: the Free plan runs inside its credits and its output is marked
+non-commercial; a paid plan must be confirmed; nothing is ever upgraded or generated twice.
+**Tradeoff:** an extra free request before each generation, and a draft voice that only exists on macOS.
+Mixing is not ours: the IR places clips and HyperFrames mixes them.
+
+## D19. Narration is tied to scenes in the IR
+
+An audio clip may name a `scene`; its `start` then counts from that scene. Retiming a shot moves its narration
+with it, which a fixed timestamp would not. Two `voice` clips may not overlap.
+**Tradeoff:** the compiler does not read a file's length, so a voice clip states its `duration`
+(`hyperstudio audio inspect` gives it).

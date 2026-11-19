@@ -37,7 +37,8 @@ packages/
   recipes/     @hyperstudio/recipes   blocks/<name>/{registry-item.json, <name>.html}; exports RECIPES_DIR.
   compiler/    @hyperstudio/compiler  compile.ts, recipes.ts, values.ts, emit.ts, errors.ts
   assets/      @hyperstudio/assets    providers.ts, license.ts, http.ts, search.ts, ledger.ts (on refkit)
-  cli/         hyperstudio            cli.ts, commands/{compile,review,recipes,assets}.ts, output.ts
+  audio/       @hyperstudio/audio     providers.ts, local.ts, elevenlabs.ts, cost.ts
+  cli/         hyperstudio            cli.ts, commands/{compile,review,recipes,assets,audio}.ts, output.ts
 skills/hyperstudio-director/          Claude Code skill
 examples/                             A film per folder: video.json, screens/, assets/, REVIEW.md
 tests/
@@ -46,7 +47,7 @@ tests/
 docs/
 ```
 
-Unit tests sit beside the code they test. Dependencies point one way: `cli → compiler → ir, recipes`, and `cli → assets`. The compiler does not depend on `assets`; it only reads the `LICENSES.json` ledger beside a film's files. Only
+Unit tests sit beside the code they test. Dependencies point one way: `cli → compiler → ir, recipes`, `cli → assets` and `cli → audio`. The compiler does not depend on `assets`; it only reads the `LICENSES.json` ledger beside a film's files. Only
 `compiler/emit.ts` writes HyperFrames' format, so a change upstream is a change in one file. Packages are
 consumed as TypeScript source through pnpm workspace links; there is no build step.
 
