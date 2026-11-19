@@ -12,8 +12,10 @@ import {
 import {
   audioProviderStatus,
   createElevenLabs,
+  defaultVoiceProvider,
   estimateTts,
   inspectAudio,
+  kokoroVoiceover,
   systemVoiceover,
 } from "@hyperstudio/audio";
 import { CompileError, type CompileResult, compile, type Issue, listRecipes } from "@hyperstudio/compiler";
@@ -169,7 +171,7 @@ export function createStudio(options: StudioOptions) {
         request: {
           text: string;
           file: string;
-          provider?: "system" | "elevenlabs";
+          provider?: "kokoro" | "system" | "elevenlabs";
           voice?: string;
           language?: string;
           confirmCost?: boolean;
@@ -198,6 +200,17 @@ export function createStudio(options: StudioOptions) {
             commercial: made.rights.commercial,
             note: made.rights.note,
             reused: made.reused,
+          };
+        }
+        if ((request.provider ?? defaultVoiceProvider(env)) === "kokoro") {
+          kokoroVoiceover({ text: request.text, out, voice: request.voice }, env);
+          return {
+            file: out,
+            seconds: inspectAudio(out).seconds,
+            provider: "kokoro",
+            commercial: true,
+            note: "Generated on this machine by an Apache 2.0 model. A synthetic voice: say so where disclosure is expected.",
+            reused: false,
           };
         }
         systemVoiceover({ text: request.text, out, voice: request.voice });

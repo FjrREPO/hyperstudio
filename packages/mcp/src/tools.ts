@@ -264,12 +264,12 @@ export function registerTools(server: McpServer, studio: Studio): void {
     {
       title: "Generate a voiceover clip",
       description:
-        "Make one narration clip in a project's assets/. provider `system` is a free draft voice (a placeholder: mark it origin placeholder in the IR). provider `elevenlabs` needs its key; on the Free plan it runs inside the remaining credits and the result is non-commercial; on a paid plan it is refused unless userConfirmedCost is true. Set userConfirmedCost ONLY after showing the person the estimate and getting their yes.",
+        "Make one narration clip in a project's assets/. Leave provider out for the default: `kokoro` when it is set up (a local open-weight voice, free, no key), otherwise `system`, a draft voice (a placeholder: mark it origin placeholder in the IR). provider `elevenlabs` needs its key; on the Free plan it runs inside the remaining credits and the result is non-commercial; on a paid plan it is refused unless userConfirmedCost is true. Set userConfirmedCost ONLY after showing the person the estimate and getting their yes.",
       inputSchema: {
         name: project,
         text: z.string().min(1).max(600),
         file: z.string().describe("File name without extension, for example vo-hook"),
-        provider: z.enum(["system", "elevenlabs"]).default("system"),
+        provider: z.enum(["kokoro", "system", "elevenlabs"]).optional(),
         voice: z.string().optional().describe("System voice name, or ElevenLabs voice id"),
         language: z.string().optional().describe("ISO 639-1 code, for example id"),
         userConfirmedCost: z.boolean().default(false),
