@@ -24,6 +24,7 @@ test("the examples are the ones the documentation describes", () => {
     "luxury-watch-commercial",
     "marlow-launch-film",
     "meeting-notes-launch",
+    "relay-deploy-film",
     "saas-product-showcase",
   ]);
 });
