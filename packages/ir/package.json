@@ -1,0 +1,11 @@
+{
+  "name": "@hyperstudio/ir",
+  "version": "0.1.0",
+  "description": "Creative IR: the Zod schema for a HyperStudio video plan",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "zod": "^4.0.0"
+  }
+}
