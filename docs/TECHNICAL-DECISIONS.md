@@ -117,3 +117,19 @@ They were made from the rejected recipes and would have stood as the quality bar
 
 `compile` prints a summary; `--json` gives the machine form the earlier version always printed. Usage errors
 exit 2, so a script can tell a bad command from a rejected IR.
+
+## D16. Asset search is built on refkit, not written from scratch
+
+The owner asked for free, openly licensed asset discovery with a licence gate. refkit (Apache-2.0) already
+provides the search fan-out, per-result licence normalisation and maintained adapters for Openverse, Poly
+Haven and Pixabay. `@hyperstudio/assets` adds only what is specific to making films: a stricter verdict (no
+derivatives is a refusal, share-alike needs a person), the 24-hour cache and request log, the download ledger
+and the credits a compile reports.
+**Tradeoff:** a young dependency (0.x). Its API is confined to two files (`providers.ts`, `search.ts`), and the
+gate is our own code and tests, so replacing it would not touch the policy.
+
+## D17. The licence gate is strict and separate from the software licence
+
+An asset is selected automatically only when its own licence is known to allow commercial use and
+modification. Unknown is not free. This is stated in the CLI output as well as the docs, because the easy
+mistake is to treat an open-source search tool as a guarantee about what it finds.

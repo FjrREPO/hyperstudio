@@ -2,6 +2,12 @@
 
 Notable changes, newest first. Versions follow [Semantic Versioning](https://semver.org).
 
+## Unreleased
+
+### Added
+
+- `@hyperstudio/assets` and `hyperstudio assets`: search free sources (Openverse, Poly Haven, optional Pixabay) through refkit, a strict licence gate for commercial film use, a 24-hour cache and request log, downloads recorded in `LICENSES.json`, and credits owed reported by `compile`.
+
 ## 0.2.0 - 2026-11-19
 
 The creative quality overhaul. The first recipes produced slideshows; this release replaces them.

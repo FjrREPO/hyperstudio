@@ -1,0 +1,14 @@
+{
+  "name": "@hyperstudio/assets",
+  "version": "0.2.0",
+  "description": "Find openly licensed media, gate it by licence, and keep a record of what was used",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@refkit/core": "^0.10.1",
+    "@refkit/provider-openverse": "^0.6.1",
+    "@refkit/provider-pixabay": "^0.5.1",
+    "@refkit/provider-polyhaven": "^0.5.2"
+  }
+}

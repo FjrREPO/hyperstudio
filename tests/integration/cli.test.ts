@@ -104,3 +104,43 @@ test("help, version and usage errors", () => {
   assert.equal(run("frobnicate").code, 2);
   assert.equal(run("compile", EXAMPLE, "--bogus").code, 2);
 });
+
+test("assets: the provider policy and local listing work with no network and no key", () => {
+  const providers = JSON.parse(run("assets", "providers", "--json").out);
+  assert.deepEqual(
+    providers.providers.map((p: { name: string }) => p.name),
+    ["Openverse", "Poly Haven", "Pixabay"],
+  );
+  assert.ok(providers.excluded.some((e: { name: string }) => e.name === "Freesound API"));
+
+  const dir = mkdtempSync(join(tmpdir(), "hs-cli-assets-"));
+  writeFileSync(join(dir, "logo.svg"), "<svg/>");
+  writeFileSync(
+    join(dir, "LICENSES.json"),
+    JSON.stringify([
+      {
+        file: "bed.mp3",
+        licence: "CC-BY",
+        source: "openverse-audio",
+        attribution: '"Bed" by A. Person, CC BY 4.0',
+      },
+    ]),
+  );
+  writeFileSync(join(dir, "bed.mp3"), "x");
+  const listed = JSON.parse(run("assets", "list", dir, "--json").out);
+  assert.deepEqual(
+    listed.files.map((f: { file: string; kind: string }) => [f.file, f.kind]),
+    [
+      ["bed.mp3", "audio"],
+      ["logo.svg", "image"],
+    ],
+  );
+  assert.deepEqual(listed.credits, ['"Bed" by A. Person, CC BY 4.0']);
+});
+
+test("assets: usage errors are reported as such", () => {
+  assert.equal(run("assets").code, 2);
+  assert.equal(run("assets", "search").code, 2);
+  assert.equal(run("assets", "search", "rain", "--kind", "smell").code, 2);
+  assert.equal(run("assets", "download", "1").code, 2);
+});

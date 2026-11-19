@@ -3,6 +3,7 @@
 // Fine while this is used from its own checkout; add a build step when it is published as a dependency.
 import { parseArgs } from "node:util";
 import pkg from "../package.json" with { type: "json" };
+import { runAssets } from "./commands/assets.ts";
 import { runCompile } from "./commands/compile.ts";
 import { runRecipes } from "./commands/recipes.ts";
 import { runReview } from "./commands/review.ts";
@@ -14,15 +15,24 @@ ${bold("Usage")}
   hyperstudio compile <ir.json> [--output <dir>] [--validate-only]
   hyperstudio review  <ir.json> [--output <dir>]
   hyperstudio recipes [name]
+  hyperstudio assets  providers | search <query> | download <#> | list [dir] | usage
 
 ${bold("Commands")}
   compile   Validate a Creative IR and write a HyperFrames project.
   review    Compile, run hyperframes check, snapshot every shot and start a REVIEW.md rubric.
   recipes   List the recipes, or show one recipe's variables.
+  assets    Find openly licensed media on free sources, gated by licence, and record what is used.
 
 ${bold("Options")}
   -o, --output <dir>   Project directory (default: build/ beside the IR file)
       --validate-only  compile: validate and plan; write nothing
+      --kind <kind>    assets search: image (default), audio or video
+      --source <ids>   assets search: only these sources, comma separated
+      --limit <n>      assets search: how many results (default 10)
+      --held-back      assets search: also show what the licence gate held back
+      --to <dir>       assets download: where to save, usually <film>/assets
+      --name <name>    assets download: file name without extension
+      --accept-review  assets download: you have read a needs-review licence and accept it
       --json           Machine-readable output
       --pretty         Indented JSON (implies --json)
   -h, --help           Show this help
@@ -35,7 +45,7 @@ After compile, the output is a normal HyperFrames project:
   npx hyperframes check --json && npx hyperframes snapshot && npx hyperframes render -o out.mp4
 `;
 
-function main(argv: string[]): number {
+async function main(argv: string[]): Promise<number> {
   let parsed: ReturnType<typeof parse>;
   try {
     parsed = parse(argv);
@@ -44,6 +54,18 @@ function main(argv: string[]): number {
   }
   const { values, positionals } = parsed;
   const [command, target, ...extra] = positionals;
+  if (command === "assets")
+    return await runAssets(target, extra, {
+      kind: values.kind,
+      source: values.source,
+      limit: values.limit,
+      to: values.to,
+      name: values.name,
+      heldBack: values["held-back"],
+      acceptReview: values["accept-review"],
+      json: values.json || values.pretty,
+      pretty: values.pretty,
+    });
   const json = values.json || values.pretty;
 
   if (values.version) {
@@ -83,6 +105,13 @@ function parse(argv: string[]) {
     options: {
       output: { type: "string", short: "o" },
       "validate-only": { type: "boolean", default: false },
+      kind: { type: "string" },
+      source: { type: "string" },
+      limit: { type: "string" },
+      to: { type: "string" },
+      name: { type: "string" },
+      "held-back": { type: "boolean", default: false },
+      "accept-review": { type: "boolean", default: false },
       json: { type: "boolean", default: false },
       pretty: { type: "boolean", default: false },
       help: { type: "boolean", short: "h", default: false },
@@ -96,4 +125,4 @@ function usage(problem: string): number {
   return 2;
 }
 
-process.exitCode = main(process.argv.slice(2));
+process.exitCode = await main(process.argv.slice(2));

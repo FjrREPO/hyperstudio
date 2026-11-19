@@ -8,6 +8,7 @@
     "hyperstudio": "src/cli.ts"
   },
   "dependencies": {
-    "@hyperstudio/compiler": "workspace:*"
+    "@hyperstudio/compiler": "workspace:*",
+    "@hyperstudio/assets": "workspace:*"
   }
 }
