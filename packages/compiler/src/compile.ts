@@ -50,6 +50,8 @@ export interface CompileResult {
   warnings: Issue[];
   /** Everything on screen or in the mix that is a stand-in rather than the real thing. */
   placeholders: string[];
+  /** Credit lines the film owes for the licensed assets it uses, from each asset folder's LICENSES.json. */
+  credits: string[];
 }
 
 const RESERVED_IDS = new Set(["main", "root"]);
@@ -276,6 +278,7 @@ export function compile(irPath: string, options: CompileOptions = {}): CompileRe
     files: [...files.keys(), ...copies.keys()].sort(),
     warnings,
     placeholders,
+    credits: creditsOwed([...copies.values()]),
   };
   if (options.validateOnly) return result;
 
@@ -307,6 +310,22 @@ function sceneScreen(
   const screen = screens.get(name);
   if (!screen) fail(path, `unknown screen "${name}". Screens: ${[...screens.keys()].join(", ") || "(none)"}`);
   return screen;
+}
+
+/**
+ * Credit lines owed for the files a film uses. Each asset folder may hold a LICENSES.json ledger
+ * (written by `hyperstudio assets download`); only entries for files actually used are reported.
+ */
+function creditsOwed(sources: string[]): string[] {
+  const owed = new Set<string>();
+  for (const source of sources) {
+    const ledger = join(dirname(source), "LICENSES.json");
+    if (!existsSync(ledger)) continue;
+    const entries = JSON.parse(readFileSync(ledger, "utf8")) as { file: string; attribution?: string }[];
+    const entry = entries.find((e) => e.file === basename(source));
+    if (entry?.attribution) owed.add(entry.attribution);
+  }
+  return [...owed].sort();
 }
 
 /** A recipe is built for a range of lengths; outside it the shot either rushes or goes dead. */
