@@ -46,6 +46,20 @@ read as restless.
 Seven lines from Kokoro (voice `am_fenrir`, picked by name), synthesised interface sounds, no music. Mean
 -22.9 dB, peak -1.3 dB. Sync was placed from clip lengths and beat times, not checked by ear.
 
+## The user's review of this render (2026-11-19, from its frame sequence)
+
+Storytelling, art direction, composition and visual progression: good. Motion timing and sound: not judged
+(no direct playback, not listened to). Brand ending: needs strengthening. Four notes, none acted on yet:
+
+1. The opening is relevant but has no hook for someone who does not read code.
+2. The testing section is repetitive: bars filling for several seconds with little variation.
+3. The canary rollout is the best part but could be more dramatic: it should feel like a process under way,
+   not a number and boxes increasing.
+4. The ending is abrupt: from the 100% dashboard to the logo with no emotional payoff.
+
+Decision: a benchmark candidate, not final. Do not change the art direction until playback and audio have
+been validated; only then decide whether what remains is a design problem or a motion problem.
+
 ## Not a benchmark yet
 
 It carries no tag. It needs a person's judgement on all three dimensions first; see `docs/BENCHMARKS.md`.
