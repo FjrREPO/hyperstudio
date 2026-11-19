@@ -71,8 +71,15 @@ implemented.
 Voice Design, voice cloning, sound-effect and music generation, speech to text, streaming, pronunciation
 dictionaries, dub transcript editing.
 
-## Not tested live
+## Tested live
 
-No ElevenLabs key was available when this was built. The client is tested against a stand-in that answers
-like the documented API: request paths, headers and bodies, the three modes, quota refusal, confirmation and
-reuse. The first run with a real key should start with `audio status` and a `--dry-run`.
+On 2026-11-19 with a real key on the **Free plan**:
+
+- `GET /v1/user/subscription`: answered; the account read as tier `free` with 10,000 of 10,000 credits used.
+- `GET /v2/voices`: answered with the account's voices.
+- Voiceover: **refused by HyperStudio before any request was sent**, because the plan had no credits left
+  ("The free plan has 0 credits left and this needs 44. Nothing was generated."). That is the intended
+  behaviour, and it means the generation request itself has still not been made against the real service.
+
+Not yet exercised against the real service: voiceover generation, a paid plan's confirmation path, and all of
+dubbing. Those are covered by tests against a stand-in that answers like the documented API.
