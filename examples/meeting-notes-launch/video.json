@@ -1,0 +1,253 @@
+{
+  "project": {
+    "title": "Marlow - 17.7 second launch film",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 17.7
+  },
+  "direction": {
+    "concept": "The film follows one meeting from the confusion after it to notes that name who does what.",
+    "audience": "Team leads who leave meetings unsure what was decided and end up writing the follow-up themselves.",
+    "message": "Marlow turns a meeting into decisions and owners, and sends them to the people named.",
+    "tone": "Warm and editorial, like a well-set page; the product is calm and the film does not hurry it.",
+    "palette": "Warm paper stage with a green and an amber glow, ink for type, and one green accent that marks what is decided or done.",
+    "typography": "Playfair Display for the film's own lines, so the brand speaks in a different voice from its Inter interface.",
+    "motion": "One camera move per shot; the opening wide shot lies on a desk in shallow focus, close shots are flat or turned slightly.",
+    "pacing": "Ten shots, cut on each click; state changes get their own shot so the viewer sees cause and effect."
+  },
+  "brand": {
+    "name": "Marlow",
+    "kind": "example",
+    "url": "marlow.example"
+  },
+  "style": {
+    "background": "#efe8da",
+    "ink": "#1b1814",
+    "accent": "#0e7a53",
+    "glow": "#e79a4c",
+    "displayFont": "Playfair Display",
+    "textFont": "Inter",
+    "light": "aurora"
+  },
+  "screens": {
+    "meeting": {
+      "src": "screens/meeting.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "transcript": [28, 92, 560, 780],
+        "prompt": [834, 429, 360, 163],
+        "summarise-button": [925, 549, 177, 43]
+      }
+    },
+    "summary": {
+      "src": "screens/summary.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "transcript": [28, 92, 560, 780],
+        "summary": [617, 150, 794, 721],
+        "title": [645, 176, 738, 35],
+        "decisions": [645, 258, 738, 150],
+        "actions": [645, 430, 738, 205],
+        "action-1": [631, 455, 766, 60],
+        "action-1-box": [645, 473, 24, 24],
+        "foot": [617, 791, 794, 80],
+        "send-button": [1221, 810, 162, 43]
+      }
+    },
+    "done": {
+      "src": "screens/done.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "transcript": [28, 92, 560, 780],
+        "summary": [617, 150, 794, 721],
+        "title": [645, 176, 738, 35],
+        "decisions": [645, 258, 738, 150],
+        "actions": [645, 430, 738, 205],
+        "action-1": [631, 455, 766, 60],
+        "action-1-box": [645, 473, 24, 24],
+        "foot": [617, 791, 794, 80],
+        "send-button": [1221, 810, 162, 43]
+      }
+    },
+    "sent": {
+      "src": "screens/sent.png",
+      "width": 1440,
+      "height": 900,
+      "origin": "placeholder",
+      "regions": {
+        "window": [0, 0, 1440, 900],
+        "transcript": [28, 92, 560, 780],
+        "summary": [617, 150, 794, 721],
+        "title": [645, 176, 738, 35],
+        "decisions": [645, 258, 738, 150],
+        "actions": [645, 430, 738, 205],
+        "action-1": [631, 455, 766, 60],
+        "action-1-box": [645, 473, 24, 24],
+        "foot": [617, 791, 794, 80],
+        "send-button": [1221, 810, 162, 43],
+        "toast": [1097, 730, 286, 65]
+      }
+    }
+  },
+  "scenes": [
+    {
+      "id": "problem",
+      "recipe": "scatter",
+      "duration": 2.6,
+      "purpose": "Open on the minutes after a meeting, when nobody is sure what was decided or who owns it.",
+      "text": {
+        "note1": "Wait, who owns this?",
+        "note2": "What did we decide?",
+        "note3": "Who took notes?",
+        "note4": "Let me find the recording",
+        "line": "The meeting ended. Now what?"
+      }
+    },
+    {
+      "id": "reveal",
+      "recipe": "product-shot",
+      "duration": 2.2,
+      "purpose": "Show the product holding the whole meeting, and ask it to write the notes.",
+      "screen": "meeting",
+      "params": {
+        "from": "window",
+        "fill": 0.9,
+        "tilt": "desk",
+        "focus": "band",
+        "cursor": "summarise-button",
+        "clickAt": 0.74
+      }
+    },
+    {
+      "id": "meet",
+      "recipe": "statement",
+      "duration": 1.2,
+      "purpose": "Name the product the viewer has just watched being used.",
+      "text": {
+        "line1": "Meet Marlow.",
+        "emphasis": "Marlow."
+      },
+      "params": {
+        "size": "display"
+      }
+    },
+    {
+      "id": "notes",
+      "recipe": "product-shot",
+      "duration": 1.9,
+      "purpose": "The click produced the notes: one headline and what was decided.",
+      "screen": "summary",
+      "params": {
+        "from": "window",
+        "to": "decisions",
+        "fill": 0.8,
+        "move": "settle",
+        "tilt": "left"
+      }
+    },
+    {
+      "id": "owners",
+      "recipe": "product-shot",
+      "duration": 1.6,
+      "purpose": "Every action has a person; tick the first one off.",
+      "screen": "summary",
+      "params": {
+        "isolate": "summary",
+        "radius": 20,
+        "from": "actions",
+        "fill": 0.84,
+        "cursor": "action-1-box",
+        "clickAt": 0.62
+      }
+    },
+    {
+      "id": "ticked",
+      "recipe": "product-shot",
+      "duration": 1.2,
+      "purpose": "The state changes: the action is done and stays on the record.",
+      "screen": "done",
+      "params": {
+        "isolate": "summary",
+        "radius": 20,
+        "from": "actions",
+        "to": "action-1",
+        "highlight": "action-1",
+        "fill": 0.8,
+        "tilt": "right"
+      }
+    },
+    {
+      "id": "send",
+      "recipe": "product-shot",
+      "duration": 1.4,
+      "purpose": "Send the notes to the people named in them.",
+      "screen": "done",
+      "params": {
+        "from": "actions",
+        "to": "send-button",
+        "fill": 0.7,
+        "move": "ease",
+        "cursor": "send-button",
+        "clickAt": 0.68
+      }
+    },
+    {
+      "id": "sent",
+      "recipe": "product-shot",
+      "duration": 1.2,
+      "purpose": "It arrived: the team has the notes and each owner was told.",
+      "screen": "sent",
+      "params": {
+        "from": "toast",
+        "fill": 0.5,
+        "tilt": "up"
+      }
+    },
+    {
+      "id": "benefit",
+      "recipe": "statement",
+      "duration": 1.8,
+      "purpose": "Say what the product changes about meetings.",
+      "text": {
+        "line1": "Every meeting ends",
+        "line2": "with who does what.",
+        "emphasis": "who"
+      }
+    },
+    {
+      "id": "close",
+      "recipe": "brand-close",
+      "duration": 2.6,
+      "purpose": "Leave the name, what it does, and where to find it.",
+      "assets": {
+        "mark": {
+          "src": "assets/marlow-mark.svg",
+          "origin": "placeholder"
+        }
+      },
+      "text": {
+        "name": "Marlow",
+        "tagline": "Notes that know who does what.",
+        "cta": "marlow.example"
+      }
+    }
+  ],
+  "audio": [
+    {
+      "id": "sfx",
+      "src": "assets/ui-sfx.m4a",
+      "origin": "placeholder",
+      "role": "sfx",
+      "volume": 0.6
+    }
+  ]
+}
