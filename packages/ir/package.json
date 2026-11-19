@@ -1,6 +1,6 @@
 {
   "name": "@hyperstudio/ir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Creative IR: the Zod schema for a HyperStudio video plan",
   "private": true,
   "type": "module",
