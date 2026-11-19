@@ -1,0 +1,13 @@
+{
+  "name": "hyperstudio",
+  "version": "0.1.0",
+  "description": "hyperstudio command line: compile a Creative IR into a HyperFrames project",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "hyperstudio": "src/cli.ts"
+  },
+  "dependencies": {
+    "@hyperstudio/compiler": "workspace:*"
+  }
+}

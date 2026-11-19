@@ -1,0 +1,49 @@
+{
+  "project": {
+    "title": "Noctis One - Luxury Watch Commercial",
+    "fps": 30,
+    "aspectRatio": "16:9",
+    "duration": 16.2
+  },
+  "style": {
+    "accent": "#c9a35c",
+    "background": "#06070b",
+    "ink": "#f4efe6",
+    "headingFont": "Playfair Display",
+    "bodyFont": "Inter"
+  },
+  "scenes": [
+    {
+      "id": "reveal",
+      "recipe": "luxury-product-reveal",
+      "duration": 6,
+      "assets": { "product": "assets/noctis-one.svg" },
+      "text": { "eyebrow": "Introducing", "headline": "Time, distilled." },
+      "params": { "layout": "center", "camera": "push-in", "lighting": "dramatic" },
+      "transition": { "type": "fade", "duration": 0.8 }
+    },
+    {
+      "id": "calibre",
+      "recipe": "luxury-product-reveal",
+      "duration": 5,
+      "assets": { "product": "assets/noctis-one.svg" },
+      "text": {
+        "eyebrow": "Calibre N-01",
+        "headline": "Seventy hours of quiet precision.",
+        "subline": "A self-winding movement, finished by hand."
+      },
+      "params": { "layout": "left", "camera": "orbit", "lighting": "rim", "intensity": 0.8 },
+      "transition": { "type": "crossfade", "duration": 0.8 }
+    },
+    {
+      "id": "closing",
+      "recipe": "luxury-product-reveal",
+      "duration": 6,
+      "assets": { "product": "assets/noctis-one.svg" },
+      "text": { "eyebrow": "Noctis One", "headline": "Own the night.", "subline": "Available by appointment." },
+      "params": { "layout": "right", "camera": "pull-out", "lighting": "soft", "exit": "fade" },
+      "transition": { "type": "fade", "duration": 0.8 }
+    }
+  ],
+  "audio": [{ "id": "bed", "src": "assets/night-bed.m4a", "volume": 0.8, "fadeIn": 1.5, "fadeOut": 2.5 }]
+}

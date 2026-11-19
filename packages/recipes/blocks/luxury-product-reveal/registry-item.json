@@ -1,0 +1,151 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/registry-item.json",
+  "name": "luxury-product-reveal",
+  "type": "hyperframes:block",
+  "title": "Luxury Product Reveal",
+  "description": "A product emerges from darkness under a controlled light: slow camera move, a glint that travels across the product's own silhouette, drifting dust, and a serif headline that rises word by word. One complete shot with composition, timing, motion, lighting and typography decided. The camera is a 2.5D transform simulation on a flat image, not a physical camera.",
+  "tags": ["cinematic", "product", "luxury", "reveal", "camera", "typography"],
+  "dimensions": { "width": 1920, "height": 1080 },
+  "duration": 6,
+  "hyperstudio": {
+    "minDuration": 4,
+    "maxDuration": 12,
+    "required": ["product", "headline"]
+  },
+  "files": [
+    {
+      "path": "luxury-product-reveal.html",
+      "target": "compositions/luxury-product-reveal.html",
+      "type": "hyperframes:composition"
+    }
+  ],
+  "variables": [
+    {
+      "id": "product",
+      "type": "image",
+      "role": "content",
+      "label": "Product image",
+      "description": "Transparent PNG, WebP or SVG of the product. Its alpha channel shapes the glint, so a cut-out works and a photo on a background does not.",
+      "default": ""
+    },
+    {
+      "id": "eyebrow",
+      "type": "string",
+      "role": "content",
+      "label": "Eyebrow",
+      "description": "Short line above the headline, set in tracked capitals. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "headline",
+      "type": "string",
+      "role": "content",
+      "label": "Headline",
+      "description": "Two to six words read best; it rises word by word.",
+      "default": "Time, distilled."
+    },
+    {
+      "id": "subline",
+      "type": "string",
+      "role": "content",
+      "label": "Subline",
+      "description": "One supporting sentence. Empty hides it.",
+      "default": ""
+    },
+    {
+      "id": "layout",
+      "type": "enum",
+      "role": "layout",
+      "label": "Product position",
+      "description": "Where the product sits; the copy takes the other side. Portrait canvases always stack product over copy.",
+      "default": "center",
+      "options": [
+        { "value": "center", "label": "Product centered, copy beneath" },
+        { "value": "left", "label": "Product left, copy right" },
+        { "value": "right", "label": "Product right, copy left" }
+      ]
+    },
+    {
+      "id": "camera",
+      "type": "enum",
+      "role": "motion",
+      "label": "Camera move",
+      "description": "Runs for the whole scene. Simulated with scale, translate and perspective rotation.",
+      "default": "push-in",
+      "options": [
+        { "value": "push-in", "label": "Slow push in" },
+        { "value": "pull-out", "label": "Slow pull out" },
+        { "value": "orbit", "label": "Orbit (perspective turn)" },
+        { "value": "pan", "label": "Lateral drift" },
+        { "value": "static", "label": "Locked off" }
+      ]
+    },
+    {
+      "id": "intensity",
+      "type": "number",
+      "role": "motion",
+      "label": "Camera intensity",
+      "description": "Multiplies the distance the camera travels.",
+      "default": 1,
+      "min": 0.4,
+      "max": 1.6,
+      "step": 0.1
+    },
+    {
+      "id": "lighting",
+      "type": "enum",
+      "role": "look",
+      "label": "Lighting",
+      "default": "dramatic",
+      "options": [
+        { "value": "dramatic", "label": "Dramatic: hard top light, deep vignette" },
+        { "value": "soft", "label": "Soft: broad ambient glow" },
+        { "value": "rim", "label": "Rim: accent halo behind the product" }
+      ]
+    },
+    {
+      "id": "particles",
+      "type": "boolean",
+      "role": "look",
+      "label": "Dust particles",
+      "default": true
+    },
+    {
+      "id": "exit",
+      "type": "enum",
+      "role": "motion",
+      "label": "Exit",
+      "description": "hold keeps the final frame for a cut or a transition; fade clears the frame at the end.",
+      "default": "hold",
+      "options": [{ "value": "hold", "label": "Hold" }, { "value": "fade", "label": "Fade out" }]
+    },
+    { "id": "accent", "type": "color", "role": "brand", "label": "Accent colour", "default": "#c9a35c" },
+    { "id": "background", "type": "color", "role": "brand", "label": "Background", "default": "#07070a" },
+    { "id": "ink", "type": "color", "role": "brand", "label": "Text colour", "default": "#f4efe6" },
+    {
+      "id": "headingFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Headline typeface",
+      "default": "Playfair Display",
+      "options": [
+        { "value": "Playfair Display", "label": "Playfair Display" },
+        { "value": "EB Garamond", "label": "EB Garamond" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Outfit", "label": "Outfit" }
+      ]
+    },
+    {
+      "id": "bodyFont",
+      "type": "enum",
+      "role": "brand",
+      "label": "Body typeface",
+      "default": "Inter",
+      "options": [
+        { "value": "Inter", "label": "Inter" },
+        { "value": "Montserrat", "label": "Montserrat" },
+        { "value": "Outfit", "label": "Outfit" }
+      ]
+    }
+  ]
+}

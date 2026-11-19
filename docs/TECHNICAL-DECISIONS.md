@@ -1,6 +1,6 @@
 # Technical decisions
 
-Each decision cites [HYPERFRAMES-RESEARCH.md](HYPERFRAMES-RESEARCH.md). Status: proposed, awaiting owner sign-off.
+Each decision cites [HYPERFRAMES-RESEARCH.md](HYPERFRAMES-RESEARCH.md). Status: lean scope approved by the owner on 2026-11-19. D3 and D6 were revised the same day; see each.
 
 ## D1. Do not rebuild what HyperFrames ships
 
@@ -19,9 +19,14 @@ checks. The registry item format already provides all five (research §6).
 Composition happens at the scene level (IR lists recipes in order). Revisit if we need to merge several
 recipes inside one scene often enough that hand-editing the installed block becomes the bottleneck.
 
-## D3. One package, not a pnpm monorepo
+## D3. A small pnpm monorepo: four packages
 
-Three source files do not need workspaces. Split when a second consumer needs one part without the others.
+First proposed as a single package. The owner asked for a monorepo, so the code is split along its real seams:
+`ir`, `recipes`, `compiler`, `cli`, with dependencies pointing one way. Still far from the 13 packages of the
+original brief: a package exists only where something can be used without the rest (the schema without the
+compiler, the recipes without the CLI).
+**Tradeoff:** workspace wiring for about 600 lines of code. Packages are consumed as TypeScript source, so there
+is no build step to maintain.
 
 ## D4. No local MCP server
 
@@ -35,12 +40,14 @@ The installed `hyperframes*` skills already cover direction, story, spec, motion
 Six more would mostly restate them — which the brief forbids. One `hyperstudio` skill covers the delta:
 writing an IR, choosing our recipes, running `hyperstudio compile`.
 
-## D6. The compiler shells out to `hyperframes add`; it does not import registry internals
+## D6. The compiler copies recipe files; it does not go through `hyperframes add`
 
-`add` handles dependency resolution, path remapping and `--vars`. Importing its internals would couple us to
-unexported code. **Tradeoff:** needs network at compile time (`add` requires it, research §6).
-**Open:** whether `hyperframes.json#registry` accepts a local/`file:` path — verify first thing in Phase 2;
-fallback is copying recipe files directly, which is what `add` does anyway.
+Verified against HyperFrames 0.9.69: `hyperframes.json#registry` accepts only an absolute `https://` URL. A
+`file://` URL and a bare path both fail (details in [COMPILER.md](COMPILER.md)). So local recipes cannot be
+installed with `add`, and the compiler copies the recipe file itself, which is what `add` does for a block.
+This also keeps compilation offline and deterministic.
+**Tradeoff:** the compiler validates recipe values itself instead of relying on `add --vars`. Recipes keep the
+upstream registry-item format, so publishing them over HTTPS later needs no rewrite.
 
 ## D7. Time is seconds in the IR
 
@@ -49,9 +56,24 @@ A separate internal unit would only add a conversion to get wrong.
 
 ## Not doing (and when to reconsider)
 
-| Skipped | Reconsider when |
-| --- | --- |
-| Playground / UI editor | Never ours — HyperFrames Studio and desktop app exist |
-| Asset metadata/caching layer | A recipe needs probe data the CLI doesn't expose |
-| Render job tracker | We run renders outside the CLI (`producer` already reports progress) |
-| Structured logging, error boundaries | There is a long-running process to log from |
+| Skipped                              | Reconsider when                                                      |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| Playground / UI editor               | Never ours — HyperFrames Studio and desktop app exist                |
+| Asset metadata/caching layer         | A recipe needs probe data the CLI doesn't expose                     |
+| Render job tracker                   | We run renders outside the CLI (`producer` already reports progress) |
+| Structured logging, error boundaries | There is a long-running process to log from                          |
+
+## D8. One recipe file serves many scenes by renaming one token
+
+HyperFrames keys a scene's variables and timeline by composition id, and element ids must be unique on the
+assembled page. A recipe therefore uses its own name as composition id and id prefix, and the compiler renames
+that token to the scene id. Alternatives rejected: mounting one file several times (ids collide) and a
+template language in recipes (they would stop being valid HyperFrames files).
+**Tradeoff:** recipe authors must prefix every id; a regression test checks the result.
+
+## D9. Tests in three layers, golden files for output
+
+Unit tests beside the code (schema, validation, timing), integration tests that run the CLI as a process, and
+regression tests that compare the compiled example with committed golden files. The run against the real
+HyperFrames CLI is opt-in (`pnpm test:e2e`) because it needs `npx` and, the first time, the network.
+**Tradeoff:** any recipe edit changes the golden files; `pnpm test:update` accepts an intended change.

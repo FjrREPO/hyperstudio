@@ -1,0 +1,408 @@
+<template>
+  <!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
+  <!--
+    LUXURY PRODUCT REVEAL
+
+    One shot: the product comes out of darkness, a light crosses it, the copy rises.
+    Variables are declared in registry-item.json (the compiler writes them onto #root).
+
+    Conventions this file keeps so the HyperStudio compiler can reuse it for any number of scenes:
+      - the composition id is the recipe name, and every element id starts with it;
+      - sizes are in --u (1% of the canvas's short side), so any resolution works;
+      - every visible state is a function of timeline time: seeded dust, finite tweens, fromTo only.
+
+    The camera is a 2.5D simulation: scale, translate and a perspective rotation of a flat image.
+  -->
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #calibre-stage {
+      --u: 10.8px;
+      --lpr-accent: #c9a35c;
+      --lpr-bg: #07070a;
+      --lpr-ink: #f4efe6;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--lpr-bg);
+      color: var(--lpr-ink);
+    }
+    .lpr-fill {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* ── Layout: product zone and copy zone ── */
+    #calibre-zone,
+    #calibre-copy {
+      position: absolute;
+    }
+    #calibre-copy {
+      display: flex;
+      flex-direction: column;
+    }
+    .lpr-center #calibre-zone { left: 30%; right: 30%; top: 6%; bottom: 40%; }
+    .lpr-center #calibre-copy { left: 10%; right: 10%; top: 67%; bottom: 9%; align-items: center; text-align: center; }
+    .lpr-left #calibre-zone { left: 7%; right: 53%; top: 10%; bottom: 10%; }
+    .lpr-left #calibre-copy { left: 53%; right: 10%; top: 10%; bottom: 10%; justify-content: center; align-items: flex-start; text-align: left; }
+    .lpr-right #calibre-zone { left: 53%; right: 7%; top: 10%; bottom: 10%; }
+    .lpr-right #calibre-copy { left: 10%; right: 53%; top: 10%; bottom: 10%; justify-content: center; align-items: flex-start; text-align: left; }
+    .lpr-portrait #calibre-zone { left: 14%; right: 26%; top: 12%; bottom: 57%; }
+    .lpr-portrait #calibre-copy { left: 14%; right: 26%; top: 45%; bottom: 36%; justify-content: flex-start; align-items: center; text-align: center; }
+
+    /* ── Light ── */
+    #calibre-glow {
+      position: absolute;
+      inset: -35%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--lpr-accent) 34%, transparent), transparent);
+    }
+    #calibre-halo {
+      position: absolute;
+      inset: -6%;
+      background: radial-gradient(closest-side, transparent 60%, color-mix(in srgb, var(--lpr-accent) 80%, white) 66%, transparent 76%);
+      filter: blur(calc(var(--u) * 1.4));
+    }
+    #calibre-floor {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: -5%;
+      height: 14%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--lpr-accent) 38%, transparent), transparent);
+    }
+    #calibre-beam-wrap {
+      position: absolute;
+      left: 0;
+      top: -60%;
+      width: 100%;
+      height: 220%;
+      transform: rotate(20deg);
+      pointer-events: none;
+    }
+    #calibre-beam {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 26%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.11), transparent);
+    }
+
+    /* ── Product ── */
+    #calibre-rig {
+      position: absolute;
+      inset: 0;
+      perspective: calc(var(--u) * 150);
+    }
+    #calibre-cam,
+    #calibre-product {
+      position: absolute;
+      inset: 0;
+    }
+    #calibre-img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 calc(var(--u) * 2.4) calc(var(--u) * 3.2) rgba(0, 0, 0, 0.6));
+    }
+    #calibre-glint {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      mix-blend-mode: screen;
+      mask-repeat: no-repeat;
+      mask-position: center;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      -webkit-mask-size: contain;
+    }
+    #calibre-glint-bar {
+      position: absolute;
+      left: 0;
+      top: -20%;
+      width: 34%;
+      height: 140%;
+      background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.8) 50%, transparent 80%);
+    }
+    .lpr-dust {
+      position: absolute;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--lpr-accent) 55%, white);
+    }
+
+    /* ── Copy ── */
+    #calibre-eyebrow {
+      font-size: calc(var(--u) * 2.6);
+      font-weight: 400;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--lpr-accent);
+      margin-bottom: calc(var(--u) * 2.2);
+      white-space: nowrap;
+    }
+    #calibre-headline {
+      font-size: calc(var(--u) * 7.2);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+    .lpr-left #calibre-headline,
+    .lpr-right #calibre-headline {
+      font-size: calc(var(--u) * 6.6);
+    }
+    .lpr-portrait #calibre-headline {
+      font-size: calc(var(--u) * 6);
+    }
+    .lpr-word {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      padding-bottom: 0.14em;
+      margin-bottom: -0.14em;
+    }
+    .lpr-word-in {
+      display: inline-block;
+    }
+    #calibre-rule {
+      width: calc(var(--u) * 9);
+      height: calc(var(--u) * 0.16);
+      background: var(--lpr-accent);
+      margin: calc(var(--u) * 2.6) 0 calc(var(--u) * 2.4);
+    }
+    #calibre-sub {
+      font-size: calc(var(--u) * 2.9);
+      font-weight: 400;
+      line-height: 1.4;
+      opacity: 0.82;
+      max-width: calc(var(--u) * 70);
+    }
+    .lpr-h-playfair-display { font-family: "Playfair Display", serif; }
+    .lpr-h-eb-garamond { font-family: "EB Garamond", serif; }
+    .lpr-h-montserrat { font-family: "Montserrat", sans-serif; }
+    .lpr-h-outfit { font-family: "Outfit", sans-serif; }
+    .lpr-b-inter { font-family: "Inter", sans-serif; }
+    .lpr-b-montserrat { font-family: "Montserrat", sans-serif; }
+    .lpr-b-outfit { font-family: "Outfit", sans-serif; }
+  </style>
+
+  <div
+    id="root"
+    data-composition-id="calibre"
+    data-start="0"
+    data-duration="5"
+    data-width="1920"
+    data-height="1080"
+   data-composition-variables='[{"id":"product","type":"image","label":"Product image","description":"Transparent PNG, WebP or SVG of the product. Its alpha channel shapes the glint, so a cut-out works and a photo on a background does not.","default":"","role":"content"},{"id":"eyebrow","type":"string","label":"Eyebrow","description":"Short line above the headline, set in tracked capitals. Empty hides it.","default":"","role":"content"},{"id":"headline","type":"string","label":"Headline","description":"Two to six words read best; it rises word by word.","default":"Time, distilled.","role":"content"},{"id":"subline","type":"string","label":"Subline","description":"One supporting sentence. Empty hides it.","default":"","role":"content"},{"id":"layout","type":"enum","label":"Product position","description":"Where the product sits; the copy takes the other side. Portrait canvases always stack product over copy.","default":"center","options":[{"value":"center","label":"Product centered, copy beneath"},{"value":"left","label":"Product left, copy right"},{"value":"right","label":"Product right, copy left"}],"role":"layout"},{"id":"camera","type":"enum","label":"Camera move","description":"Runs for the whole scene. Simulated with scale, translate and perspective rotation.","default":"push-in","options":[{"value":"push-in","label":"Slow push in"},{"value":"pull-out","label":"Slow pull out"},{"value":"orbit","label":"Orbit (perspective turn)"},{"value":"pan","label":"Lateral drift"},{"value":"static","label":"Locked off"}],"role":"motion"},{"id":"intensity","type":"number","label":"Camera intensity","description":"Multiplies the distance the camera travels.","default":1,"min":0.4,"max":1.6,"role":"motion","step":0.1},{"id":"lighting","type":"enum","label":"Lighting","default":"dramatic","options":[{"value":"dramatic","label":"Dramatic: hard top light, deep vignette"},{"value":"soft","label":"Soft: broad ambient glow"},{"value":"rim","label":"Rim: accent halo behind the product"}],"role":"look"},{"id":"particles","type":"boolean","label":"Dust particles","default":true,"role":"look"},{"id":"exit","type":"enum","label":"Exit","description":"hold keeps the final frame for a cut or a transition; fade clears the frame at the end.","default":"hold","options":[{"value":"hold","label":"Hold"},{"value":"fade","label":"Fade out"}],"role":"motion"},{"id":"accent","type":"color","label":"Accent colour","default":"#c9a35c","role":"brand"},{"id":"background","type":"color","label":"Background","default":"#07070a","role":"brand"},{"id":"ink","type":"color","label":"Text colour","default":"#f4efe6","role":"brand"},{"id":"headingFont","type":"enum","label":"Headline typeface","default":"Playfair Display","options":[{"value":"Playfair Display","label":"Playfair Display"},{"value":"EB Garamond","label":"EB Garamond"},{"value":"Montserrat","label":"Montserrat"},{"value":"Outfit","label":"Outfit"}],"role":"brand"},{"id":"bodyFont","type":"enum","label":"Body typeface","default":"Inter","options":[{"value":"Inter","label":"Inter"},{"value":"Montserrat","label":"Montserrat"},{"value":"Outfit","label":"Outfit"}],"role":"brand"}]'>
+    <div id="calibre-stage" class="lpr-center">
+      <div id="calibre-spot" class="lpr-fill"></div>
+      <div id="calibre-beam-wrap" data-layout-allow-overflow><div id="calibre-beam" data-layout-allow-overflow></div></div>
+
+      <div id="calibre-zone">
+        <div id="calibre-glow" data-layout-allow-overflow></div>
+        <div id="calibre-halo" data-layout-allow-overflow></div>
+        <div id="calibre-floor" data-layout-allow-overflow></div>
+        <div id="calibre-rig">
+          <div id="calibre-cam">
+            <div id="calibre-product">
+              <img id="calibre-img" data-var-src="product" alt="" />
+              <div id="calibre-glint"><div id="calibre-glint-bar" data-layout-allow-overflow></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="calibre-dust" class="lpr-fill"></div>
+      <div id="calibre-vignette" class="lpr-fill"></div>
+
+      <div id="calibre-copy">
+        <div id="calibre-eyebrow" data-var-text="eyebrow"></div>
+        <div id="calibre-headline"></div>
+        <div id="calibre-rule"></div>
+        <div id="calibre-sub" data-var-text="subline"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var ID = "calibre";
+      var $ = function (name) {
+        return document.getElementById(ID + "-" + name);
+      };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 6;
+      var U = Math.min(W, H) / 100;
+
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign(
+        {
+          product: "",
+          eyebrow: "",
+          headline: "Time, distilled.",
+          subline: "",
+          layout: "center",
+          camera: "push-in",
+          intensity: 1,
+          lighting: "dramatic",
+          particles: true,
+          exit: "hold",
+          accent: "#c9a35c",
+          background: "#07070a",
+          ink: "#f4efe6",
+          headingFont: "Playfair Display",
+          bodyFont: "Inter",
+        },
+        given,
+      );
+      var slug = function (s) {
+        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      };
+      var portrait = H > W;
+      var layout = portrait ? "portrait" : v.layout;
+      var k = Number(v.intensity) || 1;
+
+      // ── Static setup (no time involved) ──
+      stage.style.setProperty("--u", U + "px");
+      stage.style.setProperty("--lpr-accent", v.accent);
+      stage.style.setProperty("--lpr-bg", v.background);
+      stage.style.setProperty("--lpr-ink", v.ink);
+      stage.className = "lpr-" + layout + " lpr-b-" + slug(v.bodyFont);
+      $("headline").className = "lpr-h-" + slug(v.headingFont);
+
+      var src = typeof v.product === "string" ? v.product : (v.product && v.product.url) || "";
+      if (src) {
+        $("img").setAttribute("src", src);
+        $("glint").style.maskImage = 'url("' + src + '")';
+        $("glint").style.webkitMaskImage = 'url("' + src + '")';
+      } else {
+        $("product").style.display = "none";
+      }
+
+      $("eyebrow").textContent = v.eyebrow;
+      $("sub").textContent = v.subline;
+      if (!v.eyebrow) $("eyebrow").style.display = "none";
+      if (!v.subline) $("sub").style.display = "none";
+      var words = String(v.headline).split(/\s+/).filter(Boolean);
+      var headline = $("headline");
+      words.forEach(function (word, i) {
+        var outer = document.createElement("span");
+        var inner = document.createElement("span");
+        outer.className = "lpr-word";
+        inner.className = "lpr-word-in";
+        inner.setAttribute("data-layout-allow-overflow", "");
+        inner.textContent = word;
+        outer.appendChild(inner);
+        headline.appendChild(outer);
+        if (i < words.length - 1) headline.appendChild(document.createTextNode(" "));
+      });
+
+      // Light per look: [glow, spot, halo, beam, vignette]
+      var look = { dramatic: [0.55, 1, 0, 1, 0.86], soft: [0.95, 0.4, 0, 0, 0.5], rim: [0.3, 0.55, 0.9, 1, 0.74] }[v.lighting] || [0.55, 1, 0, 1, 0.86];
+      var productX = { center: 50, left: 27, right: 73, portrait: 50 }[layout];
+      $("spot").style.background =
+        "radial-gradient(ellipse 55% 80% at " + productX + "% -12%, rgba(255,255,255,0.22), transparent 70%)";
+      $("vignette").style.background =
+        "radial-gradient(ellipse at " + productX + "% 45%, transparent 38%, rgba(0,0,0," + look[4] + ") 100%)";
+
+      // Seeded so the dust is the same on every render and differs between scenes.
+      var seed = 2166136261;
+      for (var c = 0; c < ID.length; c++) seed = Math.imul(seed ^ ID.charCodeAt(c), 16777619);
+      var rand = function () {
+        seed = (seed + 0x6d2b79f5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+
+      // ── Timeline ──
+      var tl = gsap.timeline({ paused: true });
+      var end = D - 0.05; // land every end state just before the scene's last frame
+
+      // Light comes up first.
+      tl.fromTo($("spot"), { opacity: 0 }, { opacity: look[1], duration: 1.4, ease: "power2.out" }, 0);
+      tl.fromTo($("glow"), { opacity: 0, scale: 0.8 }, { opacity: look[0], scale: 1, duration: 1.8, ease: "power2.out" }, 0.1);
+      tl.fromTo($("halo"), { opacity: 0, scale: 0.82 }, { opacity: look[2], scale: 1.04, duration: end - 0.3, ease: "power2.out" }, 0.3);
+      tl.fromTo($("floor"), { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power2.out" }, 0.7);
+      tl.fromTo($("vignette"), { opacity: 0.6 }, { opacity: 1, duration: 2, ease: "sine.out" }, 0);
+      tl.fromTo($("beam"), { x: -0.45 * W, opacity: look[3] }, { x: 1.25 * W, opacity: look[3], duration: 2.6, ease: "power1.inOut" }, 0.5);
+
+      // Product resolves out of blur.
+      tl.fromTo(
+        $("product"),
+        { opacity: 0, scale: 0.88, y: 4 * U, filter: "blur(" + 2 * U + "px)" },
+        { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 1.6, ease: "expo.out" },
+        0.2,
+      );
+      // A glint crosses the product's silhouette once it has landed, and again late in a long scene.
+      tl.fromTo($("glint-bar"), { xPercent: -120 }, { xPercent: 320, duration: 1.3, ease: "power2.inOut" }, 1.0);
+      if (D >= 7) tl.fromTo($("glint-bar"), { xPercent: -120 }, { xPercent: 320, duration: 1.3, ease: "power2.inOut", immediateRender: false }, D - 3);
+
+      // Camera: one continuous move for the whole scene.
+      var cam = $("cam");
+      var move = {
+        "push-in": [{ scale: 1 }, { scale: 1 + 0.12 * k, ease: "power1.out" }],
+        "pull-out": [{ scale: 1 + 0.14 * k }, { scale: 1, ease: "power1.out" }],
+        orbit: [{ rotationY: -24 * k, x: -2 * U * k }, { rotationY: 24 * k, x: 2 * U * k, ease: "sine.inOut" }],
+        pan: [{ x: -3.5 * U * k }, { x: 3.5 * U * k, ease: "sine.inOut" }],
+      }[v.camera];
+      if (move) tl.fromTo(cam, move[0], Object.assign({ duration: end }, move[1]), 0);
+
+      // Dust drifts upward.
+      if (v.particles !== false && v.particles !== "false") {
+        var dust = $("dust");
+        for (var i = 0; i < 34; i++) {
+          var p = document.createElement("div");
+          var size = (0.18 + rand() * 0.34) * U;
+          p.className = "lpr-dust";
+          p.style.width = p.style.height = size + "px";
+          p.style.left = (productX - 30 + rand() * 60).toFixed(2) + "%";
+          p.style.top = (20 + rand() * 70).toFixed(2) + "%";
+          p.style.filter = "blur(" + (rand() * 0.12 * U).toFixed(2) + "px)";
+          dust.appendChild(p);
+          var born = rand() * Math.max(0.2, D - 3.2);
+          var life = Math.min(3 + rand() * 2.5, end - born);
+          var peak = 0.25 + rand() * 0.45;
+          tl.fromTo(p, { y: 0, x: 0 }, { y: -(6 + rand() * 12) * U, x: (rand() - 0.5) * 5 * U, duration: life, ease: "none" }, born);
+          tl.fromTo(p, { opacity: 0 }, { keyframes: [{ opacity: peak, duration: life * 0.3 }, { opacity: 0, duration: life * 0.7 }], ease: "sine.inOut" }, born);
+        }
+      }
+
+      // Copy: eyebrow, headline word by word, rule, subline.
+      var centered = layout === "center" || layout === "portrait";
+      tl.fromTo($("eyebrow"), { opacity: 0, y: 1.4 * U }, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, 1.25);
+      tl.fromTo(
+        headline.querySelectorAll(".lpr-word-in"),
+        { yPercent: 115 },
+        { yPercent: 0, duration: 1.05, ease: "expo.out", stagger: 0.09 },
+        1.45,
+      );
+      tl.fromTo(
+        $("rule"),
+        { scaleX: 0, transformOrigin: centered ? "50% 50%" : "0% 50%" },
+        { scaleX: 1, duration: 0.9, ease: "expo.out" },
+        1.9,
+      );
+      tl.fromTo($("sub"), { opacity: 0, y: 1.4 * U }, { opacity: 0.82, y: 0, duration: 0.9, ease: "power3.out" }, 2.1);
+
+      if (v.exit === "fade") {
+        tl.fromTo($("copy"), { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.85);
+        tl.fromTo($("zone"), { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "power2.in", immediateRender: false }, D - 0.7);
+      }
+
+      tl.set({}, {}, D);
+      window.__timelines[ID] = tl;
+    })();
+  </script>
+</template>
