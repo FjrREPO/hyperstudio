@@ -164,7 +164,7 @@
       var turned = TURNS[v.tilt] || TURNS.none;
       var soft = v.focus && v.focus !== "all" ? 1 : 0;
       gsap.set(rig, { rotationX: turned[0], rotationY: turned[1], rotationZ: turned[2], transformOrigin: "50% 50%" });
-      gsap.set(veil, { opacity: 0 });
+      gsap.set(veil, { opacity: 0, boxShadow: "0 0 0 9000px " + v.background });
       tl.fromTo(cam, { x: start.x, y: start.y, scale: start.scale, transformOrigin: "0 0" }, { x: start.x, y: start.y, scale: start.scale, duration: 0.01 }, 0);
       gsap.set([ripple, outline], { opacity: 0 });
       gsap.set(cursor, { opacity: 0 });
@@ -207,9 +207,10 @@
           var parts = host ? Array.prototype.slice.call(host.querySelectorAll("[data-reveal]")) : [];
           if (!parts.length && host) parts = Array.prototype.slice.call(host.children);
           var each = (Number(b.over) || 0.9) / Math.max(parts.length, 1);
-          tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
+          if (parts.length) tl.fromTo(parts, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: each }, b.at);
           // What stood in for the content (a skeleton, a status) leaves as the content arrives.
-          if (host) tl.fromTo(host.querySelectorAll("[data-leave]"), { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "none", immediateRender: false }, b.at);
+          var leaving = host ? host.querySelectorAll("[data-leave]") : [];
+          if (leaving.length) tl.fromTo(leaving, { opacity: 1 }, { opacity: 0, duration: 0.35, ease: "none", immediateRender: false }, b.at);
         } else if (b.do === "draw") {
           var plot = find(b.target);
           var lines = plot ? Array.prototype.slice.call(plot.querySelectorAll("[data-draw]")) : [];
@@ -218,7 +219,11 @@
             line.style.strokeDasharray = n;
             tl.fromTo(line, { strokeDashoffset: n }, { strokeDashoffset: 0, duration: Number(b.over) || 0.9, ease: "power2.inOut" }, b.at);
           });
-          if (plot) tl.fromTo(plot.querySelectorAll("[data-fade]"), { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
+          var fading = plot ? plot.querySelectorAll("[data-fade]") : [];
+          if (fading.length) tl.fromTo(fading, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, b.at + (Number(b.over) || 0.9) * 0.7);
+        } else if (b.do === "scroll") {
+          var pane = find(b.target);
+          if (pane && pane.firstElementChild) tl.fromTo(pane.firstElementChild, { y: 0 }, { y: -(Number(b.by) || 300), duration: Number(b.over) || 1.5, ease: b.ease || "power1.inOut" }, b.at);
         } else if (b.do === "count") {
           // A figure the page already shows counts up to its own value; nothing is invented here.
           var figure = find(b.target);
@@ -238,8 +243,10 @@
           var hole = { left: r[0] - gap, top: r[1] - gap, width: r[2] + gap * 2, height: r[3] + gap * 2 };
           var time = Number(b.over) || 0.6;
           if (!holed) {
-            gsap.set(veil, Object.assign({ boxShadow: "0 0 0 9000px " + v.background }, hole));
-            tl.fromTo(veil, { opacity: b.at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: time, ease: "power2.inOut" }, b.at);
+            // Placed on the timeline, not at build time: a later veil must not move an earlier one's opening.
+            if (b.at <= 0.05) gsap.set(veil, hole);
+            else tl.set(veil, hole, b.at);
+            tl.fromTo(veil, { opacity: b.at <= 0.05 ? 1 : 0 }, { opacity: 1, duration: time, ease: "power2.inOut", immediateRender: b.at <= 0.05 }, b.at);
           } else {
             tl.fromTo(veil, Object.assign({}, holed), Object.assign({ duration: time, ease: "power3.inOut", immediateRender: false }, hole), b.at);
             if (b.target === "window") tl.fromTo(veil, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none", immediateRender: false }, b.at + time);

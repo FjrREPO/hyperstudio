@@ -12,7 +12,7 @@
   "duration": 6,
   "hyperstudio": {
     "minDuration": 1.5,
-    "maxDuration": 20,
+    "maxDuration": 40,
     "required": [],
     "screen": true,
     "beats": true
