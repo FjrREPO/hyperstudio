@@ -3,18 +3,22 @@
 [![CI](https://github.com/FjrREPO/hyperstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/FjrREPO/hyperstudio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A creative layer on top of [HyperFrames](https://github.com/heygen-com/hyperframes). You describe a video as a
-small JSON plan; HyperStudio validates it and writes a HyperFrames project; HyperFrames checks, previews and
-renders it.
+A creative direction layer on top of [HyperFrames](https://github.com/heygen-com/hyperframes) for product and
+brand films. You record the direction and the shots as one JSON plan; HyperStudio checks the plan against that
+direction and writes a HyperFrames project; HyperFrames validates, previews and renders it.
 
-HyperStudio adds two things HyperFrames does not have, and nothing else:
+HyperStudio adds three things, and nothing HyperFrames already does:
 
-1. **Creative IR + deterministic compiler** — a typed plan (scenes, recipes, values, transitions, audio) that
-   compiles to the same project every time.
-2. **Cinematic recipes** — whole shots with composition, timing, motion, camera, lighting and typography
-   already decided, written in HyperFrames' own registry block format.
+1. **Creative IR**: the film's direction, what in it is real, and its shots, in one typed document.
+2. **A deterministic compiler** that refuses careless work: repeated shots, invented statistics, per-scene
+   colour changes, copy too long for its frame. The same plan always compiles to the same project.
+3. **Shot recipes** in HyperFrames' own registry format: a real product screen with a camera, cursor and
+   typing; a line of copy; a brand close.
 
-Animation, variable binding, audio mixing, validation, snapshots and rendering stay with HyperFrames.
+Then a review step: frames from every shot and a rubric to answer from them. A passing check is not a
+finished film.
+
+![The benchmark film](docs/media/saas-product-showcase.jpg)
 
 ## Requirements
 
@@ -24,70 +28,60 @@ Node ≥ 24, pnpm 12, FFmpeg, and Chrome (HyperFrames uses them; `npx hyperframe
 
 ```bash
 pnpm install
-pnpm hyperstudio recipes --pretty                                             # what you can use
-pnpm hyperstudio compile examples/luxury-watch-commercial/video.json    # writes .../build/
+pnpm hyperstudio recipes
+pnpm hyperstudio compile examples/saas-product-showcase/video.json
+pnpm hyperstudio review  examples/saas-product-showcase/video.json    # check + frames + REVIEW.md
 
-cd examples/luxury-watch-commercial/build
-npx hyperframes check --json
-npx hyperframes snapshot
-npx hyperframes render --quality looks -o ../renders/noctis-one.mp4
+cd examples/saas-product-showcase/build
+npx hyperframes render --quality looks -o ../renders/saas-product-showcase.mp4
 ```
+
+## Commands
+
+| Command                                                         | Does                                                                     |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `pnpm hyperstudio compile <ir.json> [-o dir] [--validate-only]` | Validate an IR and write a HyperFrames project                           |
+| `pnpm hyperstudio review <ir.json>`                             | Compile, run `hyperframes check`, snapshot every shot, start `REVIEW.md` |
+| `pnpm hyperstudio recipes [name]`                               | List the recipes, or show one recipe's variables                         |
+| `--json`, `--pretty`                                            | Machine-readable output for any command that prints a result             |
+| `pnpm verify`                                                   | Biome, type check and tests                                              |
+| `pnpm deps:update`                                              | Update every dependency with npm-check-updates, then verify              |
+| `pnpm skill:link`                                               | Link the skill into `.claude/skills/` for Claude Code in this repo       |
+
+Exit codes: 0 success, 1 the IR was rejected or a check failed, 2 the command line was wrong.
 
 ## Recipes
 
-| Recipe                  | The shot                                                                                           | Needs                   |
-| ----------------------- | -------------------------------------------------------------------------------------------------- | ----------------------- |
-| `luxury-product-reveal` | A product emerges from darkness under a controlled light, with a glint, dust and a serif headline  | A cut-out product image |
-| `tech-product-launch`   | A product screen in a device frame floats in perspective over a gradient field, with feature chips | A screenshot            |
-| `kinetic-typography`    | Up to four lines sized to fill the canvas and choreographed word by word                           | Nothing                 |
-| `data-storytelling`     | One number counted up large, with an optional bar chart                                            | Nothing                 |
-
-`pnpm hyperstudio recipes` lists every variable. All four work in landscape, square and portrait.
+| Recipe                  | The shot                                                                                                                                                                    | Needs                           |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `product-shot`          | A real product screen: the camera moves between named regions; optional cursor and click, typed text, outlined component, label; one component can be isolated on the stage | A screenshot with named regions |
+| `statement`             | One short line of copy with at most one emphasised word                                                                                                                     | Nothing                         |
+| `brand-close`           | Mark, name, tagline, optional button                                                                                                                                        | The brand mark                  |
+| `luxury-product-reveal` | A physical product emerging from darkness                                                                                                                                   | A cut-out product image         |
 
 ## Examples
 
-Each folder under `examples/` holds an IR (`video.json`) and its assets. All seven pass `hyperframes check`
-with no errors or warnings and have been rendered.
+| Example                                                       | Length           | What it is                                                                                                                                 |
+| ------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`saas-product-showcase`](examples/saas-product-showcase)     | 15 s, 9 shots    | The quality benchmark: one question asked and answered inside a product. Reviewed in [REVIEW.md](examples/saas-product-showcase/REVIEW.md) |
+| [`luxury-watch-commercial`](examples/luxury-watch-commercial) | 16.2 s, 3 scenes | A slow film for a physical product                                                                                                         |
 
-|                                                                       | Example                   | Length | Recipes                            |
-| --------------------------------------------------------------------- | ------------------------- | ------ | ---------------------------------- |
-| <img src="docs/media/luxury-watch-commercial.jpg" width="220" alt=""> | `luxury-watch-commercial` | 16.2 s | luxury ×3                          |
-| <img src="docs/media/saas-product-launch.jpg" width="220" alt="">     | `saas-product-launch`     | 23 s   | kinetic, tech, data, tech, kinetic |
-| <img src="docs/media/kinetic-typography.jpg" width="220" alt="">      | `kinetic-typography`      | 13.6 s | kinetic ×3                         |
-| <img src="docs/media/data-visualization.jpg" width="220" alt="">      | `data-visualization`      | 18.4 s | kinetic, data ×3                   |
-| <img src="docs/media/web3-protocol-promo.jpg" width="220" alt="">     | `web3-protocol-promo`     | 18.2 s | kinetic, tech, data, kinetic       |
-| <img src="docs/media/luxury-brand-commercial.jpg" width="220" alt=""> | `luxury-brand-commercial` | 19.6 s | kinetic, luxury ×2, kinetic        |
-| <img src="docs/media/social-short.jpg" width="120" alt="">            | `social-short` (9:16)     | 16.3 s | kinetic, data, tech, kinetic       |
-
-Render one: `pnpm hyperstudio compile examples/<name>/video.json`, then in `examples/<name>/build` run
-`npx hyperframes render --quality looks -o ../renders/<name>.mp4`.
+Both products are **examples made for these films**, and every compile lists them as placeholders. The
+benchmark's interface is real HTML (`product/index.html`), screenshotted state by state.
 
 ## Layout
 
 ```
 packages/
-  ir/          @hyperstudio/ir        Zod schema of the Creative IR
-  compiler/    @hyperstudio/compiler  IR → HyperFrames project (the only code that knows HyperFrames)
+  ir/          @hyperstudio/ir        The Creative IR schema (Zod)
+  compiler/    @hyperstudio/compiler  IR → HyperFrames project; the only code that knows HyperFrames
   recipes/     @hyperstudio/recipes   blocks/<name>/{registry-item.json, <name>.html}
-  cli/         hyperstudio            `hyperstudio compile`, `hyperstudio recipes`
-skills/
-  hyperstudio-director/               Claude Code skill: brief → IR → compile → check → render
-examples/
-  luxury-watch-commercial/            IR + assets; build/ and renders/ are generated
-docs/                                 research, architecture, specifications
+  cli/         hyperstudio            compile, review, recipes
+skills/hyperstudio-director/          Claude Code skill: direction → shots → IR → review → render
+examples/                             A film per folder: video.json, screens/, assets/, REVIEW.md
+tests/                                integration/ and regression/ (unit tests sit beside the code)
+docs/
 ```
-
-## Commands
-
-| Command                                                                          | Does                                                               |
-| -------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `pnpm hyperstudio compile <ir.json> [--output dir] [--validate-only] [--pretty]` | Validate an IR and write a project                                 |
-| `pnpm hyperstudio recipes [--pretty]`                                            | List recipes and their variables                                   |
-| `pnpm verify`                                                                    | Biome lint, type check and tests                                   |
-| `pnpm lint:fix`                                                                  | Apply Biome fixes and formatting                                   |
-| `pnpm skill:link`                                                                | Link the skill into `.claude/skills/` for Claude Code in this repo |
-
-Husky runs Biome on staged files and the type check before each commit, and the tests before each push.
 
 ## Documentation
 
@@ -95,17 +89,19 @@ Husky runs Biome on staged files and the type check before each commit, and the 
 - [Compiler](docs/COMPILER.md)
 - [Recipe development](docs/RECIPE-DEVELOPMENT.md)
 - [Example workflow](docs/EXAMPLE-WORKFLOW.md)
+- [Creative quality review and proposal](docs/CREATIVE-QUALITY-PROPOSAL.md): why the first approach was replaced
 - [Architecture](docs/ARCHITECTURE.md) · [Technical decisions](docs/TECHNICAL-DECISIONS.md) ·
   [HyperFrames research](docs/HYPERFRAMES-RESEARCH.md)
 
 ## Limits
 
-- One recipe per scene; recipes are not layered inside a scene.
-- Transitions are `cut`, `fade` and `crossfade`. HyperFrames' registry and shader transitions are not wired in.
-- Camera moves are 2.5D simulations on flat images.
+- The compiler's checks catch carelessness; they do not measure taste. That is judged from frames, in review.
+- Four recipes. One recipe per scene.
+- Camera moves and tilts are 2.5D transforms of flat images.
+- Typing and the cursor are drawn over a screenshot; other interface changes need a screenshot per state.
+- Transitions are `cut`, `fade` and `crossfade`.
 - `build/` is regenerated on every compile, so manual or Studio edits there do not survive.
-- The CLI runs as TypeScript through Node's type stripping, so it works from a checkout, not as an installed dependency.
-- Product images, screens and music in the examples are stand-ins made for the demos.
+- The CLI runs as TypeScript through Node's type stripping: from a checkout, not as an installed dependency.
 
 ## Contributing
 
