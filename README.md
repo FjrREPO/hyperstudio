@@ -64,11 +64,11 @@ Exit codes: 0 success, 1 the IR was rejected or a check failed, 2 the command li
 
 ## Examples
 
-| Example                                                       | Length           | What it is                                                                                                                                                                            |
-| ------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`saas-product-showcase`](examples/saas-product-showcase)     | 17 s, 10 shots   | The quality benchmark, on a dark stage: a question that was a ticket, asked and answered inside a product. Reviewed in [REVIEW.md](examples/saas-product-showcase/REVIEW.md)          |
-| [`meeting-notes-launch`](examples/meeting-notes-launch)       | 17.7 s, 10 shots | A second product in a different art direction: warm editorial stage, serif voice, each click followed by its result. Reviewed in [REVIEW.md](examples/meeting-notes-launch/REVIEW.md) |
-| [`luxury-watch-commercial`](examples/luxury-watch-commercial) | 16.2 s, 3 scenes | A slow film for a physical product                                                                                                                                                    |
+| Example                                                       | Length            | What it is                                                                                                                                                                                                                                |
+| ------------------------------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`saas-product-showcase`](examples/saas-product-showcase)     | 14.7 s and 15.6 s | The quality benchmark: one product, mounted live, in two art directions (`video.json`, `video-dark.json`). A question is typed, sent and answered in one unbroken take. Reviewed in [REVIEW.md](examples/saas-product-showcase/REVIEW.md) |
+| [`meeting-notes-launch`](examples/meeting-notes-launch)       | 17.7 s, 10 shots  | A second product in a different art direction: warm editorial stage, serif voice, each click followed by its result. Reviewed in [REVIEW.md](examples/meeting-notes-launch/REVIEW.md)                                                     |
+| [`luxury-watch-commercial`](examples/luxury-watch-commercial) | 16.2 s, 3 scenes  | A slow film for a physical product                                                                                                                                                                                                        |
 
 The products are **examples made for these films**, and every compile lists them as placeholders. The
 benchmark's interface is real HTML (`product/index.html`), screenshotted state by state.

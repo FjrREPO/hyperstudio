@@ -75,6 +75,13 @@ three glows in the film's `accent` and `glow` colours that drift once across it,
 `index.html` behind every scene, and recipes are transparent. A cut therefore changes the picture and not the
 place. Fades dip to the stage colour, not to black.
 
+### Live pages
+
+For a screen given as `html`, the compiler reads the page, drops its scripts and comments, renames its custom
+properties, and writes its styles and markup into the scene file as one line of JSON. The recipe mounts that
+in a shadow root. Region and state names are taken from the page, so a beat that names one the page does not
+have is rejected at compile time.
+
 ### Instancing a recipe
 
 A recipe uses its own name as composition id and as the prefix of every element id. The compiler replaces

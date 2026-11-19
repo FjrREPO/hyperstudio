@@ -21,7 +21,10 @@ A product film shows the product. Before anything else, get the real thing:
 
 - A live product or site: `npx hyperframes capture <url> --json` for screenshots, colours, fonts and the logo.
   Take the brand's colours and typefaces from there, not from taste.
-- An app you can open: screenshot the states the story needs (empty, filled, result). One screenshot per state.
+- A product whose front end you have, or can rebuild faithfully: make it a **live page**, one HTML file whose
+  `.app` element shows each state from its `data-state` (`docs/IR-SPECIFICATION.md`, Live screens). The film then
+  drives the real interface instead of cutting between pictures. This is the strongest option.
+- An app you can only open: screenshot the states the story needs (empty, filled, result). One screenshot per state.
 - Nothing available: **ask for it.** If the person wants to proceed anyway, build the screens as real HTML and
   mark every one `"origin": "placeholder"`. Never draw a dashboard to fill space.
 
@@ -46,15 +49,19 @@ Write the eight `direction` sentences before any scene exists. Each is a decisio
 Restraint is the default: one stage, one accent, one camera move per shot, small type with space around it.
 No particles or grids standing in for design. A still frame is allowed.
 
-A flat, empty stage reads as unfinished. Give the stage depth and the product presence:
+What makes a film read as a template, and is therefore not a default: a blurred colour gradient behind
+everything, notes or cards floating for decoration, a line of centred type between every two shots, a zoom
+into a dashboard, and a logo on the same background to finish. Use any of these only when this product's
+story needs it, and say why in `purpose`.
 
-- `style.light`: `soft` for a calm light film, `aurora` (with `glow` as a second hue) for a dark stage with depth.
-  A white interface on a dark aurora stage is the strongest contrast available.
-- Wide shots of a whole screen get a `tilt` (`left`, `right`, `up`, `desk`) and usually `focus`, so they read as a
-  camera looking at a screen, not a screenshot pasted on a slide. Close shots of one component stay flat.
-- Fill the frame. A component alone in the middle of an empty stage is the look to avoid; raise `fill`, or show
-  the screen around it instead of using `isolate`.
-- Open on the problem when the product solves one (`scatter`), then show the product doing the thing.
+Decide these from the product, not from the last film:
+
+- **The stage.** Usually plain: the product's own surface colour, or black, with nothing on it. `light: soft`
+  or `aurora` only when the brand itself looks like that.
+- **How the product sits in the frame.** Flat and frontal reads as a recording; turned (`tilt`) with `focus`
+  reads as a photograph of a screen. Pick one manner for the film.
+- **The voice.** One typeface for the film's own lines, set where the composition needs it (left on the
+  margin, or centred), not centred by habit.
 
 ## 3. Storyboard, in shots
 
@@ -68,8 +75,18 @@ is there (`purpose`), and how long. Then check the list:
 - Product films cut fast: 1 to 2.5 s a shot. The compiler warns above a 3.5 s average.
 - Open on something visible at frame 0 (it is the thumbnail) and end on the brand.
 
-A shape that often fits a launch film, to adapt and not to follow: hook, product reveal, one feature shown
-working, what it means for the viewer, close.
+Choose the structure the product calls for. They produce different films:
+
+| Structure | When |
+| --- | --- |
+| Problem, solution, product, outcome | The product removes a pain the viewer already feels |
+| Reveal, experience, what sets it apart, brand | A premium launch; the product is the event |
+| User journey, interaction, result, call to action | A demonstration; the product is best understood by watching it used |
+| Concept, explanation, product, positioning | A technical product that needs one idea explained first |
+
+Then write the storyboard as actions, not pictures: who does what, what the product does back, and where the
+camera is while it happens. A change the viewer should understand (a click and its result) belongs in one
+take, not on either side of a cut.
 
 ## 4. See what recipes exist
 
@@ -80,8 +97,9 @@ pnpm -s hyperstudio recipes product-shot   # one recipe: every variable, where i
 
 | Recipe | Use it for |
 | --- | --- |
-| `product-shot` | One shot of a real screen: camera from one named region to another, optional cursor and click, typed text, outlined component, short label. `isolate` floats one component on the stage |
-| `scatter` | The problem before the product: three to six short notes arrive scattered, a line lands between them, they are swept away. Once, as an opening |
+| `product-take` | **The default for showing a product.** One continuous take of the live interface: the scene's `beats` type, click, change state, reveal and draw, and the camera follows. Needs the product as an HTML page (`screens.*.html`) |
+| `product-shot` | For products that can only be screenshotted. One shot of a real screen: camera from one named region to another, optional cursor and click, typed text, outlined component, short label. `isolate` floats one component on the stage |
+| `scatter` | Short notes arrive scattered around one line, then are swept away. Only when the story is about scattered requests; not a default opening |
 | `statement` | One short line of copy, small, with at most one emphasised word |
 | `brand-close` | The ending: mark, name, tagline, optional button |
 | `luxury-product-reveal` | A physical product emerging from darkness (slow, 4 to 12 s) |
@@ -134,11 +152,14 @@ is allowed. Fix the IR and compile again. Never edit `build/`.
 ## 7. Review real frames
 
 ```bash
-pnpm -s hyperstudio review <film>/video.json
+pnpm -s hyperstudio review <film>/video.json --motion
 ```
 
 This compiles, runs `hyperframes check`, takes two frames from every shot, and writes `<film>/REVIEW.md` with
-a rubric. Then **open the contact sheets and at least one full frame per shot, and answer the rubric from
+a rubric. With `--motion` it also renders a draft, reports how much of the film is a frozen picture, and
+writes one strip per shot at eight frames a second (`build/.hyperstudio/motion-*.jpg`). **Open the strips.**
+A freeze of a second or more inside a product shot is a fault: add a beat, or shorten the shot. Compare with
+films you admire: professional product films hold a still picture for a few percent of their length. Then **open the contact sheets and at least one full frame per shot, and answer the rubric from
 what you see**:
 
 1. Storytelling: does each shot move the story on?
