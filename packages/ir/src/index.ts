@@ -90,7 +90,7 @@ const Beat = z.strictObject({
   /**
    * `camera` frames a region; `cursor` moves the pointer there and `click` also clicks; `type` types `text`
    * into an input; `state` switches the interface's state; `reveal` brings a region's parts in one by one;
-   * `draw` draws a chart's lines; `count` counts a figure up to the value the page shows; `highlight` outlines
+   * `draw` draws a chart's lines; `scroll` moves a region's content up; `count` counts a figure up to the value the page shows; `highlight` outlines
    * a region; `say` sets one of the film's own lines in the frame; `veil` covers everything but a region in the
    * stage's colour, so the interface resolves into that part.
    */
@@ -103,6 +103,7 @@ const Beat = z.strictObject({
     "reveal",
     "draw",
     "count",
+    "scroll",
     "highlight",
     "say",
     "veil",
@@ -117,6 +118,8 @@ const Beat = z.strictObject({
   /** For `camera`: how much of the frame the region may take. */
   fill: z.number().min(0.2).max(1).optional(),
   ease: z.string().optional(),
+  /** For `scroll`: how far the region's content moves up, in the page's pixels. */
+  by: z.number().positive().optional(),
   /** For `camera`: turn to this angle, pull focus, or move the interface to one side of the frame. */
   tilt: z.enum(["none", "left", "right", "up", "desk"]).optional(),
   focus: z.enum(["all", "band", "near", "centre"]).optional(),
