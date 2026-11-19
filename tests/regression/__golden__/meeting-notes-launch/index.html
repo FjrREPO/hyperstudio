@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- hyperstudio:generated - edit the IR and recompile, do not edit here -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Marlow - 17.7 second launch film</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #efe8da; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #hs-stage { position: absolute; inset: 0; overflow: hidden; background: #efe8da; pointer-events: none; }
+      #hs-light { position: absolute; left: -20%; top: -30%; width: 110%; height: 130%; pointer-events: none;
+        background: radial-gradient(closest-side, color-mix(in srgb, #efe8da 55%, white), transparent); }
+      #hs-glow-0 { position: absolute; left: -18%; top: -34%; width: 78%; height: 110%; pointer-events: none;
+        background: radial-gradient(closest-side, color-mix(in srgb, #0e7a53 46%, transparent), transparent); }
+      #hs-glow-1 { position: absolute; left: 48%; top: 22%; width: 82%; height: 118%; pointer-events: none;
+        background: radial-gradient(closest-side, color-mix(in srgb, #e79a4c 38%, transparent), transparent); }
+      #hs-glow-2 { position: absolute; left: 14%; top: 58%; width: 60%; height: 80%; pointer-events: none;
+        background: radial-gradient(closest-side, color-mix(in srgb, #0e7a53 22%, transparent), transparent); }
+      #hs-vignette { position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(ellipse at 50% 46%, transparent 42%, color-mix(in srgb, #efe8da 62%, black) 118%); }
+      #hs-grain { position: absolute; inset: 0; pointer-events: none; opacity: 0.16; mix-blend-mode: overlay; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+      .hs-dip { position: absolute; inset: 0; background: #efe8da; opacity: 0; z-index: 1000; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="17.7" data-width="1920" data-height="1080">
+      <div id="hs-stage" data-layout-allow-occlusion><div id="hs-glow-0" data-layout-allow-overflow data-layout-allow-occlusion></div><div id="hs-glow-1" data-layout-allow-overflow data-layout-allow-occlusion></div><div id="hs-glow-2" data-layout-allow-overflow data-layout-allow-occlusion></div><div id="hs-vignette" data-layout-allow-overflow data-layout-allow-occlusion></div><div id="hs-grain" data-layout-allow-overflow data-layout-allow-occlusion></div></div>
+      <div id="problem" data-composition-id="problem" data-composition-src="compositions/problem.html" data-start="0" data-duration="2.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","note1":"Wait, who owns this?","note2":"What did we decide?","note3":"Who took notes?","note4":"Let me find the recording","line":"The meeting ended. Now what?"}' style="z-index: 1"></div>
+      <div id="reveal" data-composition-id="reveal" data-composition-src="compositions/reveal.html" data-start="2.6" data-duration="2.2" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","from":"window","fill":0.9,"tilt":"desk","focus":"band","cursor":"summarise-button","clickAt":0.74,"screen":"assets/meeting.png","screenMeta":"{\"width\":1440,\"height\":900,\"regions\":{\"window\":[0,0,1440,900],\"transcript\":[28,92,560,780],\"prompt\":[834,429,360,163],\"summarise-button\":[925,549,177,43]}}"}' style="z-index: 2"></div>
+      <div id="meet" data-composition-id="meet" data-composition-src="compositions/meet.html" data-start="4.8" data-duration="1.2" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","line1":"Meet Marlow.","emphasis":"Marlow.","size":"display"}' style="z-index: 3"></div>
+      <div id="notes" data-composition-id="notes" data-composition-src="compositions/notes.html" data-start="6" data-duration="1.9" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","from":"window","to":"decisions","fill":0.8,"move":"settle","tilt":"left","screen":"assets/summary.png","screenMeta":"{\"width\":1440,\"height\":900,\"regions\":{\"window\":[0,0,1440,900],\"transcript\":[28,92,560,780],\"summary\":[617,150,794,721],\"title\":[645,176,738,35],\"decisions\":[645,258,738,150],\"actions\":[645,430,738,205],\"action-1\":[631,455,766,60],\"action-1-box\":[645,473,24,24],\"foot\":[617,791,794,80],\"send-button\":[1221,810,162,43]}}"}' style="z-index: 4"></div>
+      <div id="owners" data-composition-id="owners" data-composition-src="compositions/owners.html" data-start="7.9" data-duration="1.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","isolate":"summary","radius":20,"from":"actions","fill":0.84,"cursor":"action-1-box","clickAt":0.62,"screen":"assets/summary.png","screenMeta":"{\"width\":1440,\"height\":900,\"regions\":{\"window\":[0,0,1440,900],\"transcript\":[28,92,560,780],\"summary\":[617,150,794,721],\"title\":[645,176,738,35],\"decisions\":[645,258,738,150],\"actions\":[645,430,738,205],\"action-1\":[631,455,766,60],\"action-1-box\":[645,473,24,24],\"foot\":[617,791,794,80],\"send-button\":[1221,810,162,43]}}"}' style="z-index: 5"></div>
+      <div id="ticked" data-composition-id="ticked" data-composition-src="compositions/ticked.html" data-start="9.5" data-duration="1.2" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","isolate":"summary","radius":20,"from":"actions","to":"action-1","highlight":"action-1","fill":0.8,"tilt":"right","screen":"assets/done.png","screenMeta":"{\"width\":1440,\"height\":900,\"regions\":{\"window\":[0,0,1440,900],\"transcript\":[28,92,560,780],\"summary\":[617,150,794,721],\"title\":[645,176,738,35],\"decisions\":[645,258,738,150],\"actions\":[645,430,738,205],\"action-1\":[631,455,766,60],\"action-1-box\":[645,473,24,24],\"foot\":[617,791,794,80],\"send-button\":[1221,810,162,43]}}"}' style="z-index: 6"></div>
+      <div id="send" data-composition-id="send" data-composition-src="compositions/send.html" data-start="10.7" data-duration="1.4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","from":"actions","to":"send-button","fill":0.7,"move":"ease","cursor":"send-button","clickAt":0.68,"screen":"assets/done.png","screenMeta":"{\"width\":1440,\"height\":900,\"regions\":{\"window\":[0,0,1440,900],\"transcript\":[28,92,560,780],\"summary\":[617,150,794,721],\"title\":[645,176,738,35],\"decisions\":[645,258,738,150],\"actions\":[645,430,738,205],\"action-1\":[631,455,766,60],\"action-1-box\":[645,473,24,24],\"foot\":[617,791,794,80],\"send-button\":[1221,810,162,43]}}"}' style="z-index: 7"></div>
+      <div id="sent" data-composition-id="sent" data-composition-src="compositions/sent.html" data-start="12.1" data-duration="1.2" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","from":"toast","fill":0.5,"tilt":"up","screen":"assets/sent.png","screenMeta":"{\"width\":1440,\"height\":900,\"regions\":{\"window\":[0,0,1440,900],\"transcript\":[28,92,560,780],\"summary\":[617,150,794,721],\"title\":[645,176,738,35],\"decisions\":[645,258,738,150],\"actions\":[645,430,738,205],\"action-1\":[631,455,766,60],\"action-1-box\":[645,473,24,24],\"foot\":[617,791,794,80],\"send-button\":[1221,810,162,43],\"toast\":[1097,730,286,65]}}"}' style="z-index: 8"></div>
+      <div id="benefit" data-composition-id="benefit" data-composition-src="compositions/benefit.html" data-start="13.3" data-duration="1.8" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","line1":"Every meeting ends","line2":"with who does what.","emphasis":"who"}' style="z-index: 9"></div>
+      <div id="close" data-composition-id="close" data-composition-src="compositions/close.html" data-start="15.1" data-duration="2.6" data-track-index="2" data-track-kind="graphics" data-width="1920" data-height="1080" data-variable-values='{"background":"#efe8da","ink":"#1b1814","accent":"#0e7a53","displayFont":"Playfair Display","textFont":"Inter","mark":"assets/marlow-mark.svg","name":"Marlow","tagline":"Notes that know who does what.","cta":"marlow.example"}' style="z-index: 10"></div>
+      <audio id="sfx" class="clip" src="assets/ui-sfx.m4a" data-start="0" data-duration="17.7" data-track-index="3" data-volume="0.6"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#hs-glow-0", { xPercent: -9, yPercent: -6 }, { xPercent: 9, yPercent: 6, duration: 17.7, ease: "sine.inOut" }, 0);
+      tl.fromTo("#hs-glow-1", { xPercent: 8, yPercent: 7 }, { xPercent: -8, yPercent: -7, duration: 17.7, ease: "sine.inOut" }, 0);
+      tl.fromTo("#hs-glow-2", { xPercent: -6, yPercent: 5 }, { xPercent: 6, yPercent: -5, duration: 17.7, ease: "sine.inOut" }, 0);
+      tl.set({}, {}, 17.7);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
