@@ -7,7 +7,9 @@ pnpm install        # also installs the git hooks
 pnpm verify         # Biome, type check, tests
 ```
 
-Node 24 or newer and pnpm 10. Rendering needs FFmpeg and Chrome; `npx hyperframes doctor` checks both.
+Node 24 or newer and pnpm 12. Rendering needs FFmpeg and Chrome; `npx hyperframes doctor` checks both.
+
+Update every dependency in the workspace with `pnpm deps:update` (npm-check-updates, then install and verify).
 
 ## Before you build something
 
