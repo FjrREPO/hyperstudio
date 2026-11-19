@@ -222,12 +222,14 @@ music and effects from `hyperstudio assets search --kind audio`; a generated voi
 
 ```bash
 pnpm -s hyperstudio audio providers
-pnpm -s hyperstudio audio tts "One line of narration." --out <film>/assets/vo-1.m4a   # system draft voice
+pnpm -s hyperstudio audio tts "One line of narration." --out <film>/assets/vo-1.m4a   # Kokoro if set up, else the system draft voice
 pnpm -s hyperstudio audio inspect <film>/assets/vo-1.m4a                              # its real length
 ```
 
 - Write narration per shot, one clip per line, and place it with `"role": "voice", "scene": "<id>", "start": 0.1,
   "duration": <from inspect>`. It then follows the shot when the film is retimed.
+- Kokoro (`audio providers` shows whether it is set up) is a local open-weight voice: its clips are real
+  assets, `"origin": "supplied"`. If it is not set up, ask before running `audio setup kokoro` (a 190 MB download).
 - The system voice is a **draft**: give it `"origin": "placeholder"` and say so in your report.
 - ElevenLabs runs only with `--provider elevenlabs` and its key. Start with `audio status` and `--dry-run`.
   **Never pass `--confirm-cost` yourself**: show the estimate and ask the person. Free-plan output is

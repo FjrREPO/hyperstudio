@@ -61,6 +61,11 @@ Made with the same recipe (`product-take`) and compiler. Everything below was de
 | Ending                    | The interface closes like an iris onto its mark | The camera pulls back and leans; the name set in type  |
 | Sound                     | Music bed and interface sounds                  | Interface sounds only                                  |
 
+## Since v1
+
+On `main` both films also carry narration generated locally with Kokoro (see
+[AUDIO-ENGINE.md](AUDIO-ENGINE.md)). The v1 tags are the films without it.
+
 ## What these benchmarks do not establish
 
 - Both interfaces were written by the same hand as the films, to suit them. Neither is a real product.
