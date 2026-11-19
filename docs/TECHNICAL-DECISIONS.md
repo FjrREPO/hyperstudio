@@ -203,6 +203,14 @@ changes state, so the camera's behaviour follows the story. `veil` covers everyt
 stage's colour, so the film ends on the product's own mark, where it sits in the interface, instead of
 cutting to a logo card. `statement` and `brand-close` remain for films that want them.
 
+## D29. An art direction is a composition system, not a palette
+
+The editorial and cinematic cuts were reviewed as "the same composition in two colours": headline left,
+product right, in both. A direction now has to differ in where things sit, how the product enters, what the
+camera does and how the film ends. The recipe gained what that needs and nothing decorative: corner
+placements and a display size for type, vertical placement for the product, a wide lens, and a veil that
+opens as well as closes. The benchmark review has a row for differentiation.
+
 ## D28. HyperFrames is pinned
 
 `npx hyperframes` takes the newest release. On 2026-11-19 a release appeared mid-session and the review
