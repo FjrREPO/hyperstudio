@@ -1,0 +1,12 @@
+{
+  "name": "@hyperstudio/recipes",
+  "version": "0.1.0",
+  "description": "Cinematic recipes in the HyperFrames registry block format",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "blocks",
+    "src"
+  ]
+}
