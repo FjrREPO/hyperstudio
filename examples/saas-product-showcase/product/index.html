@@ -16,104 +16,125 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=block" rel="stylesheet" />
     <style>
       :root {
-        --paper: #f6f3ec;
+        --side: #f6f6f7;
         --canvas: #ffffff;
-        --ink: #17150f;
-        --muted: #6f6a5f;
-        --line: #e7e2d6;
-        --accent: #2747f0;
-        --accent-soft: #e9edff;
+        --ink: #0d0e12;
+        --muted: #6b6f7b;
+        --faint: #9a9eab;
+        --line: #e6e7eb;
+        --accent: #3b5bff;
+        --accent-soft: #eef1ff;
+        --green: #18a566;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1440px; height: 900px; overflow: hidden; }
       body { font-family: Inter, sans-serif; color: var(--ink); background: var(--canvas); display: flex; font-size: 15px; -webkit-font-smoothing: antialiased; }
+      svg { display: block; flex: none; }
 
       /* Sidebar */
-      aside { width: 232px; background: var(--paper); border-right: 1px solid var(--line); padding: 22px 16px; display: flex; flex-direction: column; }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; padding: 0 8px 22px; }
+      aside { width: 248px; background: var(--side); border-right: 1px solid var(--line); padding: 20px 14px; display: flex; flex-direction: column; }
+      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; padding: 2px 8px 18px; }
       .mark { width: 26px; height: 26px; }
-      nav a { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 9px; color: var(--muted); font-weight: 500; }
-      nav a.on { background: var(--canvas); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
-      nav i { width: 16px; height: 16px; border-radius: 5px; border: 1.6px solid currentColor; opacity: 0.8; }
-      nav a.on i { background: var(--accent); border-color: var(--accent); opacity: 1; }
-      .who { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; font-size: 13px; color: var(--muted); }
-      .avatar { width: 30px; height: 30px; border-radius: 50%; background: #f0c9a2; color: #6b3d12; font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+      .space { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 9px 10px; border-radius: 11px; background: var(--canvas); border: 1px solid var(--line); font-weight: 600; font-size: 14px; }
+      .space i { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, #ff9d5c, #ff5c8a); }
+      .space span { margin-left: auto; color: var(--faint); font-weight: 500; font-size: 12px; }
+      nav a { display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 9px; color: var(--muted); font-weight: 500; }
+      nav a.on { background: var(--canvas); color: var(--ink); box-shadow: 0 0 0 1px var(--line), 0 1px 2px rgba(13, 14, 18, 0.05); }
+      nav svg { width: 18px; height: 18px; }
+      nav a.on svg { color: var(--accent); }
+      .group { margin: 22px 10px 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
+      .board { display: flex; align-items: center; gap: 11px; padding: 7px 10px; color: var(--muted); font-size: 14px; font-weight: 500; }
+      .board i { width: 8px; height: 8px; margin: 0 5px; border-radius: 3px; }
+      .who { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); }
+      .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #ffd9a8, #f3a56b); color: #6b3d12; font-weight: 700; font-size: 12px; display: grid; place-items: center; }
       .who b { display: block; color: var(--ink); font-weight: 600; font-size: 14px; }
 
       /* Main */
-      main { flex: 1; display: flex; flex-direction: column; }
-      header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; border-bottom: 1px solid var(--line); color: var(--muted); font-weight: 500; }
-      .sources { display: flex; gap: 8px; align-items: center; font-size: 13px; }
-      .chip { padding: 5px 11px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); color: var(--ink); font-weight: 500; font-size: 13px; }
-      .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #2fa66a; margin-right: 6px; }
-      .column { width: 760px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
+      main { flex: 1; display: flex; flex-direction: column; background: radial-gradient(900px 420px at 50% -80px, #f3f5ff, transparent 70%); }
+      header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; border-bottom: 1px solid var(--line); color: var(--faint); font-weight: 500; font-size: 14px; }
+      header b { color: var(--ink); font-weight: 600; }
+      .sources { display: flex; gap: 8px; align-items: center; }
+      .chip { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; background: var(--canvas); border: 1px solid var(--line); color: var(--ink); font-weight: 500; font-size: 13px; }
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 7px; box-shadow: 0 0 0 3px rgba(24, 165, 102, 0.16); }
+      .column { width: 780px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
 
       /* Ask bar */
-      .ask { display: flex; align-items: center; gap: 14px; height: 68px; padding: 0 12px 0 24px; border-radius: 18px; background: var(--canvas); border: 1px solid #d9d3c4; box-shadow: 0 1px 0 #fff inset, 0 10px 30px rgba(23, 21, 15, 0.07); }
-      .ask .input { flex: 1; height: 26px; line-height: 26px; font-size: 18px; color: #a8a294; white-space: nowrap; overflow: hidden; }
+      .ask { display: flex; align-items: center; gap: 14px; height: 72px; padding: 0 12px 0 24px; border-radius: 20px; background: var(--canvas); border: 1px solid #d5d8e2; box-shadow: 0 0 0 5px rgba(59, 91, 255, 0.07), 0 14px 34px rgba(13, 14, 18, 0.08); }
+      .ask .input { flex: 1; height: 28px; line-height: 28px; font-size: 19px; color: var(--faint); white-space: nowrap; overflow: hidden; }
       .ask.filled .input { color: var(--ink); }
-      .send { width: 44px; height: 44px; border-radius: 50%; background: #d9d3c4; display: grid; place-items: center; flex: none; }
-      .ask.filled .send { background: var(--accent); }
-      .send svg { width: 18px; height: 18px; }
+      .send { width: 48px; height: 48px; border-radius: 15px; background: #d5d8e2; display: grid; place-items: center; flex: none; }
+      .ask.filled .send { background: var(--accent); box-shadow: 0 8px 18px rgba(59, 91, 255, 0.35); }
+      .send svg { width: 20px; height: 20px; }
 
       /* Home */
-      .home { padding-top: 150px; }
-      h1 { font-size: 40px; font-weight: 600; letter-spacing: -0.03em; }
-      .lede { margin: 10px 0 34px; font-size: 18px; color: var(--muted); }
+      .home { padding-top: 118px; }
+      h1 { font-size: 44px; font-weight: 600; letter-spacing: -0.035em; }
+      .lede { margin: 10px 0 30px; font-size: 18px; color: var(--muted); }
       .suggest { display: flex; gap: 10px; margin-top: 18px; }
-      .recent { margin-top: 64px; }
-      .recent h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-      .row { display: flex; justify-content: space-between; padding: 14px 2px; border-top: 1px solid var(--line); font-weight: 500; }
-      .row span { color: var(--muted); font-weight: 400; }
+      .recent { margin-top: 56px; }
+      .recent h2 { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; }
+      .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .tile { padding: 16px 16px 14px; border-radius: 16px; background: var(--canvas); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(13, 14, 18, 0.04); }
+      .tile p { font-weight: 500; font-size: 14px; line-height: 1.35; height: 38px; }
+      .spark { width: 96px; height: 32px; margin: 12px 0 10px; }
+      .tile span { font-size: 12px; color: var(--faint); }
 
       /* Answer */
-      .thread { padding-top: 44px; flex: 1; display: flex; flex-direction: column; }
-      .question { align-self: flex-end; max-width: 520px; padding: 13px 20px; border-radius: 18px 18px 4px 18px; background: var(--paper); border: 1px solid var(--line); font-size: 17px; font-weight: 500; }
-      .card { margin-top: 26px; padding: 30px 32px 24px; border-radius: 20px; border: 1px solid var(--line); box-shadow: 0 16px 40px rgba(23, 21, 15, 0.06); }
+      .thread { padding-top: 34px; flex: 1; display: flex; flex-direction: column; }
+      .question { align-self: flex-end; max-width: 520px; padding: 13px 20px; border-radius: 18px 18px 5px 18px; background: var(--ink); color: #fff; font-size: 17px; font-weight: 500; }
+      .card { margin-top: 22px; padding: 28px 30px 22px; border-radius: 22px; background: var(--canvas); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(13, 14, 18, 0.04), 0 22px 50px rgba(13, 14, 18, 0.08); }
       .card .by { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
       .card .by .mark { width: 18px; height: 18px; }
-      .answer-line { font-size: 30px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
+      .answer-line { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.18; }
       .answer-line em { font-style: normal; color: var(--accent); }
       .detail { margin-top: 8px; color: var(--muted); font-size: 16px; }
-      .chart { margin-top: 26px; display: grid; gap: 14px; }
-      .bar { display: grid; grid-template-columns: 76px 1fr 56px; align-items: center; gap: 14px; font-weight: 500; }
-      .bar .track { height: 26px; border-radius: 8px; background: var(--paper); }
-      .bar .fill { height: 100%; border-radius: 8px; background: #cfc8b7; }
-      .bar.hot .fill { background: var(--accent); }
-      .bar b { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
-      .bar.hot b { color: var(--accent); }
-      .foot { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
-      .foot .src { font-size: 13px; color: var(--muted); }
+      .chart { margin-top: 22px; display: grid; grid-template-columns: 404px 1fr; gap: 26px; align-items: center; }
+      .plot { width: 404px; height: 190px; border-radius: 14px; background: linear-gradient(#fafbff, #fff); border: 1px solid var(--line); }
+      .plot text { font: 500 11px Inter, sans-serif; fill: #9a9eab; }
+      .rows { display: grid; gap: 8px; }
+      .plan { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 13px; border: 1px solid transparent; font-weight: 500; }
+      .plan i { width: 10px; height: 10px; border-radius: 50%; background: #c9ccd6; }
+      .plan small { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; color: var(--faint); }
+      .plan b { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+      .plan.hot { background: var(--accent-soft); border-color: #d6ddff; }
+      .plan.hot i { background: var(--accent); box-shadow: 0 0 0 4px rgba(59, 91, 255, 0.18); }
+      .plan.hot b { color: var(--accent); }
+      .foot { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+      .foot .src { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+      .foot .src svg { width: 16px; height: 16px; color: var(--faint); }
       .actions { display: flex; gap: 10px; position: relative; }
-      .btn { padding: 9px 16px; border-radius: 10px; border: 1px solid #d9d3c4; font-weight: 600; font-size: 14px; background: var(--canvas); }
+      .btn { padding: 10px 17px; border-radius: 11px; border: 1px solid #d5d8e2; font-weight: 600; font-size: 14px; background: var(--canvas); }
       .btn.primary { background: var(--ink); color: #fff; border-color: var(--ink); }
-      .popover { position: absolute; right: 0; bottom: 52px; width: 330px; padding: 16px 18px; border-radius: 14px; background: var(--ink); color: #fff; box-shadow: 0 20px 44px rgba(23, 21, 15, 0.28); }
+      .popover { position: absolute; right: 0; bottom: 54px; width: 340px; padding: 16px 18px; border-radius: 16px; background: var(--ink); color: #fff; box-shadow: 0 24px 50px rgba(13, 14, 18, 0.3); }
       .popover b { display: flex; align-items: center; gap: 8px; font-size: 15px; }
-      .popover b::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: #2fa66a url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.4l2.6 2.6L13 6.6' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain; }
-      .popover .link { margin-top: 10px; padding: 9px 12px; border-radius: 9px; background: rgba(255, 255, 255, 0.1); font-size: 14px; color: #dcd8cc; }
-      .popover .to { margin-top: 10px; font-size: 13px; color: #a8a294; }
-      .follow { margin: auto 0 34px; }
+      .popover b::before { content: ""; width: 18px; height: 18px; border-radius: 50%; background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5 9.4l2.6 2.6L13 6.6' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain; }
+      .popover .link { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.1); font-size: 14px; color: #dfe1ea; }
+      .popover .to { margin-top: 10px; font-size: 13px; color: #9a9eab; }
+      .follow { margin: auto 0 30px; height: 60px; box-shadow: 0 8px 22px rgba(13, 14, 18, 0.06); }
+      .follow .send { width: 40px; height: 40px; border-radius: 13px; }
       [hidden] { display: none !important; }
     </style>
   </head>
   <body data-region="window">
     <aside>
-      <div class="brand">
-        <svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#17150f" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#2747f0" /><circle cx="13" cy="13" r="3.4" fill="#f6f3ec" /></svg>
-        Lumen
-      </div>
+      <div class="brand"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
+      <div class="space"><i></i>Northwind<span>Workspace</span></div>
       <nav>
-        <a class="on"><i></i>Ask</a>
-        <a><i></i>Boards</a>
-        <a><i></i>Sources</a>
-        <a><i></i>Team</a>
+        <a class="on"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h7A2.5 2.5 0 0 1 16 5.5v5a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3A2.5 2.5 0 0 1 4 10.5z"/></svg>Ask</a>
+        <a><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="8" rx="1.5"/><rect x="11" y="3" width="6" height="5" rx="1.5"/><rect x="3" y="13" width="6" height="4" rx="1.5"/><rect x="11" y="10" width="6" height="7" rx="1.5"/></svg>Boards</a>
+        <a><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.5"/><path d="M4 5v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/></svg>Sources</a>
+        <a><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="7" r="3"/><path d="M2.5 16.5c.4-2.6 2.4-4 5-4s4.6 1.4 5 4M13 4.3a3 3 0 0 1 0 5.4M15 12.8c1.4.5 2.3 1.7 2.5 3.7"/></svg>Team</a>
       </nav>
+      <div class="group">Pinned boards</div>
+      <div class="board"><i style="background: #3b5bff"></i>Revenue weekly</div>
+      <div class="board"><i style="background: #ff8a4c"></i>Churn watch</div>
+      <div class="board"><i style="background: #18a566"></i>Board pack</div>
       <div class="who"><div class="avatar">DK</div><div><b>Dana Kim</b>Northwind</div></div>
     </aside>
 
     <main>
       <header>
-        <span>Ask</span>
+        <span>Ask &nbsp;/&nbsp; <b>New question</b></span>
         <div class="sources" data-region="connected"><span class="chip"><span class="dot"></span>Billing</span><span class="chip"><span class="dot"></span>CRM</span></div>
       </header>
 
@@ -128,9 +149,11 @@
         <div class="suggest"><span class="chip">MRR this month</span><span class="chip">Churn by plan</span><span class="chip">Largest accounts</span></div>
         <div class="recent">
           <h2>Recent</h2>
-          <div class="row">Why did trials dip in August?<span>Friday</span></div>
-          <div class="row">Net revenue retention by cohort<span>Thursday</span></div>
-          <div class="row">Which invoices are overdue?<span>Tuesday</span></div>
+          <div class="tiles">
+            <div class="tile"><p>Why did trials dip in August?</p><svg class="spark" viewBox="0 0 96 32" fill="none"><path d="M2 8 L20 10 L38 9 L56 24 L74 20 L94 14" stroke="#ff8a4c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Friday</span></div>
+            <div class="tile"><p>Net revenue retention by cohort</p><svg class="spark" viewBox="0 0 96 32" fill="none"><path d="M2 24 L20 20 L38 21 L56 14 L74 12 L94 6" stroke="#3b5bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Thursday</span></div>
+            <div class="tile"><p>Which invoices are overdue?</p><svg class="spark" viewBox="0 0 96 32" fill="none"><path d="M2 16 L20 12 L38 18 L56 13 L74 17 L94 12" stroke="#18a566" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Tuesday</span></div>
+          </div>
         </div>
       </section>
 
@@ -138,16 +161,32 @@
       <section class="column thread" id="view-answer" hidden>
         <div class="question" data-region="question">Which plan grew fastest last quarter?</div>
         <div class="card" data-region="answer">
-          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#17150f" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#2747f0" /><circle cx="13" cy="13" r="3.4" fill="#f6f3ec" /></svg>Lumen</div>
+          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
           <div class="answer-line" data-region="answer-line"><em>Team</em> grew fastest: up 18% over the quarter.</div>
           <p class="detail">Starter grew 6% and Scale grew 11% in the same period.</p>
           <div class="chart" data-region="chart">
-            <div class="bar"><span>Starter</span><div class="track"><div class="fill" style="width: 33%"></div></div><b>+6%</b></div>
-            <div class="bar hot" data-region="bar-team"><span>Team</span><div class="track"><div class="fill" style="width: 100%"></div></div><b data-region="team-value">+18%</b></div>
-            <div class="bar"><span>Scale</span><div class="track"><div class="fill" style="width: 61%"></div></div><b>+11%</b></div>
+            <!-- Revenue per plan, indexed to 100 at the start of July. Sample data. -->
+            <svg class="plot" data-region="plot" viewBox="0 0 404 190">
+              <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b5bff" stop-opacity="0.22" /><stop offset="1" stop-color="#3b5bff" stop-opacity="0" /></linearGradient></defs>
+              <g stroke="#eceef3" stroke-width="1"><path d="M28 40H384M28 85H384M28 130H384" /></g>
+              <path d="M28 142 L206 96 L384 38 V150 H28 Z" fill="url(#area)" />
+              <g fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M28 142 L206 125 L384 108" stroke="#c9ccd6" />
+                <path d="M28 142 L206 113 L384 79" stroke="#9aa0b4" />
+                <path d="M28 142 L206 96 L384 38" stroke="#3b5bff" stroke-width="3" />
+              </g>
+              <circle cx="384" cy="108" r="4" fill="#c9ccd6" /><circle cx="384" cy="79" r="4" fill="#9aa0b4" />
+              <circle cx="384" cy="38" r="9" fill="#3b5bff" fill-opacity="0.18" /><circle cx="384" cy="38" r="5" fill="#3b5bff" stroke="#fff" stroke-width="2" />
+              <text x="28" y="174">Jul</text><text x="206" y="174" text-anchor="middle">Aug</text><text x="384" y="174" text-anchor="end">Sep</text>
+            </svg>
+            <div class="rows">
+              <div class="plan hot" data-region="bar-team"><i></i><span>Team<small>Mid-size accounts</small></span><b data-region="team-value">+18%</b></div>
+              <div class="plan"><i style="background: #9aa0b4"></i><span>Scale<small>Enterprise accounts</small></span><b>+11%</b></div>
+              <div class="plan"><i></i><span>Starter<small>Self-serve</small></span><b>+6%</b></div>
+            </div>
           </div>
           <div class="foot" data-region="foot">
-            <span class="src" data-region="sources">From billing · 2,318 invoices · July to September</span>
+            <span class="src" data-region="sources"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="10" cy="5" rx="6" ry="2.5"/><path d="M4 5v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V5M4 10v5c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-5"/></svg>From billing · 2,318 invoices · July to September</span>
             <div class="actions" data-region="actions">
               <span class="btn">Add to board</span>
               <span class="btn primary" data-region="share-button">Share</span>
