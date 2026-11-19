@@ -37,19 +37,20 @@
       .app:not([data-state="home"], [data-state="asked"]) #view-home,
       .app:is([data-state="home"], [data-state="asked"]) #view-answer,
       .app:not([data-state="share"]) #popover,
-      .app:not([data-state="thinking"]) #thinking,
-      .app[data-state="thinking"] #card { display: none; }
+      .app:not([data-state="thinking"], [data-state="arriving"]) .skeleton,
+      .app:not([data-state="thinking"], [data-state="arriving"]) .status { display: none; }
+      .app[data-state="thinking"] [data-reveal] { opacity: 0; }
       .app[data-state="asked"] #ask .input, #ask .input[data-typed] { color: var(--ink); }
       .app[data-state="asked"] #ask .send, #ask:has(.input[data-typed]) .send { background: var(--accent); box-shadow: 0 8px 18px rgba(59, 91, 255, 0.35); }
-      .thinking { margin-top: 22px; padding: 28px 30px; border-radius: 22px; background: var(--canvas); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(13, 14, 18, 0.04), 0 22px 50px rgba(13, 14, 18, 0.08); }
-      .thinking .by { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 18px; }
-      .thinking .by .mark { width: 18px; height: 18px; }
-      .thinking i { display: block; height: 16px; margin-top: 12px; border-radius: 8px; background: linear-gradient(90deg, #eef0f5, #f6f7fa); }
+      .card { position: relative; }
+      .status { font-weight: 500; color: var(--faint); }
+      .skeleton { position: absolute; left: 30px; right: 30px; top: 62px; }
+      .skeleton i { display: block; margin-top: 12px; border-radius: 9px; background: linear-gradient(90deg, #eceef4, #f5f6f9); }
       svg { display: block; flex: none; }
 
       /* Sidebar */
       aside { width: 248px; background: var(--side); border-right: 1px solid var(--line); padding: 20px 14px; display: flex; flex-direction: column; }
-      .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; padding: 2px 8px 18px; }
+      .brand { display: flex; align-self: flex-start; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; margin: 0 4px 16px; padding: 4px 8px 4px 4px; }
       .mark { width: 26px; height: 26px; }
       .space { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; padding: 9px 10px; border-radius: 11px; background: var(--canvas); border: 1px solid var(--line); font-weight: 600; font-size: 14px; }
       .space i { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, #ff9d5c, #ff5c8a); }
@@ -130,9 +131,9 @@
     </style>
   </head>
   <body>
-    <div class="app" data-state="home" data-states="home asked thinking answer share" data-region="window">
+    <div class="app" data-state="home" data-states="home asked thinking arriving answer share" data-region="window">
     <aside>
-      <div class="brand"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
+      <div class="brand" data-region="brand"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
       <div class="space"><i></i>Northwind<span>Workspace</span></div>
       <nav>
         <a class="on"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h7A2.5 2.5 0 0 1 16 5.5v5a2.5 2.5 0 0 1-2.5 2.5H9l-3.5 3v-3A2.5 2.5 0 0 1 4 10.5z"/></svg>Ask</a>
@@ -175,12 +176,9 @@
       <!-- #answer and #share -->
       <section class="column thread" id="view-answer">
         <div class="question" data-region="question">Which plan grew fastest last quarter?</div>
-        <div class="thinking" id="thinking" data-region="thinking">
-          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Reading billing · 2,318 invoices</div>
-          <i style="width: 72%; height: 30px"></i><i style="width: 54%"></i><i style="width: 100%; height: 150px; margin-top: 22px"></i>
-        </div>
         <div class="card" id="card" data-region="answer">
-          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen</div>
+          <div class="by"><svg class="mark" viewBox="0 0 26 26"><circle cx="13" cy="13" r="12" fill="#0d0e12" /><path d="M13 4a9 9 0 0 1 0 18z" fill="#3b5bff" /><circle cx="13" cy="13" r="3.4" fill="#fff" /></svg>Lumen<span class="status" data-leave>&nbsp;· reading billing, 2,318 invoices</span></div>
+          <div class="skeleton" data-leave data-shimmer><i style="width: 78%; height: 34px"></i><i style="width: 52%; height: 16px"></i><i style="width: 100%; height: 190px; margin-top: 26px"></i></div>
           <div class="answer-line" data-region="answer-line" data-reveal><em>Team</em> grew fastest: up 18% over the quarter.</div>
           <p class="detail" data-reveal>Starter grew 6% and Scale grew 11% in the same period.</p>
           <div class="chart" data-region="chart">
