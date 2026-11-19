@@ -1,0 +1,391 @@
+<template>
+  <!--
+    DATA STORYTELLING
+
+    One number, counted up large, with an optional bar chart that supports it.
+    Variables are declared in registry-item.json (the compiler writes them onto #root).
+
+    Conventions (see docs/RECIPE-DEVELOPMENT.md): the composition id is the recipe name and every element
+    id starts with it; sizes are in --u (1% of the canvas's short side); every visible state is a function
+    of timeline time.
+
+    Counting text is written by a property setter on the tweened object, not by onUpdate: HyperFrames seeks
+    the timeline with events suppressed, so a callback-driven counter would freeze on its first value.
+  -->
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #data-storytelling-stage {
+      --u: 10.8px;
+      --ds-accent: #22d3ee;
+      --ds-bg: #080a12;
+      --ds-ink: #f3f5fa;
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: var(--ds-bg);
+      color: var(--ds-ink);
+    }
+    #data-storytelling-glow {
+      position: absolute;
+      width: calc(var(--u) * 110);
+      height: calc(var(--u) * 110);
+      margin: calc(var(--u) * -55) 0 0 calc(var(--u) * -55);
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--ds-accent) 26%, transparent), transparent);
+    }
+    #data-storytelling-lines {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(color-mix(in srgb, var(--ds-ink) 6%, transparent) 1px, transparent 1px);
+      background-size: 100% calc(var(--u) * 10);
+      mask-image: linear-gradient(90deg, transparent, black 30%, black 70%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, black 30%, black 70%, transparent);
+    }
+    #data-storytelling-figure,
+    #data-storytelling-chart {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+    }
+    #data-storytelling-eyebrow {
+      font-size: calc(var(--u) * 2.6);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ds-accent);
+      margin-bottom: calc(var(--u) * 1.2);
+      white-space: nowrap;
+    }
+    #data-storytelling-stat {
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    #data-storytelling-rule {
+      width: calc(var(--u) * 10);
+      height: calc(var(--u) * 0.5);
+      border-radius: calc(var(--u) * 0.25);
+      background: var(--ds-accent);
+      margin: calc(var(--u) * 3) 0 calc(var(--u) * 2.2);
+    }
+    #data-storytelling-label {
+      font-size: calc(var(--u) * 3.2);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    #data-storytelling-headline {
+      margin-top: calc(var(--u) * 1.4);
+      font-size: calc(var(--u) * 2.9);
+      font-weight: 400;
+      line-height: 1.4;
+      opacity: 0.72;
+      max-width: calc(var(--u) * 64);
+    }
+    .ds-centered {
+      align-items: center;
+      text-align: center;
+    }
+
+    /* ── Chart ── */
+    #data-storytelling-chart {
+      justify-content: center;
+      gap: calc(var(--u) * 2.8);
+    }
+    .ds-row {
+      display: grid;
+      grid-template-columns: var(--ds-label-w) 1fr var(--ds-value-w);
+      align-items: center;
+      column-gap: calc(var(--u) * 2);
+      font-size: calc(var(--u) * 3);
+    }
+    .ds-row-label {
+      text-align: right;
+      white-space: nowrap;
+      opacity: 0.78;
+    }
+    .ds-track {
+      height: calc(var(--u) * 4.4);
+      border-radius: calc(var(--u) * 0.8);
+      background: color-mix(in srgb, var(--ds-ink) 7%, transparent);
+      overflow: hidden;
+    }
+    .ds-fill {
+      height: 100%;
+      border-radius: calc(var(--u) * 0.8);
+      background: color-mix(in srgb, var(--ds-ink) 36%, transparent);
+    }
+    .ds-row-value {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .ds-hot .ds-fill {
+      background: var(--ds-accent);
+    }
+    .ds-hot .ds-row-label {
+      opacity: 1;
+      font-weight: 700;
+    }
+    .ds-hot .ds-row-value {
+      color: var(--ds-accent);
+    }
+    .ds-h-inter { font-family: "Inter", sans-serif; font-weight: 900; }
+    .ds-h-outfit { font-family: "Outfit", sans-serif; font-weight: 900; }
+    .ds-h-montserrat { font-family: "Montserrat", sans-serif; font-weight: 900; }
+    .ds-h-poppins { font-family: "Poppins", sans-serif; font-weight: 900; }
+    .ds-h-oswald { font-family: "Oswald", sans-serif; font-weight: 700; }
+    .ds-h-archivo-black { font-family: "Archivo Black", sans-serif; font-weight: 400; }
+    .ds-h-playfair-display { font-family: "Playfair Display", serif; font-weight: 700; }
+    .ds-h-eb-garamond { font-family: "EB Garamond", serif; font-weight: 700; }
+    .ds-b-inter { font-family: "Inter", sans-serif; }
+    .ds-b-outfit { font-family: "Outfit", sans-serif; }
+    .ds-b-montserrat { font-family: "Montserrat", sans-serif; }
+    .ds-b-poppins { font-family: "Poppins", sans-serif; }
+  </style>
+
+  <div id="root" data-composition-id="data-storytelling" data-start="0" data-duration="6" data-width="1920" data-height="1080">
+    <div id="data-storytelling-stage">
+      <div id="data-storytelling-glow" data-layout-allow-overflow data-layout-allow-occlusion></div>
+      <div id="data-storytelling-lines"></div>
+      <div id="data-storytelling-figure">
+        <div id="data-storytelling-eyebrow" data-var-text="eyebrow"></div>
+        <div id="data-storytelling-stat"></div>
+        <div id="data-storytelling-rule"></div>
+        <div id="data-storytelling-label" data-var-text="statLabel"></div>
+        <div id="data-storytelling-headline" data-var-text="headline"></div>
+      </div>
+      <div id="data-storytelling-chart"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      window.__timelines = window.__timelines || {};
+      var ID = "data-storytelling";
+      var $ = function (name) {
+        return document.getElementById(ID + "-" + name);
+      };
+      var stage = $("stage");
+      var scope = stage.closest("[data-composition-id]");
+      var W = Number(scope.getAttribute("data-width")) || 1920;
+      var H = Number(scope.getAttribute("data-height")) || 1080;
+      var D = Number(scope.getAttribute("data-duration")) || 6;
+      var U = Math.min(W, H) / 100;
+
+      var given = window.__hyperframes && window.__hyperframes.getVariables ? window.__hyperframes.getVariables() : {};
+      var v = Object.assign(
+        {
+          stat: 0,
+          statPrefix: "",
+          statSuffix: "",
+          decimals: 0,
+          statLabel: "",
+          eyebrow: "",
+          headline: "",
+          bars: "",
+          highlight: "",
+          barSuffix: "",
+          layout: "split",
+          exit: "hold",
+          accent: "#22d3ee",
+          background: "#080a12",
+          ink: "#f3f5fa",
+          headingFont: "Inter",
+          bodyFont: "Inter",
+        },
+        given,
+      );
+      var slug = function (s) {
+        return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+      };
+      var weight = { oswald: 700, "archivo-black": 400, "playfair-display": 700, "eb-garamond": 700 }[slug(v.headingFont)] || 900;
+      var format = function (n, places) {
+        return Number(n).toLocaleString("en-US", { minimumFractionDigits: places, maximumFractionDigits: places });
+      };
+      var places = Math.max(0, Math.min(3, Math.round(Number(v.decimals) || 0)));
+      var target = Number(v.stat) || 0;
+
+      // "Label:Value, Label:Value" → up to six bars. Entries that do not parse are skipped.
+      var bars = String(v.bars)
+        .split(",")
+        .map(function (entry) {
+          var cut = entry.lastIndexOf(":");
+          var value = Number(entry.slice(cut + 1));
+          return { label: entry.slice(0, cut).trim(), value: value };
+        })
+        .filter(function (bar) {
+          return bar.label && isFinite(bar.value) && bar.value >= 0;
+        })
+        .slice(0, 6);
+      var top = bars.reduce(function (m, bar) {
+        return Math.max(m, bar.value);
+      }, 0);
+      var barPlaces = bars.some(function (bar) {
+        return bar.value % 1 !== 0;
+      })
+        ? 1
+        : 0;
+      var hot = String(v.highlight).trim().toLowerCase();
+
+      // ── Static setup ──
+      stage.style.setProperty("--u", U + "px");
+      stage.style.setProperty("--ds-accent", v.accent);
+      stage.style.setProperty("--ds-bg", v.background);
+      stage.style.setProperty("--ds-ink", v.ink);
+      stage.className = "ds-b-" + slug(v.bodyFont);
+      $("stat").className = "ds-h-" + slug(v.headingFont);
+
+      var portrait = H > W;
+      var layout = !bars.length ? "solo" : portrait ? "portrait" : v.layout === "stacked" ? "stacked" : "split";
+      // Boxes as [left, top, right, bottom] percent. Portrait keeps clear of social interface areas.
+      var boxes = {
+        split: { figure: [8, 12, 56, 12], chart: [48, 14, 7, 14], centered: false, glow: [26, 50] },
+        stacked: { figure: [10, 7, 10, 52], chart: [16, 53, 16, 8], centered: true, glow: [50, 34] },
+        portrait: { figure: [14, 14, 30, 58], chart: [14, 44, 31, 37], centered: true, glow: [45, 30] },
+        solo: { figure: portrait ? [12, 18, 28, 40] : [10, 12, 10, 12], chart: [0, 0, 0, 0], centered: true, glow: [50, 46] },
+      }[layout];
+      var place = function (el, b) {
+        el.style.left = b[0] + "%";
+        el.style.top = b[1] + "%";
+        el.style.right = b[2] + "%";
+        el.style.bottom = b[3] + "%";
+      };
+      var figure = $("figure");
+      place(figure, boxes.figure);
+      place($("chart"), boxes.chart);
+      figure.style.justifyContent = layout === "stacked" || layout === "portrait" ? "flex-end" : "center";
+      if (boxes.centered) figure.className = "ds-centered";
+      $("glow").style.left = boxes.glow[0] + "%";
+      $("glow").style.top = boxes.glow[1] + "%";
+      if (!bars.length) $("chart").style.display = "none";
+
+      $("eyebrow").textContent = v.eyebrow;
+      $("label").textContent = v.statLabel;
+      $("headline").textContent = v.headline;
+      if (!v.eyebrow) $("eyebrow").style.display = "none";
+      if (!v.statLabel) $("label").style.display = "none";
+      if (!v.headline) $("headline").style.display = "none";
+      var final = v.statPrefix + format(target, places) + v.statSuffix;
+      $("stat").textContent = final;
+
+      var rows = bars.map(function (bar) {
+        var row = document.createElement("div");
+        var label = document.createElement("div");
+        var track = document.createElement("div");
+        var fill = document.createElement("div");
+        var value = document.createElement("div");
+        var isHot = hot ? bar.label.toLowerCase() === hot : bar.value === top;
+        row.className = "ds-row" + (isHot ? " ds-hot" : "");
+        label.className = "ds-row-label";
+        track.className = "ds-track";
+        fill.className = "ds-fill";
+        value.className = "ds-row-value";
+        label.textContent = bar.label;
+        value.textContent = format(bar.value, barPlaces) + v.barSuffix;
+        track.appendChild(fill);
+        row.appendChild(label);
+        row.appendChild(track);
+        row.appendChild(value);
+        $("chart").appendChild(row);
+        return { row: row, fill: fill, value: value, bar: bar, ratio: top ? bar.value / top : 0 };
+      });
+
+      // An object whose property writes text: the tween sets it on every seek.
+      var counter = function (el, render) {
+        var state = 0;
+        return Object.defineProperty({}, "n", {
+          get: function () {
+            return state;
+          },
+          set: function (x) {
+            state = x;
+            el.textContent = render(x);
+          },
+        });
+      };
+
+      function build() {
+        // Size the number, and the chart's text columns, from real glyph widths.
+        var ctx = document.createElement("canvas").getContext("2d");
+        var figureW = (W * (100 - boxes.figure[0] - boxes.figure[2])) / 100;
+        ctx.font = weight + ' 100px "' + v.headingFont + '"';
+        var statSize = Math.max(6 * U, Math.min(layout === "portrait" ? 15 * U : 21 * U, (figureW / (ctx.measureText(final).width * 0.97)) * 100));
+        $("stat").style.fontSize = statSize.toFixed(2) + "px";
+        var widest = function (font, texts) {
+          ctx.font = font;
+          return texts.reduce(function (m, t) {
+            return Math.max(m, ctx.measureText(t).width);
+          }, 0);
+        };
+        var px = 3 * U;
+        var labels = bars.map(function (bar) {
+          return bar.label;
+        });
+        var values = bars.map(function (bar) {
+          return format(bar.value, barPlaces) + v.barSuffix;
+        });
+        $("chart").style.setProperty("--ds-label-w", Math.ceil(widest("700 " + px + 'px "' + v.bodyFont + '"', labels) + 2) + "px");
+        $("chart").style.setProperty("--ds-value-w", Math.ceil(widest("700 " + px + 'px "' + v.bodyFont + '"', values) + 2) + "px");
+
+        var tl = gsap.timeline({ paused: true });
+        var end = D - 0.05;
+        tl.fromTo($("glow"), { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1.08, duration: end, ease: "sine.out" }, 0);
+        tl.fromTo($("lines"), { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power2.out" }, 0);
+
+        tl.fromTo($("eyebrow"), { opacity: 0, y: 1.2 * U }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.2);
+        tl.fromTo($("stat"), { opacity: 0, y: 2.4 * U }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.35);
+        tl.fromTo(
+          counter($("stat"), function (x) {
+            return v.statPrefix + format(x, places) + v.statSuffix;
+          }),
+          { n: 0 },
+          { n: target, duration: 1.7, ease: "power3.out" },
+          0.35,
+        );
+        tl.fromTo(
+          $("rule"),
+          { scaleX: 0, transformOrigin: boxes.centered ? "50% 50%" : "0% 50%" },
+          { scaleX: 1, duration: 0.8, ease: "expo.out" },
+          1.0,
+        );
+        tl.fromTo($("label"), { opacity: 0, y: 1.2 * U }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 1.15);
+        tl.fromTo($("headline"), { opacity: 0, y: 1.2 * U }, { opacity: 0.72, y: 0, duration: 0.8, ease: "power3.out" }, 1.4);
+
+        // Bars grow in turn; each value counts with its bar.
+        rows.forEach(function (r, i) {
+          var at = 1.3 + i * 0.13;
+          tl.fromTo(r.row, { opacity: 0, x: 1.6 * U }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, at);
+          tl.fromTo(r.fill, { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: r.ratio, duration: 1.1, ease: "expo.out" }, at + 0.1);
+          tl.fromTo(
+            counter(r.value, function (x) {
+              return format(x, barPlaces) + v.barSuffix;
+            }),
+            { n: 0 },
+            { n: r.bar.value, duration: 1.1, ease: "expo.out" },
+            at + 0.1,
+          );
+        });
+
+        if (v.exit === "fade") {
+          tl.fromTo(figure, { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.8);
+          tl.fromTo($("chart"), { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.in", immediateRender: false }, D - 0.7);
+        }
+
+        tl.set({}, {}, D);
+        window.__timelines[ID] = tl;
+      }
+
+      var face = weight + ' 100px "' + v.headingFont + '"';
+      var bodyFace = '700 26px "' + v.bodyFont + '"';
+      if (document.fonts && document.fonts.load)
+        Promise.all([document.fonts.load(face), document.fonts.load(bodyFace)]).then(build, build);
+      else build();
+    })();
+  </script>
+</template>
