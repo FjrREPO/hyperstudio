@@ -121,9 +121,14 @@ const Beat = z.strictObject({
   tilt: z.enum(["none", "left", "right", "up", "desk"]).optional(),
   focus: z.enum(["all", "band", "near", "centre"]).optional(),
   side: z.enum(["left", "centre", "right"]).optional(),
+  level: z.enum(["high", "middle", "low"]).optional(),
+  /** For `camera`: the closest this one move may magnify, overriding the take's `maxZoom`. */
+  zoom: z.number().min(1).max(8).optional(),
   /** For `say`: where the line sits and how large it is. */
-  place: z.enum(["left", "right", "under", "over", "foot"]).optional(),
-  size: z.enum(["hero", "title", "text"]).optional(),
+  place: z
+    .enum(["left", "right", "under", "over", "foot", "top-left", "top-right", "bottom-left", "bottom-right"])
+    .optional(),
+  size: z.enum(["display", "hero", "title", "text"]).optional(),
 });
 
 const Transition = z.strictObject({
