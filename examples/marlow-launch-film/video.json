@@ -383,6 +383,15 @@
       "scene": "film",
       "start": 25.9,
       "duration": 2.2333333333
+    },
+    {
+      "id": "music",
+      "src": "assets/music.ogg",
+      "origin": "supplied",
+      "role": "music",
+      "volume": 0.19,
+      "fadeIn": 0.3,
+      "fadeOut": 1.8
     }
   ]
 }

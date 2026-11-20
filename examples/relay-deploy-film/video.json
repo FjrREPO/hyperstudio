@@ -511,6 +511,15 @@
       "scene": "close",
       "start": 0.7,
       "duration": 1.5
+    },
+    {
+      "id": "music",
+      "src": "assets/music.opus",
+      "origin": "supplied",
+      "role": "music",
+      "volume": 0.28,
+      "fadeIn": 0.3,
+      "fadeOut": 1.8
     }
   ]
 }
