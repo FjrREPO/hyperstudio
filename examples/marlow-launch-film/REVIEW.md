@@ -3,7 +3,9 @@
 Answered on 2026-11-19 from the rendered file `renders/marlow-launch-film.mp4`: a sheet at one frame a second
 and four full frames. Sound was measured, not heard. Marlow is an example product: its interface and its
 sound effects are placeholders. Narration: eight lines from Kokoro (voice `am_adam`), a local open-weight model; nobody has listened to
-it. There is no music, so the film is silent between lines (five gaps of 2 to 3 s).
+it. Music: "Lofi Hip Hop Upbeat" by raspberrymusic, CC BY 4.0 (Wikimedia Commons, licence read at the
+source), chosen by title and licence, not by ear; with it the mean level is -21.6 dB, the peak -1.0 dB, and
+there is no silent gap. Credit is owed wherever the film is shown.
 
 - 29.0 s, 1920×1080, 30 fps, one take. HyperFrames check: 0 errors, 0 warnings; the take's audit reports nothing
 - Motion: 29% of frames still; longest freeze 2.5 s at 17 s (the cursor passing over the three owners)

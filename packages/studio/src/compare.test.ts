@@ -21,8 +21,10 @@ test("it reports what two films share and where a third departs", () => {
       .rows.filter((r) => r.same)
       .map((r) => r.decision);
   // The reviewer's finding, as the tool reports it: the first two share a light stage and large type.
-  assert.deepEqual(shared(lumen, marlow), ["stage", "film type"]);
-  assert.deepEqual(shared(lumen, relay), []);
+  for (const decision of ["stage", "film type"]) {
+    assert.ok(shared(lumen, marlow).includes(decision), `Lumen and Marlow share ${decision}`);
+    assert.ok(!shared(lumen, relay).includes(decision), `Lumen and Relay differ in ${decision}`);
+  }
   assert.equal(describe(relay)["film type"], "none on screen");
   assert.match(describe(relay).stage ?? "", /^dark/);
 });

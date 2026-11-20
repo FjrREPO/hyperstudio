@@ -74,6 +74,18 @@ Made with the same recipe (`product-take`) and compiler. Everything below was de
 - Its first version was one dashboard circled by a camera, and was judged worse than Lumen and Marlow: the
   picture never changed while the story advanced. It was rebuilt, not adjusted
 
+## Music on `main`
+
+| Film   | Track                                                                | Licence   | Source            |
+| ------ | -------------------------------------------------------------------- | --------- | ----------------- |
+| Lumen  | "Inspire Action" by Yuri Megis                                       | CC BY 4.0 | Wikimedia Commons |
+| Marlow | "Lofi Hip Hop Upbeat" by raspberrymusic                              | CC BY 4.0 | Wikimedia Commons |
+| Relay  | "Lifelike (Dark Glitch Technology Background Music)" by Alexi Action | CC BY 3.0 | Wikimedia Commons |
+
+Each licence was read on the file's own Commons page and is recorded in the film's `assets/LICENSES.json`.
+Credit is owed wherever a film is shown. The Marlow and Relay tracks were chosen by title and licence, not
+by ear. The `marlow-benchmark-v1` tag has no music.
+
 ## What a benchmark needs before it is frozen
 
 Three separate judgements, each by a person watching the rendered file:

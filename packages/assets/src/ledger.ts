@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { extname, join } from "node:path";
 import { USER_AGENT } from "./http.ts";
@@ -76,9 +77,13 @@ export async function downloadAsset(
     );
   if (!asset.fileUrl) throw new Error(`${asset.id} has no file that may be copied; open ${asset.pageUrl}`);
 
-  const response = await (options.fetch ?? globalThis.fetch)(asset.fileUrl, {
+  let response = await (options.fetch ?? globalThis.fetch)(asset.fileUrl, {
     headers: { "user-agent": USER_AGENT },
   });
+  // Node's fetch speaks HTTP/1.1 only, and some hosts (Wikimedia's file servers) refuse that with a 429 while
+  // serving HTTP/2. Only when no fetch was injected: one more try through curl, which negotiates HTTP/2.
+  // ponytail: shells out to curl; use an HTTP/2 client in-process if curl cannot be assumed.
+  if (response.status === 429 && !options.fetch) response = viaCurl(asset.fileUrl) ?? response;
   if (!response.ok) throw new Error(`download failed (${response.status}) for ${asset.fileUrl}`);
   const type = (response.headers.get("content-type") ?? asset.mediaType ?? "").split(";")[0] ?? "";
   const extension = EXTENSIONS[type] ?? (extname(new URL(asset.fileUrl).pathname) || ".bin");
@@ -106,6 +111,21 @@ export async function downloadAsset(
   );
   writeFileSync(join(dir, LEDGER), `${JSON.stringify(ledger, null, 2)}\n`);
   return entry;
+}
+
+/** The file through curl, or nothing if curl is missing or the host still refuses. */
+function viaCurl(url: string): Response | undefined {
+  const done = spawnSync(
+    "curl",
+    ["-fsSL", "--max-time", "120", "-A", USER_AGENT, "-w", "\n%{content_type}", url],
+    {
+      maxBuffer: 512 * 1024 * 1024,
+    },
+  );
+  if (done.status !== 0) return undefined;
+  const cut = done.stdout.lastIndexOf(10);
+  const type = done.stdout.subarray(cut + 1).toString();
+  return new Response(done.stdout.subarray(0, cut), { headers: type ? { "content-type": type } : {} });
 }
 
 const KINDS: Record<string, AssetKind> = {

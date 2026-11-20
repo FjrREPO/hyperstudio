@@ -44,8 +44,10 @@ three hard cuts and one dissolve; the rollout turns the fleet left once and retu
 
 ### 3. Audio and sound design: NOT validated
 
-Eight lines from Kokoro (voice `am_fenrir`, picked by name), synthesised interface sounds, and a music bed
-chosen by its title and licence, not by ear. Sync was placed from clip lengths and beat times.
+Eight lines from Kokoro (voice `am_fenrir`, picked by name), synthesised interface sounds, and a music bed:
+"Lifelike (Dark Glitch Technology Background Music)" by Alexi Action, CC BY 3.0 (Wikimedia Commons, licence
+read at the source), chosen by its title and licence, not by ear. Mean -21.1 dB, peak -1.0 dB, no silent gap.
+Sync was placed from clip lengths and beat times. Credit is owed wherever the film is shown.
 
 ## The user's review of the previous render (2026-11-19, from its frame sequence)
 
